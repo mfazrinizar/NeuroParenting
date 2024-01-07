@@ -4,5 +4,8 @@
     "onboarding_title2": "It's very simple!",
     "onboarding_description2": "NeuroParenting is designed to be simple and user-friendly to support our goals on quality education.",
     "onboarding_button1": "Skip",
-    "onboarding_button2": "Next"
+    "onboarding_button2": "Next",
+    "start_title": "NeuroParenting",
+    "start_button1": "  Login  ",
+    "start_button2": "Register"
 }

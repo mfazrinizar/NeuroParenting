@@ -39,9 +39,19 @@ dependencies:
   flutter_svg: ^2.0.9
   flutter_localization: ^0.2.0
   intl: ^0.18.1
-  dots_indicator: ^3.0.0
   flutter_localizations:
     sdk: flutter
+  hexcolor: ^3.0.1
+  shared_preferences: ^2.2.2
+  awesome_dialog: ^3.2.0
+  flutter_easyloading: ^3.0.5
+  convex_bottom_bar: ^3.2.0
+  carousel_slider: ^4.2.1
+  url_launcher: ^6.2.3
+  shimmer: ^3.0.0
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
 
 dev_dependencies:
   flutter_test:

@@ -20,20 +20,17 @@ class OnboardingContent extends StatelessWidget {
     final image = isSvg
         ? SvgPicture.asset(
             isDarkMode ? imageDark : imageLight,
-            width: 250,
-            height: 250,
-            fit: BoxFit.fill,
+            height: MediaQuery.of(context).size.height * 0.50,
+            fit: BoxFit.scaleDown,
           )
         : Image.asset(
             isDarkMode ? imageDark : imageLight,
-            width: 250,
-            height: 250,
-            fit: BoxFit.fill,
+            height: MediaQuery.of(context).size.height * 0.50,
+            fit: BoxFit.cover,
           );
 
     return Column(
       children: <Widget>[
-        const Spacer(),
         image,
         const SizedBox(height: 25),
         Text(
@@ -52,7 +49,6 @@ class OnboardingContent extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        const Spacer(),
       ],
     );
   }

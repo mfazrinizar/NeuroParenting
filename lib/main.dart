@@ -1,38 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/pages/onboarding/onboarding_screen.dart';
 import 'src/localization/app_localizations_delegate.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  String _locale = 'en';
+  ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    // print(Get.locale);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? localeString = prefs.getString('locale');
+    bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
+
+    setState(() {
+      _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+      _locale = localeString ?? 'en';
+      Get.updateLocale(Locale(_locale, ''));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: const MaterialColor(0xFF4173CA, {
-          50: Color.fromRGBO(65, 115, 202, .1),
-          100: Color.fromRGBO(65, 115, 202, .2),
-          200: Color.fromRGBO(65, 115, 202, .3),
-          300: Color.fromRGBO(65, 115, 202, .4),
-          400: Color.fromRGBO(65, 115, 202, .5),
-          500: Color.fromRGBO(65, 115, 202, .6),
-          600: Color.fromRGBO(65, 115, 202, .7),
-          700: Color.fromRGBO(65, 115, 202, .8),
-          800: Color.fromRGBO(65, 115, 202, .9),
-          900: Color.fromRGBO(65, 115, 202, 1),
-        }),
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
+      theme: ThemeClass.lightTheme,
+      darkTheme: ThemeClass.darkTheme,
+      themeMode: _themeMode,
+      locale: Locale(_locale, ''),
       home: const OnboardingScreen(),
       localizationsDelegates: const [
         AppLocalizationsDelegate(),

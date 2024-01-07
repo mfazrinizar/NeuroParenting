@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:neuroparenting/src/homepage.dart';
 import 'forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,9 +30,7 @@ class LoginState extends State<LoginPage> {
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: BackButton(
-            color: Colors.white,
-            onPressed: () => Get.offAll(const StartPage())),
+        leading: const BackButton(color: Colors.white),
         title: const Text('Login', style: TextStyle(color: Colors.white)),
         actions: [
           Container(
@@ -161,7 +157,9 @@ class LoginState extends State<LoginPage> {
                             shadowColor: Colors.grey,
                             elevation: 5,
                           ),
-                          onPressed: () => Get.offAll(() => const HomePage()),
+                          onPressed: () {
+                            // Handle login
+                          },
                           child: const Text('  Login  ',
                               style: TextStyle(fontSize: 20)),
                         ),

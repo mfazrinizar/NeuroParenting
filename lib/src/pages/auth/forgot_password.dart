@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:neuroparenting/src/homepage.dart';
-import 'forgot_password.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import 'login.dart';
+
+class ForgotPage extends StatefulWidget {
+  const ForgotPage({super.key});
 
   @override
-  LoginState createState() => LoginState();
+  ForgotState createState() => ForgotState();
 }
 
-class LoginState extends State<LoginPage> {
+class ForgotState extends State<ForgotPage> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool isDarkMode = Get.isDarkMode, passwordVisible = false;
+  bool isDarkMode = Get.isDarkMode;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +32,11 @@ class LoginState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: BackButton(
-            color: Colors.white,
-            onPressed: () => Get.offAll(const StartPage())),
-        title: const Text('Login', style: TextStyle(color: Colors.white)),
+          color: Colors.white,
+          onPressed: () => Get.offAll(() => const LoginPage()),
+        ),
+        title: const Text('Forgot Password',
+            style: TextStyle(color: Colors.white)),
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -74,14 +75,14 @@ class LoginState extends State<LoginPage> {
                 right: 0,
                 child: SvgPicture.asset(
                   isDarkMode
-                      ? 'assets/images/login1_dark.svg'
-                      : 'assets/images/login1_light.svg',
-                  width: width * 0.75,
+                      ? 'assets/images/forgot1_dark.svg'
+                      : 'assets/images/forgot1_light.svg',
+                  width: width,
                   fit: BoxFit.fill,
                 ),
               ),
               Positioned(
-                top: height * 0.25,
+                top: height * 0.35,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -101,7 +102,7 @@ class LoginState extends State<LoginPage> {
                         SizedBox(
                           height: height * 0.05,
                         ),
-                        const Text('Please Fill the Form',
+                        const Text('Please enter your email below:',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -119,55 +120,36 @@ class LoginState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.email, color: Colors.black),
                           ),
                         ),
-                        StatefulBuilder(
-                          builder:
-                              (BuildContext context, StateSetter setState) {
-                            return TextFormField(
-                              controller: passwordController,
-                              style: const TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                labelStyle: const TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
-                                ),
-                                hintText: '********',
-                                labelText: 'Password',
-                                prefixIcon:
-                                    const Icon(Icons.lock, color: Colors.black),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                      // Based on passwordVisible state choose the icon
-                                      passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color: Colors.black),
-                                  onPressed: () {
-                                    // Update the state i.e. toggle the state of passwordVisible variable
-                                    setState(() {
-                                      passwordVisible = !passwordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                              obscureText: !passwordVisible,
-                            );
-                          },
-                        ),
                         SizedBox(
-                          height: height * 0.1,
+                          height: height * 0.05,
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shadowColor: Colors.grey,
                             elevation: 5,
                           ),
-                          onPressed: () => Get.offAll(() => const HomePage()),
-                          child: const Text('  Login  ',
+                          onPressed: () {
+                            AwesomeDialog(
+                              context: context,
+                              btnOkColor: ThemeClass().lightPrimaryColor,
+                              keyboardAware: true,
+                              dismissOnBackKeyPress: false,
+                              dialogType: DialogType.info,
+                              animType: AnimType.scale,
+                              transitionAnimationDuration: const Duration(
+                                  milliseconds:
+                                      200), // Duration(milliseconds: 300),
+                              btnOkText: "Login",
+                              title: 'Password Reset',
+                              desc:
+                                  'We\'ve sent reset password email to your email address, kindly check your email.',
+                              btnOkOnPress: () {
+                                Get.offAll(() => const LoginPage());
+                              },
+                            ).show();
+                          },
+                          child: const Text('   Reset   ',
                               style: TextStyle(fontSize: 20)),
-                        ),
-                        TextButton(
-                          onPressed: () => Get.offAll(() => const ForgotPage()),
-                          child: const Text('Forgot password?'),
                         ),
                       ],
                     ),
