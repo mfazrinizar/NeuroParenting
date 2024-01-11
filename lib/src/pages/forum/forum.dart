@@ -44,7 +44,7 @@ class Discussion {
   final String title;
   final List<String> tags;
   final String datePosted;
-  final int likes;
+  int likes;
   final int comments;
 
   Discussion({
@@ -63,6 +63,7 @@ class ForumPageState extends State<ForumPage> {
   final titlePostController = TextEditingController();
   final descriptionPostController = TextEditingController();
   final tagPostController = TextEditingController();
+  List<bool> hasLiked = [];
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
   Map<String, bool> tagCheckboxes = {
@@ -93,10 +94,13 @@ class ForumPageState extends State<ForumPage> {
     super.initState();
     current = widget.current;
     isDarkMode = Get.isDarkMode;
+    hasLiked = List<bool>.filled(discussions.length, false);
   }
 
   @override
   Widget build(context) {
+    final List<int> likes =
+        discussions.map((discussion) => discussion.likes).toList();
     return Column(children: [
       Container(
         decoration: BoxDecoration(
@@ -298,6 +302,11 @@ class ForumPageState extends State<ForumPage> {
                                   ? Colors.black
                                   : ThemeClass().lightPrimaryColor),
                           onPressed: () {
+                            setState(() {
+                              if (discussions[index].likes == likes[index]) {
+                                likes[index] = discussions[index].likes++;
+                              }
+                            });
                             // Handle like button press
                           },
                         ),
@@ -314,6 +323,7 @@ class ForumPageState extends State<ForumPage> {
                                   ? Colors.black
                                   : ThemeClass().lightPrimaryColor),
                           onPressed: () {
+                            setState(() {});
                             // Handle comment button press
                           },
                         ),

@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 
 class HomePageBody extends StatefulWidget {
@@ -147,7 +148,18 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
       ),
       child: InkWell(
         onTap: () {
-          print('$title button pressed');
+          if (title == 'Articles') {
+            // Create a dummy ArticleOverview instance
+            ArticleOverview articleOverview = ArticleOverview(
+              id: '1',
+              title: 'Dummy Article',
+              description: 'Dummy Description',
+              imageURL: 'https://via.placeholder.com/150',
+            );
+            // Navigate to ArticleContentPage with the dummy ArticleOverview instance
+            Get.to(() => ArticleContentPage(articleOverview));
+          }
+          print(title);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
