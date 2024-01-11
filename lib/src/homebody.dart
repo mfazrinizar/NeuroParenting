@@ -48,9 +48,8 @@ class HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(context) {
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: widget.height,
+    return Expanded(
+      child: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
@@ -128,6 +127,7 @@ class HomePageBodyState extends State<HomePageBody> {
                 ),
               ],
             ),
+            SizedBox(height: widget.height * 0.05)
           ],
         ),
       ),

@@ -116,9 +116,7 @@ class ForumPageState extends State<ForumPage> {
                       color: Theme.of(context).brightness == Brightness.dark
                           ? const Color.fromARGB(255, 124, 129, 140)
                           : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("udin"),
-                  ),
+                  child: const Row(),
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
@@ -132,62 +130,6 @@ class ForumPageState extends State<ForumPage> {
                           : const Color.fromARGB(255, 243, 243, 243)),
                   child: const Center(
                     child: Text("udin anak mang ujang"),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("bedul"),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("bedul"),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("bedul 1"),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("bedul 2"),
                   ),
                 ),
               ],

@@ -136,7 +136,7 @@ class HomePageState extends State<HomePage> {
                   ? SvgPicture.asset('assets/icons/logo_black.svg')
                   : Image.asset('assets/icons/logo.png'),
               onPressed: () {
-                Get.offAll(const OnboardingScreen());
+                // Get.offAll(const OnboardingScreen());
               }),
           actions: [
             LanguageSwitcher(

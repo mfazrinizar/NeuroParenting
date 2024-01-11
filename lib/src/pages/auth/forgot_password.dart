@@ -66,9 +66,8 @@ class ForgotState extends State<ForgotPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: height,
+      body: Column(children: [
+        Expanded(
           child: Stack(
             children: [
               Positioned(
@@ -96,70 +95,73 @@ class ForgotState extends State<ForgotPage> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height * 0.05,
-                        ),
-                        const Text('Please enter your email below:',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            )),
-                        TextFormField(
-                          controller: emailController,
-                          decoration: const InputDecoration(
-                            labelStyle: TextStyle(
-                              color: Colors
-                                  .black, // Change this to your desired color
+                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: height * 0.05,
+                          ),
+                          const Text('Please enter your email below:',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              )),
+                          TextFormField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              labelStyle: TextStyle(
+                                color: Colors
+                                    .black, // Change this to your desired color
+                              ),
+                              hintText: 'email@name.domain',
+                              labelText: 'Email',
+                              prefixIcon:
+                                  Icon(Icons.email, color: Colors.black),
                             ),
-                            hintText: 'email@name.domain',
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email, color: Colors.black),
                           ),
-                        ),
-                        SizedBox(
-                          height: height * 0.05,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.grey,
-                            elevation: 5,
+                          SizedBox(
+                            height: height * 0.05,
                           ),
-                          onPressed: () {
-                            AwesomeDialog(
-                              context: context,
-                              btnOkColor: ThemeClass().lightPrimaryColor,
-                              keyboardAware: true,
-                              dismissOnBackKeyPress: false,
-                              dialogType: DialogType.info,
-                              animType: AnimType.scale,
-                              transitionAnimationDuration: const Duration(
-                                  milliseconds:
-                                      200), // Duration(milliseconds: 300),
-                              btnOkText: "Login",
-                              title: 'Password Reset',
-                              desc:
-                                  'We\'ve sent reset password email to your email address, kindly check your email.',
-                              btnOkOnPress: () {
-                                Get.offAll(() => const LoginPage());
-                              },
-                            ).show();
-                          },
-                          child: const Text('   Reset   ',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ],
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.grey,
+                              elevation: 5,
+                            ),
+                            onPressed: () {
+                              AwesomeDialog(
+                                context: context,
+                                btnOkColor: ThemeClass().lightPrimaryColor,
+                                keyboardAware: true,
+                                dismissOnBackKeyPress: false,
+                                dialogType: DialogType.info,
+                                animType: AnimType.scale,
+                                transitionAnimationDuration: const Duration(
+                                    milliseconds:
+                                        200), // Duration(milliseconds: 300),
+                                btnOkText: "Login",
+                                title: 'Password Reset',
+                                desc:
+                                    'We\'ve sent reset password email to your email address, kindly check your email.',
+                                btnOkOnPress: () {
+                                  Get.offAll(() => const LoginPage());
+                                },
+                              ).show();
+                            },
+                            child: const Text('   Reset   ',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
-      ),
+      ]),
     );
   }
 }

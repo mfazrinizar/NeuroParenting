@@ -65,9 +65,8 @@ class LoginState extends State<LoginPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: height,
+      body: Column(children: [
+        Expanded(
           child: Stack(
             children: [
               Positioned(
@@ -95,89 +94,93 @@ class LoginState extends State<LoginPage> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height * 0.05,
-                        ),
-                        const Text('Please Fill the Form',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            )),
-                        TextFormField(
-                          controller: emailController,
-                          decoration: const InputDecoration(
-                            labelStyle: TextStyle(
-                              color: Colors
-                                  .black, // Change this to your desired color
-                            ),
-                            hintText: 'email@name.domain',
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email, color: Colors.black),
+                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: height * 0.05,
                           ),
-                        ),
-                        StatefulBuilder(
-                          builder:
-                              (BuildContext context, StateSetter setState) {
-                            return TextFormField(
-                              controller: passwordController,
-                              style: const TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                labelStyle: const TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
-                                ),
-                                hintText: '********',
-                                labelText: 'Password',
-                                prefixIcon:
-                                    const Icon(Icons.lock, color: Colors.black),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                      // Based on passwordVisible state choose the icon
-                                      passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color: Colors.black),
-                                  onPressed: () {
-                                    // Update the state i.e. toggle the state of passwordVisible variable
-                                    setState(() {
-                                      passwordVisible = !passwordVisible;
-                                    });
-                                  },
-                                ),
+                          const Text('Please Fill the Form',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              )),
+                          TextFormField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              labelStyle: TextStyle(
+                                color: Colors
+                                    .black, // Change this to your desired color
                               ),
-                              obscureText: !passwordVisible,
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: height * 0.1,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.grey,
-                            elevation: 5,
+                              hintText: 'email@name.domain',
+                              labelText: 'Email',
+                              prefixIcon:
+                                  Icon(Icons.email, color: Colors.black),
+                            ),
                           ),
-                          onPressed: () => Get.offAll(() => const HomePage()),
-                          child: const Text('  Login  ',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                        TextButton(
-                          onPressed: () => Get.offAll(() => const ForgotPage()),
-                          child: const Text('Forgot password?'),
-                        ),
-                      ],
+                          StatefulBuilder(
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                              return TextFormField(
+                                controller: passwordController,
+                                style: const TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  labelStyle: const TextStyle(
+                                    color: Colors
+                                        .black, // Change this to your desired color
+                                  ),
+                                  hintText: '********',
+                                  labelText: 'Password',
+                                  prefixIcon: const Icon(Icons.lock,
+                                      color: Colors.black),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                        // Based on passwordVisible state choose the icon
+                                        passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Colors.black),
+                                    onPressed: () {
+                                      // Update the state i.e. toggle the state of passwordVisible variable
+                                      setState(() {
+                                        passwordVisible = !passwordVisible;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                obscureText: !passwordVisible,
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: height * 0.1,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.grey,
+                              elevation: 5,
+                            ),
+                            onPressed: () => Get.offAll(() => const HomePage()),
+                            child: const Text('  Login  ',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                Get.offAll(() => const ForgotPage()),
+                            child: const Text('Forgot password?'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
-      ),
+      ]),
     );
   }
 }
