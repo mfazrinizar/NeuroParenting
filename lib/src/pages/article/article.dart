@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
+import 'package:neuroparenting/src/homepage.dart';
+import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
+import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/localization_change.dart';
+import 'package:neuroparenting/src/reusable_func/theme_change.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
 class ArticleOverview {
   final String id;
@@ -63,10 +70,11 @@ class _ArticleContentPageState extends State<ArticleContentPage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
   ArticleContent? articleContent;
-
+  bool isDarkMode = Get.isDarkMode;
   @override
   void initState() {
     super.initState();
+    isDarkMode = Get.isDarkMode;
     tabController = TabController(length: 2, vsync: this);
     loadArticleContent();
   }
@@ -89,18 +97,48 @@ class _ArticleContentPageState extends State<ArticleContentPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? ThemeClass().darkRounded
+            : ThemeClass().lightPrimaryColor,
+        elevation: 0,
         title: Text(
-          'Artikel',
-          style: GoogleFonts.nunito(
-            fontSize: 25,
+          'Article',
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Get.offAll(const HomePage());
+            }),
+        actions: [
+          LanguageSwitcher(
+            onPressed: localizationChange,
+            textColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+          ),
+          ThemeSwitcher(onPressed: () async {
+            themeChange();
+            setState(() {
+              isDarkMode = !isDarkMode;
+            });
+          }),
+          Icon(Icons.notifications,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Colors.white),
+          Icon(Icons.person,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Colors.white),
+        ],
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
