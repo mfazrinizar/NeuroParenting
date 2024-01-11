@@ -83,103 +83,101 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: widget.height * 0.01, width: widget.width * 0.01),
-            // 1. User avatar
-            CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: widget.height * 0.125,
-              backgroundImage: newProfileImage != null
-                  ? FileImage(newProfileImage!)
-                  : const AssetImage('assets/icons/logo.png')
-                      as ImageProvider<Object>?,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  width: widget.height * 0.1,
-                  decoration: BoxDecoration(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: widget.height * 0.01, width: widget.width * 0.01),
+          // 1. User avatar
+          CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: widget.height * 0.125,
+            backgroundImage: newProfileImage != null
+                ? FileImage(newProfileImage!)
+                : const AssetImage('assets/icons/logo.png')
+                    as ImageProvider<Object>?,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                width: widget.height * 0.1,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? ThemeClass().darkRounded
+                      : ThemeClass().lightPrimaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () async {
+                    final pickedImage = await filePicking.pickImage();
+                    if (pickedImage != null) {
+                      setState(() {
+                        newProfileImage = pickedImage;
+                      });
+                    }
+                  },
+                  icon: Icon(
+                    Icons.camera_alt,
                     color: Theme.of(context).brightness == Brightness.dark
-                        ? ThemeClass().darkRounded
-                        : ThemeClass().lightPrimaryColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    onPressed: () async {
-                      final pickedImage = await filePicking.pickImage();
-                      if (pickedImage != null) {
-                        setState(() {
-                          newProfileImage = pickedImage;
-                        });
-                      }
-                    },
-                    icon: Icon(
-                      Icons.camera_alt,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.black
-                          : Colors.white,
-                      size: widget.height * 0.05,
-                    ),
+                        ? Colors.black
+                        : Colors.white,
+                    size: widget.height * 0.05,
                   ),
                 ),
-              ), // Replace with your image path
-            ),
-            // 2. Neurodivergent tags
-            const Text('Dr. Raihan Wangsaff',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            (userType == 'Parent')
-                ? // Replace userType with your actual user type variable
-                Wrap(
-                    spacing: 8.0, // gap between adjacent chips
-                    runSpacing: 4.0, // gap between lines
-                    children: <String>['ADHD', 'DCD', 'Dyslexia', 'Others']
-                        .map((String tag) => Chip(label: Text(tag)))
-                        .toList(),
-                  )
-                : const Wrap(
-                    spacing: 8.0, // gap between adjacent chips
-                    runSpacing: 4.0, // gap between lines
-                    children: [Chip(label: Text('Psychologist'))],
-                  ),
-            if (userType == 'Parent')
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.edit,
-                        size: 24,
+              ),
+            ), // Replace with your image path
+          ),
+          // 2. Neurodivergent tags
+          const Text('Dr. Raihan Wangsaff',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          (userType == 'Parent')
+              ? // Replace userType with your actual user type variable
+              Wrap(
+                  spacing: 8.0, // gap between adjacent chips
+                  runSpacing: 4.0, // gap between lines
+                  children: <String>['ADHD', 'DCD', 'Dyslexia', 'Others']
+                      .map((String tag) => Chip(label: Text(tag)))
+                      .toList(),
+                )
+              : const Wrap(
+                  spacing: 8.0, // gap between adjacent chips
+                  runSpacing: 4.0, // gap between lines
+                  children: [Chip(label: Text('Psychologist'))],
+                ),
+          if (userType == 'Parent')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.edit,
+                      size: 24,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black),
+                  label: Text(
+                    'Edit Needs',
+                    style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
-                            : Colors.black),
-                    label: Text(
-                      'Edit Needs',
-                      style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          fontSize: 16),
-                    ),
-                  )
-                ],
-              ),
+                            : Colors.black,
+                        fontSize: 16),
+                  ),
+                )
+              ],
+            ),
 
-            // 3. List tile button
-            Column(
-              children: tilesData.map(
-                (tile) {
-                  return _buildListTile(
-                      tile['icon'] as IconData,
-                      tile['title'] as String,
-                      tile['onTap'] as void Function(),
-                      context);
-                },
-              ).toList(),
-            )
-          ],
-        ),
+          // 3. List tile button
+          Column(
+            children: tilesData.map(
+              (tile) {
+                return _buildListTile(
+                    tile['icon'] as IconData,
+                    tile['title'] as String,
+                    tile['onTap'] as void Function(),
+                    context);
+              },
+            ).toList(),
+          )
+        ],
       ),
     );
   }

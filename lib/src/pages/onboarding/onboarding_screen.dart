@@ -59,99 +59,101 @@ class OnboardingScreenState extends State<OnboardingScreen> {
           ThemeSwitcher(onPressed: themeChange),
         ],
       ),
-      body: Expanded(
-          child: SingleChildScrollView(
-              child: Column(children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.75,
-          child: Expanded(
-            child: PageView.builder(
-              controller: controller,
-              onPageChanged: (value) {
-                setState(
-                  () {
-                    currentPage = value;
-                  },
-                );
-              },
-              itemCount: onboardingData.length,
-              itemBuilder: (context, index) => OnboardingContent(
-                title: onboardingData[index]["title"]!,
-                description: onboardingData[index]["description"]!,
-                imageLight: onboardingData[index]["imageLight"]!,
-                imageDark: onboardingData[index]["imageDark"]!,
-                isSvg: onboardingData[index]["isSvg"] == "true" ? true : false,
-              ),
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            const SizedBox(
-              width: 20,
-            ),
-            ElevatedButton(
-              child: Text(
-                AppLocalizations.of(context)!.translate('onboarding_button1') ??
-                    'problem',
-              ),
-              onPressed: () {
-                Get.to(const StartPage());
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List<Widget>.generate(
-                onboardingData.length,
-                (int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      controller.animateToPage(
-                        index,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: PageView.builder(
+                controller: controller,
+                onPageChanged: (value) {
+                  setState(
+                    () {
+                      currentPage = value;
                     },
-                    child: Container(
-                      width: 15.0,
-                      height: 15.0,
-                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: currentPage == index
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.5),
-                      ),
-                    ),
                   );
                 },
+                itemCount: onboardingData.length,
+                itemBuilder: (context, index) => OnboardingContent(
+                  title: onboardingData[index]["title"]!,
+                  description: onboardingData[index]["description"]!,
+                  imageLight: onboardingData[index]["imageLight"]!,
+                  imageDark: onboardingData[index]["imageDark"]!,
+                  isSvg:
+                      onboardingData[index]["isSvg"] == "true" ? true : false,
+                ),
               ),
             ),
-            ElevatedButton(
-              child: Text(AppLocalizations.of(context)!
-                      .translate('onboarding_button2') ??
-                  'problem'),
-              onPressed: () {
-                if (currentPage == onboardingData.length - 1) {
-                  Get.offAll(() => const StartPage());
-                }
-                controller.nextPage(
-                  // Index of the second page
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                );
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  child: Text(
+                    AppLocalizations.of(context)!
+                            .translate('onboarding_button1') ??
+                        'problem',
+                  ),
+                  onPressed: () {
+                    Get.to(const StartPage());
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List<Widget>.generate(
+                    onboardingData.length,
+                    (int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                        },
+                        child: Container(
+                          width: 15.0,
+                          height: 15.0,
+                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentPage == index
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.5),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  child: Text(AppLocalizations.of(context)!
+                          .translate('onboarding_button2') ??
+                      'problem'),
+                  onPressed: () {
+                    if (currentPage == onboardingData.length - 1) {
+                      Get.offAll(() => const StartPage());
+                    }
+                    controller.nextPage(
+                      // Index of the second page
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    );
+                  },
+                ),
+                const SizedBox(
+                  width: 20,
+                )
+              ],
             ),
-            const SizedBox(
-              width: 20,
-            )
           ],
         ),
-      ]))),
+      ),
     );
   }
 }
