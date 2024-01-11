@@ -71,9 +71,8 @@ class StartPageState extends State<StartPage> {
               ),
             ],
           ),
-          body: SingleChildScrollView(
+          body: Expanded(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
                   Positioned(
@@ -95,49 +94,52 @@ class StartPageState extends State<StartPage> {
                     ),
                   ),
                   Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                        SvgPicture.asset(
-                          isDarkMode.value
-                              ? 'assets/images/start1_dark.svg'
-                              : 'assets/images/start1_light.svg',
-                          height: MediaQuery.of(context).size.height * 0.45,
-                          fit: BoxFit.fill,
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.grey, elevation: 5),
-                          onPressed: () async =>
-                              Get.offAll(() => const LoginPage()),
-                          child: const Text('  Login  ',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                        const SizedBox(height: 5),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.grey,
-                              elevation: 5,
-                              backgroundColor: isDarkMode.value
-                                  ? Colors.grey
-                                  : Colors.white),
-                          onPressed: () async =>
-                              Get.offAll(() => const RegisterPage()),
-                          child: Text('Register',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: isDarkMode.value
-                                      ? Colors.white
-                                      : ThemeClass().lightPrimaryColor)),
-                        ),
-                        const Spacer(),
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                          ),
+                          SvgPicture.asset(
+                            isDarkMode.value
+                                ? 'assets/images/start1_dark.svg'
+                                : 'assets/images/start1_light.svg',
+                            height: MediaQuery.of(context).size.height * 0.45,
+                            fit: BoxFit.fill,
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shadowColor: Colors.grey, elevation: 5),
+                            onPressed: () async =>
+                                Get.offAll(() => const LoginPage()),
+                            child: const Text('  Login  ',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                          const SizedBox(height: 5),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shadowColor: Colors.grey,
+                                elevation: 5,
+                                backgroundColor: isDarkMode.value
+                                    ? Colors.grey
+                                    : Colors.white),
+                            onPressed: () async =>
+                                Get.offAll(() => const RegisterPage()),
+                            child: Text('Register',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: isDarkMode.value
+                                        ? Colors.white
+                                        : ThemeClass().lightPrimaryColor)),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05)
+                        ],
+                      ),
                     ),
                   ),
                 ],

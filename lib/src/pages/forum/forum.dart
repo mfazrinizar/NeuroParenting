@@ -1,6 +1,7 @@
 // forum.dart
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:get/get.dart';
@@ -36,9 +37,56 @@ class ForumPage extends StatefulWidget {
   ForumPageState createState() => ForumPageState();
 }
 
+class Discussion {
+  final String userAvatarUrl;
+  final String userName;
+  final String userType;
+  final String title;
+  final List<String> tags;
+  final String datePosted;
+  final int likes;
+  final int comments;
+
+  Discussion({
+    required this.userAvatarUrl,
+    required this.userName,
+    required this.userType,
+    required this.title,
+    required this.tags,
+    required this.datePosted,
+    required this.likes,
+    required this.comments,
+  });
+}
+
 class ForumPageState extends State<ForumPage> {
+  final titlePostController = TextEditingController();
+  final descriptionPostController = TextEditingController();
+  final tagPostController = TextEditingController();
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
+  Map<String, bool> tagCheckboxes = {
+    'DCD': false,
+    'Dyslexia': false,
+    'ADHD': false,
+    'Others': false,
+  };
+  List<Discussion> discussions = List<Discussion>.generate(
+    5,
+    (index) => Discussion(
+      userAvatarUrl:
+          'https://example.com/avatar${index + 1}.png', // replace with a dummy URL
+      userName: 'User ${index + 1}', // replace with a dummy name
+      userType: index % 2 == 0
+          ? 'Parent'
+          : 'Psychologist', // replace with a dummy user type
+      title: 'Discussion Title ${index + 1}', // replace with a dummy title
+      tags: ['DCD', 'OCD'], // replace with dummy tags
+      datePosted: '2022-01-0${index + 1}',
+      likes: 1 + index,
+      comments: 2 + index + 2, // replace with a dummy date
+    ),
+  );
 
   @override
   void initState() {
@@ -94,47 +142,185 @@ class ForumPageState extends State<ForumPage> {
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.black
                         : Colors.white),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        scrollable: true,
+                        title: const Text('Post Discussion'),
+                        content: StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) {
+                            return SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextField(
+                                    controller: titlePostController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Title',
+                                    ),
+                                  ),
+                                  TextField(
+                                    controller: descriptionPostController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Description',
+                                    ),
+                                    maxLines: 3,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text('Topic/tags:'),
+                                  ...tagCheckboxes.entries.map(
+                                    (entry) {
+                                      return CheckboxListTile(
+                                        title: Text(entry.key),
+                                        value: entry.value,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tagCheckboxes[entry.key] = value!;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      FilePickerResult? result =
+                                          await FilePicker.platform.pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: [
+                                          'jpg',
+                                          'jpeg',
+                                          'png'
+                                        ],
+                                      );
+
+                                      if (result != null) {
+                                        print(
+                                            'File path: ${result.files.single.path}');
+                                      } else {
+                                        print('No file selected');
+                                      }
+                                    },
+                                    child: const Text('Choose Photo'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      print(
+                                          'Title: ${titlePostController.text}');
+                                      print(
+                                          'Description: ${descriptionPostController.text}');
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Post Discussion'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      print('Dialog cancelled');
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
               )
             ],
           ),
         ),
       ),
       Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: SizedBox(
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Row(),
+        child: ListView.builder(
+          itemCount: discussions.length,
+          itemBuilder: (context, index) {
+            return Card(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color.fromARGB(255, 124, 129, 140)
+                  : const Color.fromARGB(255, 243, 243, 243),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage:
+                              NetworkImage(discussions[index].userAvatarUrl),
+                        ),
+                        SizedBox(width: widget.width * 0.025),
+                        Text(discussions[index].userName,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                        Chip(label: Text(discussions[index].userType)),
+                      ],
+                    ),
+                    Text(discussions[index].title),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Wrap(
+                        spacing: 10,
+                        children: discussions[index]
+                            .tags
+                            .map((tag) => Text('#$tag '))
+                            .toList(),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        TextButton.icon(
+                          label: Text(
+                            discussions[index].likes.toString(),
+                            style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                          ),
+                          icon: Icon(Icons.thumb_up,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.black
+                                  : ThemeClass().lightPrimaryColor),
+                          onPressed: () {
+                            // Handle like button press
+                          },
+                        ),
+                        TextButton.icon(
+                          label: Text(discussions[index].comments.toString(),
+                              style: TextStyle(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black)),
+                          icon: Icon(Icons.comment,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.black
+                                  : ThemeClass().lightPrimaryColor),
+                          onPressed: () {
+                            // Handle comment button press
+                          },
+                        ),
+                        const Spacer(),
+                        Text(discussions[index].datePosted),
+                      ],
+                    ),
+                  ],
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 400,
-                  height: 100,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 124, 129, 140)
-                          : const Color.fromARGB(255, 243, 243, 243)),
-                  child: const Center(
-                    child: Text("udin anak mang ujang"),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       )
     ]);
