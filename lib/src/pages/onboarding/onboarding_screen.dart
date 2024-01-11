@@ -7,7 +7,6 @@ import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
-import 'package:neuroparenting/src/theme/invert_color.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
