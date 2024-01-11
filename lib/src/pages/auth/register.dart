@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -22,6 +25,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterState extends State<RegisterPage> {
+  File? profileImage;
   int currentPage = 0;
   final PageController controller = PageController();
   final TextEditingController nameController = TextEditingController();
@@ -33,6 +37,18 @@ class RegisterState extends State<RegisterPage> {
       rePasswordVisible = false;
   final List<String> choices = ['  Psychologist  ', '  Parent  '];
   final List<bool> isSelected = [true, false];
+
+  Future<void> selectProfileImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+
+    if (result != null) {
+      profileImage = File(result.files.single.path!);
+      setState(() {});
+    } else {
+      // User canceled the picker
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,13 +127,36 @@ class RegisterState extends State<RegisterPage> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: height * 0.015,
+                            height: height * 0.01,
                           ),
-                          const Text('Select User Type:',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)),
+                          GestureDetector(
+                            onTap:
+                                selectProfileImage, // This method opens the file picker
+                            child: ClipOval(
+                              child: profileImage != null
+                                  ? Image.file(
+                                      profileImage!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(
+                                      color: Colors.grey,
+                                      width: 100,
+                                      height: 100,
+                                      child: Icon(Icons.camera_alt,
+                                          color: Colors.white),
+                                    ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          // const Text('Select User Type:',
+                          //     style: TextStyle(
+                          //         fontSize: 20,
+                          //         fontWeight: FontWeight.bold,
+                          //         color: Colors.black)),
                           ToggleButtons(
                             isSelected: isSelected,
                             onPressed: (int index) {
@@ -252,7 +291,7 @@ class RegisterState extends State<RegisterPage> {
                             },
                           ),
                           SizedBox(
-                            height: height * 0.02,
+                            height: height * 0.01,
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -305,6 +344,9 @@ class RegisterState extends State<RegisterPage> {
                             },
                             child: const Text('  Register  ',
                                 style: TextStyle(fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: height * 0.01,
                           ),
                         ],
                       ),

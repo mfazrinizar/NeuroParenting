@@ -75,7 +75,7 @@ class ForumPageState extends State<ForumPage> {
     5,
     (index) => Discussion(
       userAvatarUrl:
-          'https://example.com/avatar${index + 1}.png', // replace with a dummy URL
+          'https://via.placeholder.com/45${index + 1}.png', // replace with a dummy URL
       userName: 'User ${index + 1}', // replace with a dummy name
       userType: index % 2 == 0
           ? 'Parent'
@@ -252,10 +252,15 @@ class ForumPageState extends State<ForumPage> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              NetworkImage(discussions[index].userAvatarUrl),
+                        ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            image: discussions[index].userAvatarUrl,
+                            placeholder:
+                                'assets/images/placeholder_loading.gif',
+                            width: 40, // 2x radius
+                            height: 40, // 2x radius
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         SizedBox(width: widget.width * 0.025),
                         Text(discussions[index].userName,
