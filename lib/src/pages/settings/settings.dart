@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 
 import '../onboarding/onboarding_screen.dart';
+import '../auth/change_password.dart';
 
 class SettingsPage extends StatefulWidget {
   final double height;
@@ -50,7 +51,9 @@ class SettingsPageState extends State<SettingsPage> {
     {
       'icon': Icons.lock,
       'title': 'Change Password',
-      'onTap': () {/* Handle change password */}
+      'onTap': () {
+        Get.to(const ChangePasswordPage());
+      }
     },
     {
       'icon': Icons.exit_to_app,

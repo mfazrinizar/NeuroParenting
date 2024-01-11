@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:neuroparenting/src/pages/onboarding/onboarding_screen.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
@@ -12,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'homebody.dart';
 import 'package:neuroparenting/src/pages/forum/forum.dart';
 import 'package:neuroparenting/src/pages/settings/settings.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'reusable_comp/theme_changer.dart';
 
@@ -51,7 +49,7 @@ class HomePageState extends State<HomePage> {
     Icons.help,
     Icons.games,
     Icons.book,
-    Icons.chat_bubble,
+    Icons.chat_rounded,
     Icons.article,
     Icons.campaign,
     Icons.more

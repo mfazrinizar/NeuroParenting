@@ -12,8 +12,6 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'parent_selection.dart';
 
@@ -144,7 +142,7 @@ class RegisterState extends State<RegisterPage> {
                                       color: Colors.grey,
                                       width: 100,
                                       height: 100,
-                                      child: Icon(Icons.camera_alt,
+                                      child: const Icon(Icons.camera_alt,
                                           color: Colors.white),
                                     ),
                             ),
