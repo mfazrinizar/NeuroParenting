@@ -63,14 +63,16 @@ class OnboardingScreenState extends State<OnboardingScreen> {
           child: SingleChildScrollView(
               child: Column(children: [
         SizedBox(
-            height: MediaQuery.of(context).size.height * 0.75,
-            child: Expanded(
-                child: PageView.builder(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: Expanded(
+            child: PageView.builder(
               controller: controller,
               onPageChanged: (value) {
-                setState(() {
-                  currentPage = value;
-                });
+                setState(
+                  () {
+                    currentPage = value;
+                  },
+                );
               },
               itemCount: onboardingData.length,
               itemBuilder: (context, index) => OnboardingContent(
@@ -80,7 +82,9 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                 imageDark: onboardingData[index]["imageDark"]!,
                 isSvg: onboardingData[index]["isSvg"] == "true" ? true : false,
               ),
-            ))),
+            ),
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

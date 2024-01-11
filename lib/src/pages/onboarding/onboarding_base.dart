@@ -42,11 +42,13 @@ class OnboardingContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Text(
-          description,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 18,
+        Expanded(
+          child: Text(
+            description,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 18,
+            ),
           ),
         ),
       ],

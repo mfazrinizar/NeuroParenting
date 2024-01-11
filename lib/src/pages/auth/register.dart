@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -12,6 +11,7 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 
 import 'parent_selection.dart';
 
@@ -35,18 +35,7 @@ class RegisterState extends State<RegisterPage> {
       rePasswordVisible = false;
   final List<String> choices = ['  Psychologist  ', '  Parent  '];
   final List<bool> isSelected = [true, false];
-
-  Future<void> selectProfileImage() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-
-    if (result != null) {
-      profileImage = File(result.files.single.path!);
-      setState(() {});
-    } else {
-      // User canceled the picker
-    }
-  }
+  final filePicking = FilePicking();
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +117,15 @@ class RegisterState extends State<RegisterPage> {
                             height: height * 0.01,
                           ),
                           GestureDetector(
-                            onTap:
-                                selectProfileImage, // This method opens the file picker
+                            onTap: () async {
+                              final pickedImage = await filePicking.pickImage();
+                              if (pickedImage != null) {
+                                setState(() {
+                                  profileImage = pickedImage;
+                                });
+                              }
+                            },
+                            // This method opens the file picker
                             child: ClipOval(
                               child: profileImage != null
                                   ? Image.file(

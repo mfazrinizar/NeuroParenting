@@ -56,6 +56,9 @@ dependencies:
   path_provider: ^2.1.2
   google_fonts: ^6.1.0
   markdown_viewer: ^0.6.2
+  image_picker: ^1.0.7
+  permission_handler: ^11.1.0
+  device_info_plus: ^9.1.1
 
 dev_dependencies:
   flutter_test:

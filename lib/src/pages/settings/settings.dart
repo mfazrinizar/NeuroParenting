@@ -1,8 +1,11 @@
 // settings.dart
 
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 
 import '../onboarding/onboarding_screen.dart';
@@ -39,6 +42,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
+  File? newProfileImage;
+  final filePicking = FilePicking();
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
   String userType = 'Parent'; // Psychologist
@@ -87,7 +92,10 @@ class SettingsPageState extends State<SettingsPage> {
             CircleAvatar(
               backgroundColor: Colors.transparent,
               radius: widget.height * 0.125,
-              backgroundImage: const AssetImage('assets/icons/logo.png'),
+              backgroundImage: newProfileImage != null
+                  ? FileImage(newProfileImage!)
+                  : const AssetImage('assets/icons/logo.png')
+                      as ImageProvider<Object>?,
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
@@ -99,7 +107,14 @@ class SettingsPageState extends State<SettingsPage> {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final pickedImage = await filePicking.pickImage();
+                      if (pickedImage != null) {
+                        setState(() {
+                          newProfileImage = pickedImage;
+                        });
+                      }
+                    },
                     icon: Icon(
                       Icons.camera_alt,
                       color: Theme.of(context).brightness == Brightness.dark

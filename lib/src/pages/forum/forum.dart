@@ -63,6 +63,7 @@ class ForumPageState extends State<ForumPage> {
   final titlePostController = TextEditingController();
   final descriptionPostController = TextEditingController();
   final tagPostController = TextEditingController();
+  final themeClass = ThemeClass();
   List<bool> hasLiked = [];
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
@@ -99,8 +100,6 @@ class ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(context) {
-    final List<int> likes =
-        discussions.map((discussion) => discussion.likes).toList();
     return Column(children: [
       Container(
         decoration: BoxDecoration(
@@ -109,8 +108,8 @@ class ForumPageState extends State<ForumPage> {
               bottomRight: Radius.circular(16.0),
             ),
             color: Theme.of(context).brightness == Brightness.dark
-                ? ThemeClass().darkRounded
-                : ThemeClass().lightPrimaryColor),
+                ? themeClass.darkRounded
+                : themeClass.lightPrimaryColor),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -261,8 +260,8 @@ class ForumPageState extends State<ForumPage> {
                             image: discussions[index].userAvatarUrl,
                             placeholder:
                                 'assets/images/placeholder_loading.gif',
-                            width: 40, // 2x radius
-                            height: 40, // 2x radius
+                            width: 50, // 2x radius
+                            height: 50, // 2x radius
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -296,17 +295,25 @@ class ForumPageState extends State<ForumPage> {
                                     ? Colors.white
                                     : Colors.black),
                           ),
-                          icon: Icon(Icons.thumb_up,
+                          icon: Icon(
+                              hasLiked[index]
+                                  ? Icons.thumb_up
+                                  : Icons.thumb_up_outlined,
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? Colors.black
-                                  : ThemeClass().lightPrimaryColor),
+                                  : themeClass.lightPrimaryColor),
                           onPressed: () {
-                            setState(() {
-                              if (discussions[index].likes == likes[index]) {
-                                likes[index] = discussions[index].likes++;
-                              }
-                            });
+                            setState(
+                              () {
+                                if (hasLiked[index]) {
+                                  discussions[index].likes--;
+                                } else {
+                                  discussions[index].likes++;
+                                }
+                                hasLiked[index] = !hasLiked[index];
+                              },
+                            );
                             // Handle like button press
                           },
                         ),
@@ -321,7 +328,7 @@ class ForumPageState extends State<ForumPage> {
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? Colors.black
-                                  : ThemeClass().lightPrimaryColor),
+                                  : themeClass.lightPrimaryColor),
                           onPressed: () {
                             setState(() {});
                             // Handle comment button press
