@@ -246,14 +246,11 @@ class _ArticleDictionaryPageState extends State<ArticleDictionaryPage> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop) {},
-=======
-    return WillPopScope(
-      onWillPop: showExitPopup,
->>>>>>> 0d2fe692cceb861f72b50c7a2026b76ae84ff5fb
+      onPopInvoked: (bool didPop) {
+        showExitPopup();
+      },
       child: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
