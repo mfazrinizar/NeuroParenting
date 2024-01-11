@@ -75,8 +75,8 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                 right: 0,
                 child: SvgPicture.asset(
                   isDarkMode
-                      ? 'assets/images/login1_dark.svg'
-                      : 'assets/images/login1_light.svg',
+                      ? 'assets/images/changepw1_dark.svg'
+                      : 'assets/images/changepw1_light.svg',
                   width: width * 0.75,
                   fit: BoxFit.fill,
                 ),
