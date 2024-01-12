@@ -154,7 +154,6 @@ class HomePageState extends State<HomePage> {
             Builder(
               builder: (BuildContext context) {
                 final user = FirebaseAuth.instance.currentUser;
-                print('$user + ${user?.photoURL}');
                 if (user != null && user.photoURL != null) {
                   return ClipOval(
                     child: FadeInImage.assetNetwork(

@@ -202,27 +202,18 @@ class ForumPageState extends State<ForumPage> {
                                       );
 
                                       if (result != null) {
-                                        print(
-                                            'File path: ${result.files.single.path}');
-                                      } else {
-                                        print('No file selected');
-                                      }
+                                      } else {}
                                     },
                                     child: const Text('Choose Photo'),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      print(
-                                          'Title: ${titlePostController.text}');
-                                      print(
-                                          'Description: ${descriptionPostController.text}');
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('Post Discussion'),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      print('Dialog cancelled');
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('Cancel'),

@@ -5,10 +5,13 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
+import 'package:path/path.dart' as path;
 
 import '../onboarding/onboarding_screen.dart';
 import 'change_password.dart';
@@ -66,6 +69,11 @@ class SettingsPageState extends State<SettingsPage> {
       'onTap': () {/* Handle change name */}
     },
     {
+      'icon': Icons.email,
+      'title': 'Change Email',
+      'onTap': () {/* Handle change name */}
+    },
+    {
       'icon': Icons.lock,
       'title': 'Change Password',
       'onTap': () {
@@ -104,10 +112,9 @@ class SettingsPageState extends State<SettingsPage> {
         } else {
           final userDoc = snapshot.data!;
           final userType = userDoc['userType'];
-          final userTags = userType == 'Parent'
+          var userTags = userType == 'Parent'
               ? (userDoc['userTags'] as List).cast<String>()
               : null;
-          print(userTags);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -138,9 +145,36 @@ class SettingsPageState extends State<SettingsPage> {
                         onPressed: () async {
                           final pickedImage = await filePicking.pickImage();
                           if (pickedImage != null) {
-                            setState(() {
-                              newProfileImage = pickedImage;
-                            });
+                            EasyLoading.show(status: 'Uploading...');
+
+                            // Upload the image to Firebase Storage
+                            try {
+                              // Upload the image to Firebase Storage
+                              final ref = FirebaseStorage.instance
+                                  .ref()
+                                  .child('profile_pictures')
+                                  .child(
+                                      '${user!.uid}${path.extension(newProfileImage!.path)}');
+
+                              await ref.putFile(File(pickedImage.path));
+
+                              // Get the URL of the uploaded image
+                              final url = await ref.getDownloadURL();
+
+                              // Update the user's photoURL with the URL of the uploaded image
+                              await FirebaseAuth.instance.currentUser!
+                                  .updatePhotoURL(url);
+
+                              EasyLoading.dismiss();
+                              Get.snackbar(
+                                  'Success', 'Image uploaded successfully.');
+                              setState(() {
+                                newProfileImage = pickedImage;
+                              });
+                            } catch (e) {
+                              EasyLoading.dismiss();
+                              Get.snackbar('Error', 'Failed to upload image.');
+                            }
                           }
                         },
                         icon: Icon(
@@ -163,8 +197,7 @@ class SettingsPageState extends State<SettingsPage> {
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 (userType == 'Parent')
-                    ? // Replace userType with your actual user type variable
-                    Wrap(
+                    ? Wrap(
                         spacing: 8.0, // gap between adjacent chips
                         runSpacing: 4.0, // gap between lines
                         children: (userTags as List<String>)
@@ -181,23 +214,53 @@ class SettingsPageState extends State<SettingsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit,
-                            size: 24,
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black),
+                        onPressed: () async {
+                          final result = await showDialog<List<String>>(
+                            context: context,
+                            builder: (context) => TagSelectionDialog(
+                              initialTags: userTags!,
+                              availableTags: const [
+                                'ADHD',
+                                'DCD',
+                                'Dyslexia',
+                                'Others'
+                              ],
+                            ),
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              userTags = result;
+                            });
+
+                            // Update the userTags field in Firestore
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user != null) {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(user.uid)
+                                  .update({'userTags': userTags});
+                            }
+                          }
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          size: 24,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                         label: Text(
                           'Edit Needs',
                           style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 16),
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontSize: 16,
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
 
@@ -246,4 +309,68 @@ Widget _buildListTile(
       ),
     ),
   );
+}
+
+class TagSelectionDialog extends StatefulWidget {
+  final List<String> initialTags;
+  final List<String> availableTags;
+
+  const TagSelectionDialog({
+    super.key,
+    required this.initialTags,
+    required this.availableTags,
+  });
+
+  @override
+  TagSelectionDialogState createState() => TagSelectionDialogState();
+}
+
+class TagSelectionDialogState extends State<TagSelectionDialog> {
+  late List<String> selectedTags;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTags = widget.initialTags;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Tags'),
+      content: Wrap(
+        spacing: 8.0,
+        runSpacing: 4.0,
+        children: widget.availableTags.map((tag) {
+          return FilterChip(
+            label: Text(tag),
+            selected: selectedTags.contains(tag),
+            onSelected: (isSelected) {
+              setState(() {
+                if (isSelected) {
+                  selectedTags.add(tag);
+                } else {
+                  selectedTags.remove(tag);
+                }
+              });
+            },
+          );
+        }).toList(),
+      ),
+      actions: [
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop(selectedTags);
+          },
+        ),
+      ],
+    );
+  }
 }

@@ -380,37 +380,25 @@ class RegisterState extends State<RegisterPage> {
                                               if (!context.mounted) return;
                                               if (userCode ==
                                                   'SUCCESSFUL_SIR') {
-                                                print(
-                                                    'User registered. $userCode');
                                                 _showVerificationDialog(
                                                     context);
                                               } else if (userCode ==
                                                   'email-already-in-use') {
-                                                print(
-                                                    'Failed to register. $userCode');
                                                 _showErrorDialog(context,
                                                     'The email address is already registered.');
                                               } else if (userCode ==
                                                   'invalid-email') {
-                                                print(
-                                                    'Failed to register. $userCode');
                                                 _showErrorDialog(context,
                                                     'The email address is invalid. Kindly check again and retry.');
                                               } else if (userCode ==
                                                   'operation-not-allowed') {
-                                                print(
-                                                    'Failed to register. $userCode');
                                                 _showErrorDialog(context,
                                                     'Something went wrong in server-side. Please contact developer.');
                                               } else if (userCode ==
                                                   'weak-password') {
-                                                print(
-                                                    'Failed to register. $userCode');
                                                 _showErrorDialog(context,
                                                     'Your password is considered weak. Kindly check again and retry.');
                                               } else {
-                                                print(
-                                                    'Failed to register. $userCode');
                                                 _showErrorDialog(context,
                                                     'Something went wrong, please check your internet or contact developer.');
                                               }

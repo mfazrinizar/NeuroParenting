@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:neuroparenting/src/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'src/pages/onboarding/onboarding_screen.dart';
 import 'src/localization/app_localizations_delegate.dart';
@@ -55,7 +57,9 @@ class MyAppState extends State<MyApp> {
       themeMode: _themeMode,
       locale: Locale(_locale, ''),
       builder: EasyLoading.init(),
-      home: const OnboardingScreen(),
+      home: FirebaseAuth.instance.currentUser != null
+          ? const HomePage()
+          : const OnboardingScreen(),
       localizationsDelegates: const [
         AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

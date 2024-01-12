@@ -183,7 +183,6 @@ class LoginState extends State<LoginPage> {
                                   // Check the result
                                   if (result['status'] == 'success') {
                                     // If the login was successful, navigate to HomePage
-                                    print(result);
                                     Get.offAll(() => const HomePage());
                                   } else {
                                     // If there was an error, show a message to the user

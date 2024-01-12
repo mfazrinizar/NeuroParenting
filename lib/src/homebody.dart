@@ -159,7 +159,6 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
           } else {
             Get.to(() => const UnderConstructionPage());
           }
-          print(title);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

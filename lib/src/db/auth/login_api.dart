@@ -37,7 +37,6 @@ class LoginApi {
         'message': 'SUCCESSFUL_SIR',
       };
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       // Return the error code
       if (e.code == 'wrong-password' ||
           e.code == 'invalid-email' ||
