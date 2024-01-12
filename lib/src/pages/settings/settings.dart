@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,11 +10,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/auth/logout.dart';
+import 'package:neuroparenting/src/pages/settings/change_name.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:path/path.dart' as path;
+import 'package:flutter/services.dart';
 
 import '../onboarding/onboarding_screen.dart';
+import 'change_email.dart';
 import 'change_password.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -62,37 +67,6 @@ class SettingsPageState extends State<SettingsPage> {
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
   String userType = 'Parent'; // Psychologist
-  final tilesData = [
-    {
-      'icon': Icons.person,
-      'title': 'Change Name',
-      'onTap': () {/* Handle change name */}
-    },
-    {
-      'icon': Icons.email,
-      'title': 'Change Email',
-      'onTap': () {/* Handle change name */}
-    },
-    {
-      'icon': Icons.lock,
-      'title': 'Change Password',
-      'onTap': () {
-        Get.to(() => const ChangePasswordPage());
-      }
-    },
-    {
-      'icon': Icons.exit_to_app,
-      'title': 'Exit App',
-      'onTap': () {/* Handle exit app */}
-    },
-    {
-      'icon': Icons.logout,
-      'title': 'Logout',
-      'onTap': () {
-        Get.offAll(() => const OnboardingScreen());
-      }
-    },
-  ];
 
   @override
   void initState() {
@@ -103,6 +77,66 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(context) {
+    final tilesData = [
+      {
+        'icon': Icons.person,
+        'title': 'Change Name',
+        'onTap': () {
+          Get.to(() => const ChangeNamePage());
+        }
+      },
+      {
+        'icon': Icons.email,
+        'title': 'Change Email',
+        'onTap': () {
+          Get.to(() => const ChangeEmailPage());
+        }
+      },
+      {
+        'icon': Icons.lock,
+        'title': 'Change Password',
+        'onTap': () {
+          Get.to(() => const ChangePasswordPage());
+        }
+      },
+      {
+        'icon': Icons.exit_to_app,
+        'title': 'Exit App',
+        'onTap': () {
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.question,
+            headerAnimationLoop: false,
+            animType: AnimType.bottomSlide,
+            title: 'Exit App',
+            desc: 'Are you sure you want to exit the app?',
+            btnCancelOnPress: () {},
+            btnOkOnPress: () {
+              SystemNavigator.pop();
+            },
+          ).show();
+        }
+      },
+      {
+        'icon': Icons.logout,
+        'title': 'Logout',
+        'onTap': () async {
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.question,
+            headerAnimationLoop: false,
+            animType: AnimType.bottomSlide,
+            title: 'Logout',
+            desc: 'Are you sure you want to logout?',
+            btnCancelOnPress: () {},
+            btnOkOnPress: () async {
+              await LogoutAPI().logout();
+              Get.offAll(() => const OnboardingScreen());
+            },
+          ).show();
+        }
+      },
+    ];
     return FutureBuilder<DocumentSnapshot>(
       future: getUserData(),
       builder:
@@ -337,7 +371,7 @@ class TagSelectionDialogState extends State<TagSelectionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select Tags'),
+      title: const Text('Select Need(s)'),
       content: Wrap(
         spacing: 8.0,
         runSpacing: 4.0,

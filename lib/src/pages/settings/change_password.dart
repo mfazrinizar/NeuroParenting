@@ -16,6 +16,7 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class ChangePasswordState extends State<ChangePasswordPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController newRePasswordController = TextEditingController();
@@ -37,7 +38,8 @@ class ChangePasswordState extends State<ChangePasswordPage> {
         leading: const BackButton(
           color: Colors.white,
         ),
-        title: const Text('Login', style: TextStyle(color: Colors.white)),
+        title: const Text('Change Password',
+            style: TextStyle(color: Colors.white)),
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -98,135 +100,139 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: height * 0.05,
-                          ),
-                          const Text('Please Fill the Form',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: oldPasswordController,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'Current Password',
-                                  prefixIcon: const Icon(Icons.lock,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        oldPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        oldPasswordVisible =
-                                            !oldPasswordVisible;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                obscureText: !oldPasswordVisible,
-                              );
-                            },
-                          ),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: newRePasswordController,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'New Password',
-                                  prefixIcon: const Icon(Icons.password,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        newPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        newPasswordVisible =
-                                            !newPasswordVisible;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                obscureText: !newPasswordVisible,
-                              );
-                            },
-                          ),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: newPasswordController,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'Re-enter New Password',
-                                  prefixIcon: const Icon(Icons.restart_alt,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        newRePasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        newRePasswordVisible =
-                                            !newRePasswordVisible;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                obscureText: !newRePasswordVisible,
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: height * 0.1,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.grey,
-                              elevation: 5,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: height * 0.05,
                             ),
-                            onPressed: () => Get.offAll(() => const HomePage()),
-                            child: const Text('  Change Password  ',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
+                            const Text('Please Fill the Form',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                )),
+                            StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return TextFormField(
+                                  controller: oldPasswordController,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: '********',
+                                    labelText: 'Current Password',
+                                    prefixIcon: const Icon(Icons.lock,
+                                        color: Colors.black),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                          // Based on passwordVisible state choose the icon
+                                          oldPasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        // Update the state i.e. toggle the state of passwordVisible variable
+                                        setState(() {
+                                          oldPasswordVisible =
+                                              !oldPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  obscureText: !oldPasswordVisible,
+                                );
+                              },
+                            ),
+                            StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return TextFormField(
+                                  controller: newRePasswordController,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: '********',
+                                    labelText: 'New Password',
+                                    prefixIcon: const Icon(Icons.password,
+                                        color: Colors.black),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                          // Based on passwordVisible state choose the icon
+                                          newPasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        // Update the state i.e. toggle the state of passwordVisible variable
+                                        setState(() {
+                                          newPasswordVisible =
+                                              !newPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  obscureText: !newPasswordVisible,
+                                );
+                              },
+                            ),
+                            StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return TextFormField(
+                                  controller: newPasswordController,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: '********',
+                                    labelText: 'Re-enter New Password',
+                                    prefixIcon: const Icon(Icons.restart_alt,
+                                        color: Colors.black),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                          // Based on passwordVisible state choose the icon
+                                          newRePasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        // Update the state i.e. toggle the state of passwordVisible variable
+                                        setState(() {
+                                          newRePasswordVisible =
+                                              !newRePasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  obscureText: !newRePasswordVisible,
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: height * 0.1,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shadowColor: Colors.grey,
+                                elevation: 5,
+                              ),
+                              onPressed: () =>
+                                  Get.offAll(() => const HomePage()),
+                              child: const Text('  Change Password  ',
+                                  style: TextStyle(fontSize: 20)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -9,14 +9,14 @@ import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
-class ChangeNamePage extends StatefulWidget {
-  const ChangeNamePage({super.key});
+class ChangeEmailPage extends StatefulWidget {
+  const ChangeEmailPage({super.key});
 
   @override
-  ChangeNameState createState() => ChangeNameState();
+  ChangeEmailState createState() => ChangeEmailState();
 }
 
-class ChangeNameState extends State<ChangeNamePage> {
+class ChangeEmailState extends State<ChangeEmailPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   bool isDarkMode = Get.isDarkMode;
@@ -35,7 +35,8 @@ class ChangeNameState extends State<ChangeNamePage> {
           color: Colors.white,
           onPressed: () => Get.offAll(() => const HomePage()),
         ),
-        title: const Text('Change Name', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Change Email', style: TextStyle(color: Colors.white)),
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -116,8 +117,8 @@ class ChangeNameState extends State<ChangeNamePage> {
                                   color: Colors
                                       .black, // Change this to your desired color
                                 ),
-                                hintText: 'Sucipto Hiu',
-                                labelText: 'New Name',
+                                hintText: 'email@email.com',
+                                labelText: 'New Email',
                                 prefixIcon:
                                     Icon(Icons.email, color: Colors.black),
                               ),
