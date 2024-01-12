@@ -29,7 +29,8 @@ class UnderConstructionState extends State<UnderConstructionPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: BackButton(
-            color: Colors.white, onPressed: () => Get.offAll(const HomePage())),
+            color: Colors.white,
+            onPressed: () => Get.offAll(() => const HomePage())),
         title: const Text('Under Construction',
             style: TextStyle(color: Colors.white)),
         actions: [
@@ -71,12 +72,12 @@ class UnderConstructionState extends State<UnderConstructionPage> {
                   isDarkMode
                       ? 'assets/images/under_construction_dark.svg'
                       : 'assets/images/under_construction_light.svg',
-                  width: width * 0.75,
+                  width: width * 1,
                   fit: BoxFit.fill,
                 ),
               ),
               Positioned(
-                top: height * 0.25,
+                top: height * 0.4,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -100,7 +101,6 @@ class UnderConstructionState extends State<UnderConstructionPage> {
                           const Text('Due to time limitation...',
                               style: TextStyle(
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               )),
                           SizedBox(

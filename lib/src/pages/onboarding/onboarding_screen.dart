@@ -97,7 +97,7 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                         'problem',
                   ),
                   onPressed: () {
-                    Get.to(const StartPage());
+                    Get.to(() => const StartPage());
                   },
                 ),
                 Row(

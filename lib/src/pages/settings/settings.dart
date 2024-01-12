@@ -57,7 +57,7 @@ class SettingsPageState extends State<SettingsPage> {
       'icon': Icons.lock,
       'title': 'Change Password',
       'onTap': () {
-        Get.to(const ChangePasswordPage());
+        Get.to(() => const ChangePasswordPage());
       }
     },
     {
