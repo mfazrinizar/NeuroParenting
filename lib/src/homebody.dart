@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
+import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
 
 class HomePageBody extends StatefulWidget {
   final double height;
@@ -155,6 +156,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
             );
             // Navigate to ArticleContentPage with the dummy ArticleOverview instance
             Get.to(() => ArticleContentPage(articleOverview));
+          } else {
+            Get.to(() => const UnderConstructionPage());
           }
           print(title);
         },
