@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,6 +54,7 @@ class MyAppState extends State<MyApp> {
       darkTheme: ThemeClass.darkTheme,
       themeMode: _themeMode,
       locale: Locale(_locale, ''),
+      builder: EasyLoading.init(),
       home: const OnboardingScreen(),
       localizationsDelegates: const [
         AppLocalizationsDelegate(),

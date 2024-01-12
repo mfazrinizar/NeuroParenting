@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/pages/auth/login.dart';
@@ -13,6 +15,7 @@ import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 
+import '../../db/auth/register_api.dart';
 import 'parent_selection.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -191,7 +194,7 @@ class RegisterState extends State<RegisterPage> {
                             }).toList(), // Highlight color when pressed
                           ),
                           TextFormField(
-                            controller: emailController,
+                            controller: nameController,
                             decoration: const InputDecoration(
                               labelStyle: TextStyle(
                                 color: Colors
@@ -310,29 +313,69 @@ class RegisterState extends State<RegisterPage> {
                                 desc:
                                     'Make sure you have selected the correct user type (psychologist or user).',
                                 btnCancelOnPress: () {},
-                                btnOkOnPress: () {
-                                  isSelected[1]
-                                      ? Get.offAll(
-                                          () => const ParentSelectionPage())
-                                      : AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          keyboardAware: true,
-                                          dismissOnBackKeyPress: false,
-                                          dialogType: DialogType.info,
-                                          animType: AnimType.scale,
-                                          transitionAnimationDuration:
-                                              const Duration(
-                                                  milliseconds:
-                                                      200), // Duration(milliseconds: 300),
-                                          btnOkText: "Login",
-                                          title: 'Verify Your Email',
-                                          desc:
-                                              'Please check your email, then click the verification link to finish the registration process and be able to login your account.',
-                                          btnOkOnPress: () {
-                                            Get.offAll(() => const LoginPage());
-                                          },
-                                        ).show();
+                                btnOkOnPress: () async {
+                                  if (isSelected[1]) {
+                                    Get.offAll(
+                                        () => const ParentSelectionPage());
+                                  } else {
+                                    EasyLoading.show(
+                                        status: 'Checking email...');
+                                    QuerySnapshot query =
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .where('email',
+                                                isEqualTo: emailController.text)
+                                            .get();
+                                    EasyLoading.dismiss();
+                                    if (query.docs.isEmpty) {
+                                      EasyLoading.show(
+                                          status: 'Registering...');
+                                      String userCode =
+                                          await RegisterApi().registerUser(
+                                        profilePictureImage: profileImage!,
+                                        userType: choices[isSelected.indexWhere(
+                                                (item) => item == true)]
+                                            .trim(),
+                                        nameOfUser: nameController.text,
+                                        userEmail: emailController.text,
+                                        userPassword: passwordController.text,
+                                      );
+
+                                      EasyLoading.dismiss();
+
+                                      if (!context.mounted) return;
+                                      if (userCode == 'SUCCESSFUL_SIR') {
+                                        print('User registered. $userCode');
+                                        _showVerificationDialog(context);
+                                      } else if (userCode ==
+                                          'email-already-in-use') {
+                                        print('Failed to register. $userCode');
+                                        _showErrorDialog(context,
+                                            'The email address is already registered.');
+                                      } else if (userCode == 'invalid-email') {
+                                        print('Failed to register. $userCode');
+                                        _showErrorDialog(context,
+                                            'The email address is invalid. Kindly check again and retry.');
+                                      } else if (userCode ==
+                                          'operation-not-allowed') {
+                                        print('Failed to register. $userCode');
+                                        _showErrorDialog(context,
+                                            'Something went wrong in server-side. Please contact developer.');
+                                      } else if (userCode == 'weak-password') {
+                                        print('Failed to register. $userCode');
+                                        _showErrorDialog(context,
+                                            'Your password is considered weak. Kindly check again and retry.');
+                                      } else {
+                                        print('Failed to register. $userCode');
+                                        _showErrorDialog(context,
+                                            'Something went wrong, please check your internet or contact developer.');
+                                      }
+                                    } else {
+                                      if (!context.mounted) return;
+                                      _showErrorDialog(context,
+                                          'This email is already registered.');
+                                    }
+                                  }
                                 },
                               ).show();
                             },
@@ -354,4 +397,41 @@ class RegisterState extends State<RegisterPage> {
       ]),
     );
   }
+}
+
+void _showVerificationDialog(BuildContext context) {
+  AwesomeDialog(
+    dismissOnTouchOutside: false,
+    context: context,
+    keyboardAware: true,
+    dismissOnBackKeyPress: false,
+    dialogType: DialogType.info,
+    animType: AnimType.scale,
+    transitionAnimationDuration: const Duration(milliseconds: 200),
+    btnOkText: "Login",
+    title: 'Verify Your Email',
+    desc:
+        'Please check your email, then click the verification link to finish the registration process and be able to login your account.',
+    btnOkOnPress: () {
+      Get.offAll(() => const LoginPage());
+    },
+  ).show();
+}
+
+void _showErrorDialog(BuildContext context, String errorMessage) {
+  AwesomeDialog(
+    dismissOnTouchOutside: false,
+    context: context,
+    keyboardAware: true,
+    dismissOnBackKeyPress: false,
+    dialogType: DialogType.error,
+    animType: AnimType.scale,
+    transitionAnimationDuration: const Duration(milliseconds: 200),
+    btnOkText: "Ok",
+    title: 'Error Occured',
+    desc: errorMessage,
+    btnOkOnPress: () {
+      DismissType.btnOk;
+    },
+  ).show();
 }

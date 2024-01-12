@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # See https://www.dartlang.org/guides/libraries/private-files
 
 # Files and directories created by pub
@@ -14,7 +14,7 @@ doc/api/
 
 # dotenv environment variables file
 .env*
-
+README.md
 # Avoid committing generated Javascript files:
 *.dart.js
 *.info.json      # Produced by the --dump-info flag.
@@ -66,8 +66,8 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
->>>>>>> ef25980 (First commit (onboarding))
