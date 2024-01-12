@@ -1,9 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/auth/login_api.dart';
 import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/form_validator.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
@@ -18,6 +21,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isDarkMode = Get.isDarkMode, passwordVisible = false;
@@ -96,87 +100,129 @@ class LoginState extends State<LoginPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: height * 0.05,
-                          ),
-                          const Text('Please Fill the Form',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
-                          TextFormField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(
-                                color: Colors
-                                    .black, // Change this to your desired color
-                              ),
-                              hintText: 'email@name.domain',
-                              labelText: 'Email',
-                              prefixIcon:
-                                  Icon(Icons.email, color: Colors.black),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: height * 0.05,
                             ),
-                          ),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: passwordController,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'Password',
-                                  prefixIcon: const Icon(Icons.lock,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        passwordVisible = !passwordVisible;
-                                      });
-                                    },
-                                  ),
+                            const Text('Please Fill the Form',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                )),
+                            TextFormField(
+                              controller: emailController,
+                              validator: FormValidator.validateEmail,
+                              decoration: const InputDecoration(
+                                labelStyle: TextStyle(
+                                  color: Colors
+                                      .black, // Change this to your desired color
                                 ),
-                                obscureText: !passwordVisible,
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: height * 0.1,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.grey,
-                              elevation: 5,
+                                hintText: 'email@name.domain',
+                                labelText: 'Email',
+                                prefixIcon:
+                                    Icon(Icons.email, color: Colors.black),
+                              ),
                             ),
-                            onPressed: () => Get.offAll(() => const HomePage()),
-                            child: const Text('  Login  ',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                Get.offAll(() => const ForgotPage()),
-                            child: const Text('Forgot password?'),
-                          ),
-                        ],
+                            StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return TextFormField(
+                                  controller: passwordController,
+                                  validator: FormValidator.validatePassword,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: '********',
+                                    labelText: 'Password',
+                                    prefixIcon: const Icon(Icons.lock,
+                                        color: Colors.black),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                          // Based on passwordVisible state choose the icon
+                                          passwordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        // Update the state i.e. toggle the state of passwordVisible variable
+                                        setState(() {
+                                          passwordVisible = !passwordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  obscureText: !passwordVisible,
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: height * 0.1,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shadowColor: Colors.grey,
+                                elevation: 5,
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  // Call loginUser from LoginApi
+                                  LoginApi loginApi = LoginApi();
+                                  Map<String, dynamic> result =
+                                      await loginApi.loginUser(
+                                    userEmail: emailController.text,
+                                    userPassword: passwordController.text,
+                                  );
+
+                                  // Check the result
+                                  if (result['status'] == 'success') {
+                                    // If the login was successful, navigate to HomePage
+                                    print(result);
+                                    Get.offAll(() => const HomePage());
+                                  } else {
+                                    // If there was an error, show a message to the user
+                                    if (!context.mounted) return;
+                                    AwesomeDialog(
+                                      dismissOnTouchOutside: false,
+                                      context: context,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Ok",
+                                      title: 'Error Occured',
+                                      desc: result['message'],
+                                      btnOkOnPress: () {
+                                        DismissType.btnOk;
+                                      },
+                                    ).show();
+                                    // Get.snackbar('Error: ', result['message']);
+                                  }
+                                }
+                              },
+                              child: const Text('  Login  ',
+                                  style: TextStyle(fontSize: 20)),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  Get.offAll(() => const ForgotPage()),
+                              child: const Text('Forgot password?'),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -194,222 +194,248 @@ class RegisterState extends State<RegisterPage> {
                                       fontSize: 20));
                             }).toList(), // Highlight color when pressed
                           ),
-                          TextFormField(
-                            controller: nameController,
+                          Form(
                             key: _formKey,
-                            validator: FormValidator.validateName,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(
-                                color: Colors
-                                    .black, // Change this to your desired color
-                              ),
-                              hintText: 'Raihan Wangsaff',
-                              labelText: 'Name',
-                              prefixIcon:
-                                  Icon(Icons.people, color: Colors.black),
-                            ),
-                          ),
-                          TextFormField(
-                            controller: emailController,
-                            key: _formKey,
-                            validator: FormValidator.validateEmail,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(
-                                color: Colors
-                                    .black, // Change this to your desired color
-                              ),
-                              hintText: 'email@name.domain',
-                              labelText: 'Email',
-                              prefixIcon:
-                                  Icon(Icons.email, color: Colors.black),
-                            ),
-                          ),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: passwordController,
-                                key: _formKey,
-                                validator: FormValidator.validatePassword,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'Password',
-                                  prefixIcon: const Icon(Icons.lock,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        passwordVisible = !passwordVisible;
-                                      });
-                                    },
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: nameController,
+                                  validator: FormValidator.validateName,
+                                  decoration: const InputDecoration(
+                                    labelStyle: TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: 'Raihan Wangsaff',
+                                    labelText: 'Name',
+                                    prefixIcon:
+                                        Icon(Icons.people, color: Colors.black),
                                   ),
                                 ),
-                                obscureText: !passwordVisible,
-                              );
-                            },
-                          ),
-                          StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return TextFormField(
-                                controller: rePasswordController,
-                                key: _formKey,
-                                validator: (value) =>
-                                    FormValidator.validateRePassword(
-                                        passwordController.text,
-                                        rePasswordController.text),
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  labelStyle: const TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
-                                  ),
-                                  hintText: '********',
-                                  labelText: 'Re-enter Password',
-                                  prefixIcon: const Icon(Icons.password,
-                                      color: Colors.black),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                        // Based on passwordVisible state choose the icon
-                                        rePasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.black),
-                                    onPressed: () {
-                                      // Update the state i.e. toggle the state of passwordVisible variable
-                                      setState(() {
-                                        rePasswordVisible = !rePasswordVisible;
-                                      });
-                                    },
+                                TextFormField(
+                                  controller: emailController,
+                                  validator: FormValidator.validateEmail,
+                                  decoration: const InputDecoration(
+                                    labelStyle: TextStyle(
+                                      color: Colors
+                                          .black, // Change this to your desired color
+                                    ),
+                                    hintText: 'email@name.domain',
+                                    labelText: 'Email',
+                                    prefixIcon:
+                                        Icon(Icons.email, color: Colors.black),
                                   ),
                                 ),
-                                obscureText: !rePasswordVisible,
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.grey,
-                              elevation: 5,
-                            ),
-                            onPressed: () {
-                              AwesomeDialog(
-                                context: context,
-                                keyboardAware: true,
-                                dismissOnBackKeyPress: false,
-                                dialogType: DialogType.question,
-                                animType: AnimType.scale,
-                                transitionAnimationDuration: const Duration(
-                                    milliseconds:
-                                        200), // Duration(milliseconds: 300),
-                                btnCancelText: "Cancel",
-                                btnOkText: "Confirm",
-                                btnOkColor: ThemeClass().lightPrimaryColor,
-                                title: 'Is the data correct?',
-                                // padding: const EdgeInsets.all(5.0),
-                                desc:
-                                    'Make sure you have selected the correct user type (psychologist or user).',
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () async {
-                                  if (profileImage != null &&
-                                      _formKey.currentState!.validate()) {
-                                    if (isSelected[1]) {
-                                      Get.offAll(
-                                        () => ParentSelectionPage(
-                                          profileImage: profileImage!,
-                                          nameOfUser: nameController.text,
-                                          userEmail: emailController.text,
-                                          userPassword: passwordController.text,
+                                StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setState) {
+                                    return TextFormField(
+                                      controller: passwordController,
+                                      validator: FormValidator.validatePassword,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                      decoration: InputDecoration(
+                                        labelStyle: const TextStyle(
+                                          color: Colors
+                                              .black, // Change this to your desired color
                                         ),
-                                      );
-                                    } else {
-                                      // EasyLoading.show(
-                                      //     status: 'Checking email...');
-                                      // QuerySnapshot query =
-                                      //     await FirebaseFirestore.instance
-                                      //         .collection('users')
-                                      //         .where('email',
-                                      //             isEqualTo:
-                                      //                 emailController.text)
-                                      //         .get();
-                                      // EasyLoading.dismiss();
+                                        hintText: '********',
+                                        labelText: 'Password',
+                                        prefixIcon: const Icon(Icons.lock,
+                                            color: Colors.black),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                              // Based on passwordVisible state choose the icon
+                                              passwordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Colors.black),
+                                          onPressed: () {
+                                            // Update the state i.e. toggle the state of passwordVisible variable
+                                            setState(() {
+                                              passwordVisible =
+                                                  !passwordVisible;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      obscureText: !passwordVisible,
+                                    );
+                                  },
+                                ),
+                                StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setState) {
+                                    return TextFormField(
+                                      controller: rePasswordController,
+                                      validator: (value) =>
+                                          FormValidator.validateRePassword(
+                                              passwordController.text,
+                                              rePasswordController.text),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                      decoration: InputDecoration(
+                                        labelStyle: const TextStyle(
+                                          color: Colors
+                                              .black, // Change this to your desired color
+                                        ),
+                                        hintText: '********',
+                                        labelText: 'Re-enter Password',
+                                        prefixIcon: const Icon(Icons.password,
+                                            color: Colors.black),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                              // Based on passwordVisible state choose the icon
+                                              rePasswordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Colors.black),
+                                          onPressed: () {
+                                            // Update the state i.e. toggle the state of passwordVisible variable
+                                            setState(() {
+                                              rePasswordVisible =
+                                                  !rePasswordVisible;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      obscureText: !rePasswordVisible,
+                                    );
+                                  },
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shadowColor: Colors.grey,
+                                    elevation: 5,
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      AwesomeDialog(
+                                        context: context,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.question,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration: const Duration(
+                                            milliseconds:
+                                                200), // Duration(milliseconds: 300),
+                                        btnCancelText: "Cancel",
+                                        btnOkText: "Confirm",
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
+                                        title: 'Is the data correct?',
+                                        // padding: const EdgeInsets.all(5.0),
+                                        desc:
+                                            'Make sure you have selected the correct user type (psychologist or user).',
+                                        btnCancelOnPress: () {},
+                                        btnOkOnPress: () async {
+                                          if (profileImage != null) {
+                                            if (isSelected[1]) {
+                                              Get.offAll(
+                                                () => ParentSelectionPage(
+                                                  profileImage: profileImage!,
+                                                  nameOfUser:
+                                                      nameController.text,
+                                                  userEmail:
+                                                      emailController.text,
+                                                  userPassword:
+                                                      passwordController.text,
+                                                ),
+                                              );
+                                            } else {
+                                              // EasyLoading.show(
+                                              //     status: 'Checking email...');
+                                              // QuerySnapshot query =
+                                              //     await FirebaseFirestore.instance
+                                              //         .collection('users')
+                                              //         .where('email',
+                                              //             isEqualTo:
+                                              //                 emailController.text)
+                                              //         .get();
+                                              // EasyLoading.dismiss();
 
-                                      // if (query.docs.isEmpty) {
-                                      EasyLoading.show(
-                                          status: 'Registering...');
-                                      String userCode =
-                                          await RegisterApi().registerUser(
-                                        profilePictureImage: profileImage!,
-                                        userType: choices[isSelected.indexWhere(
-                                                (item) => item == true)]
-                                            .trim(),
-                                        nameOfUser: nameController.text,
-                                        userEmail: emailController.text,
-                                        userPassword: passwordController.text,
-                                      );
+                                              // if (query.docs.isEmpty) {
+                                              EasyLoading.show(
+                                                  status: 'Registering...');
+                                              String userCode =
+                                                  await RegisterApi()
+                                                      .registerUser(
+                                                profilePictureImage:
+                                                    profileImage!,
+                                                userType: choices[isSelected
+                                                        .indexWhere((item) =>
+                                                            item == true)]
+                                                    .trim(),
+                                                nameOfUser: nameController.text,
+                                                userEmail: emailController.text,
+                                                userPassword:
+                                                    passwordController.text,
+                                              );
 
-                                      EasyLoading.dismiss();
+                                              EasyLoading.dismiss();
 
-                                      if (!context.mounted) return;
-                                      if (userCode == 'SUCCESSFUL_SIR') {
-                                        print('User registered. $userCode');
-                                        _showVerificationDialog(context);
-                                      } else if (userCode ==
-                                          'email-already-in-use') {
-                                        print('Failed to register. $userCode');
-                                        _showErrorDialog(context,
-                                            'The email address is already registered.');
-                                      } else if (userCode == 'invalid-email') {
-                                        print('Failed to register. $userCode');
-                                        _showErrorDialog(context,
-                                            'The email address is invalid. Kindly check again and retry.');
-                                      } else if (userCode ==
-                                          'operation-not-allowed') {
-                                        print('Failed to register. $userCode');
-                                        _showErrorDialog(context,
-                                            'Something went wrong in server-side. Please contact developer.');
-                                      } else if (userCode == 'weak-password') {
-                                        print('Failed to register. $userCode');
-                                        _showErrorDialog(context,
-                                            'Your password is considered weak. Kindly check again and retry.');
-                                      } else {
-                                        print('Failed to register. $userCode');
-                                        _showErrorDialog(context,
-                                            'Something went wrong, please check your internet or contact developer.');
-                                      }
-                                      // } else {
-                                      //   if (!context.mounted) return;
-                                      //   _showErrorDialog(context,
-                                      //       'This email is already registered.');
-                                      // }
+                                              if (!context.mounted) return;
+                                              if (userCode ==
+                                                  'SUCCESSFUL_SIR') {
+                                                print(
+                                                    'User registered. $userCode');
+                                                _showVerificationDialog(
+                                                    context);
+                                              } else if (userCode ==
+                                                  'email-already-in-use') {
+                                                print(
+                                                    'Failed to register. $userCode');
+                                                _showErrorDialog(context,
+                                                    'The email address is already registered.');
+                                              } else if (userCode ==
+                                                  'invalid-email') {
+                                                print(
+                                                    'Failed to register. $userCode');
+                                                _showErrorDialog(context,
+                                                    'The email address is invalid. Kindly check again and retry.');
+                                              } else if (userCode ==
+                                                  'operation-not-allowed') {
+                                                print(
+                                                    'Failed to register. $userCode');
+                                                _showErrorDialog(context,
+                                                    'Something went wrong in server-side. Please contact developer.');
+                                              } else if (userCode ==
+                                                  'weak-password') {
+                                                print(
+                                                    'Failed to register. $userCode');
+                                                _showErrorDialog(context,
+                                                    'Your password is considered weak. Kindly check again and retry.');
+                                              } else {
+                                                print(
+                                                    'Failed to register. $userCode');
+                                                _showErrorDialog(context,
+                                                    'Something went wrong, please check your internet or contact developer.');
+                                              }
+                                              // } else {
+                                              //   if (!context.mounted) return;
+                                              //   _showErrorDialog(context,
+                                              //       'This email is already registered.');
+                                              // }
+                                            }
+                                          } else {
+                                            _showErrorDialog(context,
+                                                'Please upload/fill all the forms before clicking Register button.');
+                                          }
+                                        },
+                                      ).show();
                                     }
-                                  } else {
-                                    _showErrorDialog(context,
-                                        'Please upload/fill all the forms before clicking Register button.');
-                                  }
-                                },
-                              ).show();
-                            },
-                            child: const Text('  Register  ',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                          SizedBox(
-                            height: height * 0.01,
+                                  },
+                                  child: const Text('  Register  ',
+                                      style: TextStyle(fontSize: 20)),
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

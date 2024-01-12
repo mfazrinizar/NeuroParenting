@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -150,7 +151,29 @@ class HomePageState extends State<HomePage> {
             }),
             Icon(Icons.notifications,
                 color: isDarkMode ? Colors.black : Colors.white),
-            Icon(Icons.person, color: isDarkMode ? Colors.black : Colors.white),
+            Builder(
+              builder: (BuildContext context) {
+                final user = FirebaseAuth.instance.currentUser;
+                print('$user + ${user?.photoURL}');
+                if (user != null && user.photoURL != null) {
+                  return ClipOval(
+                    child: FadeInImage.assetNetwork(
+                      image: user.photoURL!,
+                      placeholder: 'assets/images/placeholder_loading.gif',
+                      fit: BoxFit.cover,
+                      width: 45,
+                      height: 45,
+                    ),
+                  ); // display the user's profile picture
+                } else {
+                  return Icon(Icons.account_circle,
+                      color: isDarkMode
+                          ? Colors.black
+                          : Colors
+                              .white); // show a default icon if the user is not logged in or doesn't have a profile picture
+                }
+              },
+            ),
           ],
         ),
         bottomNavigationBar: ConvexAppBar(

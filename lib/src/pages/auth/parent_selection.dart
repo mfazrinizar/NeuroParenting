@@ -12,6 +12,8 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
+import 'register.dart';
+
 class ParentSelectionPage extends StatefulWidget {
   final File profileImage;
   final String nameOfUser;
@@ -173,30 +175,40 @@ class ParentSelectionState extends State<ParentSelectionPage> {
                       _showVerificationDialog(context);
                     } else if (userCode == 'email-already-in-use') {
                       print('Failed to register. $userCode');
-                      _showErrorDialog(
-                          context, 'The email address is already registered.');
+                      _showErrorDialog(context,
+                          'The email address is already registered.', true);
                     } else if (userCode == 'invalid-email') {
                       print('Failed to register. $userCode');
-                      _showErrorDialog(context,
-                          'The email address is invalid. Kindly check again and retry.');
+                      _showErrorDialog(
+                          context,
+                          'The email address is invalid. Kindly check again and retry.',
+                          true);
                     } else if (userCode == 'operation-not-allowed') {
                       print('Failed to register. $userCode');
-                      _showErrorDialog(context,
-                          'Something went wrong in server-side. Please contact developer.');
+                      _showErrorDialog(
+                          context,
+                          'Something went wrong in server-side. Please contact developer.',
+                          true);
                     } else if (userCode == 'weak-password') {
                       print('Failed to register. $userCode');
-                      _showErrorDialog(context,
-                          'Your password is considered weak. Kindly check again and retry.');
+                      _showErrorDialog(
+                          context,
+                          'Your password is considered weak. Kindly check again and retry.',
+                          true);
                     } else {
                       print('Failed to register. $userCode');
-                      _showErrorDialog(context,
-                          'Something went wrong, please check your internet or contact developer.');
+                      _showErrorDialog(
+                          context,
+                          'Something went wrong, please check your internet or contact developer.',
+                          true);
                     }
 
                     // Get.offAll(() => const LoginPage());
                   } else {
-                    _showErrorDialog(context,
-                        'Please select at least one of your child\'s need.');
+                    _showErrorDialog(
+                        context,
+                        'Please select at least one of your child\'s need.',
+                        false);
                   }
                 },
                 child: const Text('  Finish  ', style: TextStyle(fontSize: 20)),
@@ -227,7 +239,8 @@ void _showVerificationDialog(BuildContext context) {
   ).show();
 }
 
-void _showErrorDialog(BuildContext context, String errorMessage) {
+void _showErrorDialog(
+    BuildContext context, String errorMessage, bool returnRegister) {
   AwesomeDialog(
     dismissOnTouchOutside: false,
     context: context,
@@ -238,9 +251,11 @@ void _showErrorDialog(BuildContext context, String errorMessage) {
     transitionAnimationDuration: const Duration(milliseconds: 200),
     btnOkText: "Ok",
     title: 'Error Occured',
-    desc: errorMessage,
+    desc: errorMessage + (returnRegister ? 'Return to register page.' : ''),
     btnOkOnPress: () {
-      DismissType.btnOk;
+      returnRegister
+          ? Get.offAll(() => const RegisterPage())
+          : DismissType.btnOk;
     },
   ).show();
 }

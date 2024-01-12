@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginApi {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Map<String, dynamic>> loginUser({
     required String userEmail,
@@ -25,24 +25,37 @@ class LoginApi {
       }
 
       // Get the user type from Firestore
-      DocumentSnapshot userDoc = await _firestore
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
-      String userType = userDoc.get('userType');
+      // DocumentSnapshot userDoc = await _firestore
+      //     .collection('users')
+      //     .doc(userCredential.user!.uid)
+      //     .get();
+      // String userType = userDoc.get('userType');
 
       // Return a success message and the user type
       return {
         'status': 'success',
         'message': 'SUCCESSFUL_SIR',
-        'userType': userType
       };
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       // Return the error code
+      if (e.code == 'wrong-password' ||
+          e.code == 'invalid-email' ||
+          e.code == 'user-not-found') {
+        return {'status': 'error', 'message': 'Wrong email or password.'};
+      } else if (e.code == 'user-disabled') {
+        return {
+          'status': 'error',
+          'message': 'Your account is disabled, please contact developer.'
+        };
+      }
       return {'status': 'error', 'message': e.code};
     } catch (e) {
       // Return a generic error message
-      return {'status': 'error', 'message': 'An error occurred'};
+      return {
+        'status': 'error',
+        'message': 'Check internet connection or contact developer'
+      };
     }
   }
 }
