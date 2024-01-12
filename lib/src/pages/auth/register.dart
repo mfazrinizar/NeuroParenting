@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +8,7 @@ import 'package:neuroparenting/src/pages/auth/login.dart';
 import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/form_validator.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
@@ -26,6 +26,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
   File? profileImage;
   int currentPage = 0;
   final PageController controller = PageController();
@@ -195,6 +196,8 @@ class RegisterState extends State<RegisterPage> {
                           ),
                           TextFormField(
                             controller: nameController,
+                            key: _formKey,
+                            validator: FormValidator.validateName,
                             decoration: const InputDecoration(
                               labelStyle: TextStyle(
                                 color: Colors
@@ -208,6 +211,8 @@ class RegisterState extends State<RegisterPage> {
                           ),
                           TextFormField(
                             controller: emailController,
+                            key: _formKey,
+                            validator: FormValidator.validateEmail,
                             decoration: const InputDecoration(
                               labelStyle: TextStyle(
                                 color: Colors
@@ -224,6 +229,8 @@ class RegisterState extends State<RegisterPage> {
                                 (BuildContext context, StateSetter setState) {
                               return TextFormField(
                                 controller: passwordController,
+                                key: _formKey,
+                                validator: FormValidator.validatePassword,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                   labelStyle: const TextStyle(
@@ -258,6 +265,11 @@ class RegisterState extends State<RegisterPage> {
                                 (BuildContext context, StateSetter setState) {
                               return TextFormField(
                                 controller: rePasswordController,
+                                key: _formKey,
+                                validator: (value) =>
+                                    FormValidator.validateRePassword(
+                                        passwordController.text,
+                                        rePasswordController.text),
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                   labelStyle: const TextStyle(
@@ -314,20 +326,30 @@ class RegisterState extends State<RegisterPage> {
                                     'Make sure you have selected the correct user type (psychologist or user).',
                                 btnCancelOnPress: () {},
                                 btnOkOnPress: () async {
-                                  if (isSelected[1]) {
-                                    Get.offAll(
-                                        () => const ParentSelectionPage());
-                                  } else {
-                                    EasyLoading.show(
-                                        status: 'Checking email...');
-                                    QuerySnapshot query =
-                                        await FirebaseFirestore.instance
-                                            .collection('users')
-                                            .where('email',
-                                                isEqualTo: emailController.text)
-                                            .get();
-                                    EasyLoading.dismiss();
-                                    if (query.docs.isEmpty) {
+                                  if (profileImage != null &&
+                                      _formKey.currentState!.validate()) {
+                                    if (isSelected[1]) {
+                                      Get.offAll(
+                                        () => ParentSelectionPage(
+                                          profileImage: profileImage!,
+                                          nameOfUser: nameController.text,
+                                          userEmail: emailController.text,
+                                          userPassword: passwordController.text,
+                                        ),
+                                      );
+                                    } else {
+                                      // EasyLoading.show(
+                                      //     status: 'Checking email...');
+                                      // QuerySnapshot query =
+                                      //     await FirebaseFirestore.instance
+                                      //         .collection('users')
+                                      //         .where('email',
+                                      //             isEqualTo:
+                                      //                 emailController.text)
+                                      //         .get();
+                                      // EasyLoading.dismiss();
+
+                                      // if (query.docs.isEmpty) {
                                       EasyLoading.show(
                                           status: 'Registering...');
                                       String userCode =
@@ -370,11 +392,15 @@ class RegisterState extends State<RegisterPage> {
                                         _showErrorDialog(context,
                                             'Something went wrong, please check your internet or contact developer.');
                                       }
-                                    } else {
-                                      if (!context.mounted) return;
-                                      _showErrorDialog(context,
-                                          'This email is already registered.');
+                                      // } else {
+                                      //   if (!context.mounted) return;
+                                      //   _showErrorDialog(context,
+                                      //       'This email is already registered.');
+                                      // }
                                     }
+                                  } else {
+                                    _showErrorDialog(context,
+                                        'Please upload/fill all the forms before clicking Register button.');
                                   }
                                 },
                               ).show();

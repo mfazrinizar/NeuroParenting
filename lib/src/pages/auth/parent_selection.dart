@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/auth/register_api.dart';
 import 'package:neuroparenting/src/pages/auth/login.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
@@ -9,7 +13,17 @@ import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
 class ParentSelectionPage extends StatefulWidget {
-  const ParentSelectionPage({super.key});
+  final File profileImage;
+  final String nameOfUser;
+  final String userEmail;
+  final String userPassword;
+
+  const ParentSelectionPage(
+      {super.key,
+      required this.profileImage,
+      required this.nameOfUser,
+      required this.userEmail,
+      required this.userPassword});
 
   @override
   ParentSelectionState createState() => ParentSelectionState();
@@ -139,24 +153,51 @@ class ParentSelectionState extends State<ParentSelectionPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     shadowColor: Colors.grey, elevation: 5),
-                onPressed: () {
-                  AwesomeDialog(
-                    dismissOnTouchOutside: false,
-                    context: context,
-                    keyboardAware: true,
-                    dismissOnBackKeyPress: false,
-                    dialogType: DialogType.info,
-                    animType: AnimType.scale,
-                    transitionAnimationDuration: const Duration(
-                        milliseconds: 200), // Duration(milliseconds: 300),
-                    btnOkText: "Login",
-                    title: 'Verify Your Email',
-                    desc:
-                        'Please check your email, then click the verification link to finish the registration process and be able to login your account.',
-                    btnOkOnPress: () {
-                      Get.offAll(() => const LoginPage());
-                    },
-                  ).show();
+                onPressed: () async {
+                  if (selectedTags.isNotEmpty) {
+                    EasyLoading.show(status: 'Registering...');
+                    String userCode = await RegisterApi().registerUser(
+                      profilePictureImage: widget.profileImage,
+                      userType: 'Parent',
+                      nameOfUser: widget.nameOfUser,
+                      userEmail: widget.userEmail,
+                      userPassword: widget.userPassword,
+                      userTags: selectedTags,
+                    );
+
+                    EasyLoading.dismiss();
+
+                    if (!context.mounted) return;
+                    if (userCode == 'SUCCESSFUL_SIR') {
+                      print('User registered. $userCode');
+                      _showVerificationDialog(context);
+                    } else if (userCode == 'email-already-in-use') {
+                      print('Failed to register. $userCode');
+                      _showErrorDialog(
+                          context, 'The email address is already registered.');
+                    } else if (userCode == 'invalid-email') {
+                      print('Failed to register. $userCode');
+                      _showErrorDialog(context,
+                          'The email address is invalid. Kindly check again and retry.');
+                    } else if (userCode == 'operation-not-allowed') {
+                      print('Failed to register. $userCode');
+                      _showErrorDialog(context,
+                          'Something went wrong in server-side. Please contact developer.');
+                    } else if (userCode == 'weak-password') {
+                      print('Failed to register. $userCode');
+                      _showErrorDialog(context,
+                          'Your password is considered weak. Kindly check again and retry.');
+                    } else {
+                      print('Failed to register. $userCode');
+                      _showErrorDialog(context,
+                          'Something went wrong, please check your internet or contact developer.');
+                    }
+
+                    // Get.offAll(() => const LoginPage());
+                  } else {
+                    _showErrorDialog(context,
+                        'Please select at least one of your child\'s need.');
+                  }
                 },
                 child: const Text('  Finish  ', style: TextStyle(fontSize: 20)),
               ),
@@ -165,4 +206,41 @@ class ParentSelectionState extends State<ParentSelectionPage> {
       ),
     );
   }
+}
+
+void _showVerificationDialog(BuildContext context) {
+  AwesomeDialog(
+    dismissOnTouchOutside: false,
+    context: context,
+    keyboardAware: true,
+    dismissOnBackKeyPress: false,
+    dialogType: DialogType.info,
+    animType: AnimType.scale,
+    transitionAnimationDuration: const Duration(milliseconds: 200),
+    btnOkText: "Login",
+    title: 'Verify Your Email',
+    desc:
+        'Please check your email, then click the verification link to finish the registration process and be able to login your account.',
+    btnOkOnPress: () {
+      Get.offAll(() => const LoginPage());
+    },
+  ).show();
+}
+
+void _showErrorDialog(BuildContext context, String errorMessage) {
+  AwesomeDialog(
+    dismissOnTouchOutside: false,
+    context: context,
+    keyboardAware: true,
+    dismissOnBackKeyPress: false,
+    dialogType: DialogType.error,
+    animType: AnimType.scale,
+    transitionAnimationDuration: const Duration(milliseconds: 200),
+    btnOkText: "Ok",
+    title: 'Error Occured',
+    desc: errorMessage,
+    btnOkOnPress: () {
+      DismissType.btnOk;
+    },
+  ).show();
 }

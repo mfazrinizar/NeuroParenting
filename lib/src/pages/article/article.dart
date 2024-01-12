@@ -1,3 +1,5 @@
+// Dummy, not yet implemented
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +25,6 @@ class ArticleOverview {
   });
 
   static Future<List<ArticleOverview>> getAllFromFirestore() async {
-    // Dummy data, replace this with your actual data fetching logic
     return List.generate(
       5,
       (index) => ArticleOverview(

@@ -1,3 +1,5 @@
+// under_construction.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -36,22 +38,16 @@ class UnderConstructionState extends State<UnderConstructionPage> {
         actions: [
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.transparent
-                  : Colors
-                      .white, // Change this to your desired background color
+              color: isDarkMode ? Colors.transparent : Colors.white,
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(25), // Adjust the radius as needed
+                bottomLeft: Radius.circular(25),
               ),
             ),
             child: const LanguageSwitcher(onPressed: localizationChange),
           ),
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.transparent
-                  : Colors
-                      .white, // Change this to your desired background color
+              color: isDarkMode ? Colors.transparent : Colors.white,
             ),
             child: ThemeSwitcher(onPressed: () {
               setState(() {
@@ -98,20 +94,24 @@ class UnderConstructionState extends State<UnderConstructionPage> {
                           SizedBox(
                             height: height * 0.05,
                           ),
-                          const Text('Due to time limitation...',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                              )),
+                          const Text(
+                            'Due to time limitation...',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
                           SizedBox(
                             height: height * 0.05,
                           ),
-                          const Text('The Feature is Under Construction',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
+                          const Text(
+                            'The Feature is Under Construction',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
                         ],
                       ),
                     ),

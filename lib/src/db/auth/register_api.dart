@@ -47,7 +47,10 @@ class RegisterApi {
       await userCredential.user!.updatePhotoURL(url);
 
       // Create a document in Firestore with the user's ID
-      Map<String, dynamic> userData = {'userType': userType};
+      Map<String, dynamic> userData = {
+        'name': nameOfUser,
+        'userType': userType
+      };
 
       if (userType == 'Parent' && userTags != null) {
         userData['userTags'] = userTags;
@@ -62,7 +65,6 @@ class RegisterApi {
       return 'SUCCESSFUL_SIR';
     } on FirebaseAuthException catch (e) {
       // Return the error code
-      print(e.code);
       return e.code;
     } catch (e) {
       // Return a generic error message
