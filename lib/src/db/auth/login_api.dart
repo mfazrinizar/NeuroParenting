@@ -53,7 +53,7 @@ class LoginApi {
       // Return a generic error message
       return {
         'status': 'error',
-        'message': 'Check internet connection or contact developer'
+        'message': 'Check internet connection or contact developer.'
       };
     }
   }

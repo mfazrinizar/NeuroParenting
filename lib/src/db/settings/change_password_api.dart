@@ -3,21 +3,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ChangePasswordApi {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<Map<String, dynamic>> changePassword(String newPassword) async {
+  Future<Map<String, dynamic>> changePassword(
+      String currentPassword, String newPassword) async {
     try {
       User? currentUser = _auth.currentUser;
 
-      if (currentUser != null) {
-        // Update the password in the user's Firebase Auth profile
+      if (currentUser != null && currentUser.email != null) {
+        AuthCredential currentCredential = EmailAuthProvider.credential(
+            email: currentUser.email!, password: currentPassword);
+
+        // Re-auth to make sure credential
+        await currentUser.reauthenticateWithCredential(currentCredential);
+
+        // Update password to Firebase Auth
         await currentUser.updatePassword(newPassword);
 
         return {
-          'status': 'success',
+          'status': 'SUCCESS_SIR',
           'message': 'Password changed successfully.'
         };
       } else {
         return {
-          'status': 'error',
+          'status': 'NO_USER',
           'message': 'No user is currently signed in.'
         };
       }

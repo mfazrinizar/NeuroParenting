@@ -1,6 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/settings/change_password_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
@@ -226,8 +229,76 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                 shadowColor: Colors.grey,
                                 elevation: 5,
                               ),
-                              onPressed: () =>
-                                  Get.offAll(() => const HomePage()),
+                              onPressed: () async {
+                                if (_formKey.currentState!.mounted) {
+                                  EasyLoading.show(status: 'Changing Password');
+                                  final result = await ChangePasswordApi()
+                                      .changePassword(
+                                          oldPasswordController.text,
+                                          newPasswordController.text);
+                                  EasyLoading.dismiss();
+
+                                  if (!context.mounted) return;
+                                  if (result['status'] == 'SUCCESS_SIR') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Email Changed',
+                                      desc:
+                                          'We\'ve changed your password, please proceed.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  } else if (result['status'] == 'NO_USER') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Error Occured',
+                                      desc:
+                                          'There was an error changing your email, please relogin and try again.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  } else {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Error Occured',
+                                      desc:
+                                          'Please check your password or internet connection and try again.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  }
+                                }
+                              },
                               child: const Text('  Change Password  ',
                                   style: TextStyle(fontSize: 20)),
                             ),

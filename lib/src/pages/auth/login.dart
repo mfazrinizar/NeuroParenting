@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/db/auth/login_api.dart';
@@ -173,12 +174,14 @@ class LoginState extends State<LoginPage> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   // Call loginUser from LoginApi
+                                  EasyLoading.show(status: 'Processing...');
                                   LoginApi loginApi = LoginApi();
                                   Map<String, dynamic> result =
                                       await loginApi.loginUser(
                                     userEmail: emailController.text,
                                     userPassword: passwordController.text,
                                   );
+                                  EasyLoading.dismiss();
 
                                   // Check the result
                                   if (result['status'] == 'success') {

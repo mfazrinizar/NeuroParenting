@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/settings/change_name_api.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
@@ -130,25 +132,56 @@ class ChangeNameState extends State<ChangeNamePage> {
                                 shadowColor: Colors.grey,
                                 elevation: 5,
                               ),
-                              onPressed: () {
-                                AwesomeDialog(
-                                  context: context,
-                                  btnOkColor: ThemeClass().lightPrimaryColor,
-                                  keyboardAware: true,
-                                  dismissOnBackKeyPress: false,
-                                  dialogType: DialogType.info,
-                                  animType: AnimType.scale,
-                                  transitionAnimationDuration: const Duration(
-                                      milliseconds:
-                                          200), // Duration(milliseconds: 300),
-                                  btnOkText: "Back",
-                                  title: 'Name Changed',
-                                  desc:
-                                      'We\'ve changed your name, please proceed.',
-                                  btnOkOnPress: () {
-                                    Get.offAll(() => const HomePage());
-                                  },
-                                ).show();
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  EasyLoading.show(status: 'Changing Name...');
+                                  final result = await ChangeNameApi()
+                                      .changeName(nameController.text);
+                                  EasyLoading.dismiss;
+
+                                  if (!context.mounted) return;
+                                  if (result['status'] == 'success') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.info,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration: const Duration(
+                                          milliseconds:
+                                              200), // Duration(milliseconds: 300),
+                                      btnOkText: "Back",
+                                      title: 'Name Changed',
+                                      desc:
+                                          'We\'ve changed your name, please proceed.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  } else {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration: const Duration(
+                                          milliseconds:
+                                              200), // Duration(milliseconds: 300),
+                                      btnOkText: "Back",
+                                      title: 'Error Occured',
+                                      desc:
+                                          'There was an error changing your name, please try again.',
+                                      btnOkOnPress: () {
+                                        Get.back();
+                                      },
+                                    ).show();
+                                  }
+                                }
                               },
                               child: const Text('   Change   ',
                                   style: TextStyle(fontSize: 20)),

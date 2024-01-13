@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/settings/change_email_api.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
@@ -104,7 +106,7 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                             SizedBox(
                               height: height * 0.05,
                             ),
-                            const Text('Please enter your new name below:',
+                            const Text('Please enter your new email below:',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -131,25 +133,72 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                                 shadowColor: Colors.grey,
                                 elevation: 5,
                               ),
-                              onPressed: () {
-                                AwesomeDialog(
-                                  context: context,
-                                  btnOkColor: ThemeClass().lightPrimaryColor,
-                                  keyboardAware: true,
-                                  dismissOnBackKeyPress: false,
-                                  dialogType: DialogType.info,
-                                  animType: AnimType.scale,
-                                  transitionAnimationDuration: const Duration(
-                                      milliseconds:
-                                          200), // Duration(milliseconds: 300),
-                                  btnOkText: "Back",
-                                  title: 'Name Changed',
-                                  desc:
-                                      'We\'ve changed your name, please proceed.',
-                                  btnOkOnPress: () {
-                                    Get.offAll(() => const HomePage());
-                                  },
-                                ).show();
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  EasyLoading.show(status: 'Changing Email...');
+                                  final result = await ChangeEmailAPI()
+                                      .changeEmail(nameController.text);
+                                  EasyLoading.dismiss();
+                                  if (!context.mounted) return;
+                                  if (result == 'SUCCESS_SIR') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Email Changed',
+                                      desc:
+                                          'We\'ve changed your email, please proceed.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  } else if (result == 'ERROR') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Error',
+                                      desc:
+                                          'There was an error changing your email, please try again.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  } else if (result == 'NO_USER') {
+                                    AwesomeDialog(
+                                      context: context,
+                                      btnOkColor:
+                                          ThemeClass().lightPrimaryColor,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Back",
+                                      title: 'Error',
+                                      desc:
+                                          'You are not logged in, please relogin and try again.',
+                                      btnOkOnPress: () {
+                                        Get.offAll(() => const HomePage());
+                                      },
+                                    ).show();
+                                  }
+                                }
                               },
                               child: const Text('   Change   ',
                                   style: TextStyle(fontSize: 20)),
