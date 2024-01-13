@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:neuroparenting/src/db/settings/change_password_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/form_validator.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
@@ -121,6 +122,7 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                   (BuildContext context, StateSetter setState) {
                                 return TextFormField(
                                   controller: oldPasswordController,
+                                  validator: FormValidator.validatePassword,
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
                                     labelStyle: const TextStyle(
@@ -155,7 +157,8 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                               builder:
                                   (BuildContext context, StateSetter setState) {
                                 return TextFormField(
-                                  controller: newRePasswordController,
+                                  controller: newPasswordController,
+                                  validator: FormValidator.validatePassword,
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
                                     labelStyle: const TextStyle(
@@ -190,7 +193,11 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                               builder:
                                   (BuildContext context, StateSetter setState) {
                                 return TextFormField(
-                                  controller: newPasswordController,
+                                  controller: newRePasswordController,
+                                  validator: (value) =>
+                                      FormValidator.validateRePassword(
+                                          newPasswordController.text,
+                                          newRePasswordController.text),
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
                                     labelStyle: const TextStyle(
@@ -230,7 +237,7 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                 elevation: 5,
                               ),
                               onPressed: () async {
-                                if (_formKey.currentState!.mounted) {
+                                if (_formKey.currentState!.validate()) {
                                   EasyLoading.show(status: 'Changing Password');
                                   final result = await ChangePasswordApi()
                                       .changePassword(
@@ -251,11 +258,13 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                       transitionAnimationDuration:
                                           const Duration(milliseconds: 200),
                                       btnOkText: "Back",
-                                      title: 'Email Changed',
+                                      title: 'Password Changed',
                                       desc:
                                           'We\'ve changed your password, please proceed.',
                                       btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
+                                        Get.offAll(() => const HomePage(
+                                              indexFromPrevious: 2,
+                                            ));
                                       },
                                     ).show();
                                   } else if (result['status'] == 'NO_USER') {
@@ -274,28 +283,46 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                       desc:
                                           'There was an error changing your email, please relogin and try again.',
                                       btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
+                                        Get.offAll(() => const HomePage(
+                                              indexFromPrevious: 2,
+                                            ));
                                       },
                                     ).show();
+                                  } else if (result['message'] ==
+                                      'too-many-requests') {
+                                    AwesomeDialog(
+                                        context: context,
+                                        btnOkColor: Colors.red,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Ok",
+                                        title: 'Error Occured',
+                                        desc:
+                                            'Too many failed reset password requests, please try again later.',
+                                        btnOkOnPress: () {
+                                          DismissType.btnOk;
+                                        }).show();
                                   } else {
                                     AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.error,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Error Occured',
-                                      desc:
-                                          'Please check your password or internet connection and try again.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
-                                      },
-                                    ).show();
+                                        context: context,
+                                        btnOkColor: Colors.red,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Ok",
+                                        title: 'Error Occured',
+                                        desc:
+                                            'Please check your current password or internet connection and try again.',
+                                        btnOkOnPress: () {
+                                          DismissType.btnOk;
+                                        }).show();
                                   }
                                 }
                               },

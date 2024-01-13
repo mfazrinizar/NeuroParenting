@@ -35,7 +35,9 @@ class ChangeEmailState extends State<ChangeEmailPage> {
         backgroundColor: Colors.transparent,
         leading: BackButton(
           color: Colors.white,
-          onPressed: () => Get.offAll(() => const HomePage()),
+          onPressed: () => Get.offAll(
+            () => const HomePage(indexFromPrevious: 2),
+          ),
         ),
         title:
             const Text('Change Email', style: TextStyle(color: Colors.white)),
@@ -59,161 +61,173 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                   : Colors
                       .white, // Change this to your desired background color
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+              onPressed: () {
+                setState(() {
+                  themeChange();
+                  isDarkMode = !isDarkMode;
+                });
+              },
+            ),
           ),
         ],
       ),
-      body: Column(children: [
-        Expanded(
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                child: SvgPicture.asset(
-                  isDarkMode
-                      ? 'assets/images/forgot1_dark.svg'
-                      : 'assets/images/forgot1_light.svg',
-                  width: width,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Positioned(
-                top: height * 0.35,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  decoration: ShapeDecoration(
-                    color: isDarkMode ? ThemeClass().darkRounded : Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(50),
-                          topLeft: Radius.circular(50)),
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  child: SvgPicture.asset(
+                    isDarkMode
+                        ? 'assets/images/forgot1_dark.svg'
+                        : 'assets/images/forgot1_light.svg',
+                    width: width,
+                    fit: BoxFit.fill,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.05,
-                            ),
-                            const Text('Please enter your new email below:',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                )),
-                            TextFormField(
-                              controller: nameController,
-                              decoration: const InputDecoration(
-                                labelStyle: TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
+                ),
+                Positioned(
+                  top: height * 0.35,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: ShapeDecoration(
+                      color:
+                          isDarkMode ? ThemeClass().darkRounded : Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(50),
+                            topLeft: Radius.circular(50)),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.05,
+                              ),
+                              const Text('Please enter your new email below:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )),
+                              TextFormField(
+                                controller: nameController,
+                                decoration: const InputDecoration(
+                                  labelStyle: TextStyle(
+                                    color: Colors
+                                        .black, // Change this to your desired color
+                                  ),
+                                  hintText: 'email@email.com',
+                                  labelText: 'New Email',
+                                  prefixIcon:
+                                      Icon(Icons.email, color: Colors.black),
                                 ),
-                                hintText: 'email@email.com',
-                                labelText: 'New Email',
-                                prefixIcon:
-                                    Icon(Icons.email, color: Colors.black),
                               ),
-                            ),
-                            SizedBox(
-                              height: height * 0.05,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shadowColor: Colors.grey,
-                                elevation: 5,
+                              SizedBox(
+                                height: height * 0.05,
                               ),
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  EasyLoading.show(status: 'Changing Email...');
-                                  final result = await ChangeEmailAPI()
-                                      .changeEmail(nameController.text);
-                                  EasyLoading.dismiss();
-                                  if (!context.mounted) return;
-                                  if (result == 'SUCCESS_SIR') {
-                                    AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.success,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Email Changed',
-                                      desc:
-                                          'We\'ve changed your email, please proceed.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
-                                      },
-                                    ).show();
-                                  } else if (result == 'ERROR') {
-                                    AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.error,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Error',
-                                      desc:
-                                          'There was an error changing your email, please try again.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
-                                      },
-                                    ).show();
-                                  } else if (result == 'NO_USER') {
-                                    AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.error,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Error',
-                                      desc:
-                                          'You are not logged in, please relogin and try again.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
-                                      },
-                                    ).show();
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shadowColor: Colors.grey,
+                                  elevation: 5,
+                                ),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    EasyLoading.show(
+                                        status: 'Changing Email...');
+                                    final result = await ChangeEmailAPI()
+                                        .changeEmail(nameController.text);
+                                    EasyLoading.dismiss();
+                                    if (!context.mounted) return;
+                                    if (result == 'SUCCESS_SIR') {
+                                      AwesomeDialog(
+                                        context: context,
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.success,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Back",
+                                        title: 'Email Changed',
+                                        desc:
+                                            'We\'ve changed your email, please proceed.',
+                                        btnOkOnPress: () {
+                                          Get.offAll(() => const HomePage(
+                                                indexFromPrevious: 2,
+                                              ));
+                                        },
+                                      ).show();
+                                    } else if (result == 'ERROR') {
+                                      AwesomeDialog(
+                                        context: context,
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Back",
+                                        title: 'Error',
+                                        desc:
+                                            'There was an error changing your email, please try again.',
+                                        btnOkOnPress: () {
+                                          Get.offAll(() => const HomePage(
+                                                indexFromPrevious: 2,
+                                              ));
+                                        },
+                                      ).show();
+                                    } else if (result == 'NO_USER') {
+                                      AwesomeDialog(
+                                        context: context,
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Back",
+                                        title: 'Error',
+                                        desc:
+                                            'You are not logged in, please relogin and try again.',
+                                        btnOkOnPress: () {
+                                          Get.offAll(() => const HomePage(
+                                                indexFromPrevious: 2,
+                                              ));
+                                        },
+                                      ).show();
+                                    }
                                   }
-                                }
-                              },
-                              child: const Text('   Change   ',
-                                  style: TextStyle(fontSize: 20)),
-                            ),
-                          ],
+                                },
+                                child: const Text('   Change   ',
+                                    style: TextStyle(fontSize: 20)),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

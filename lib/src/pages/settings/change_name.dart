@@ -35,7 +35,9 @@ class ChangeNameState extends State<ChangeNamePage> {
         backgroundColor: Colors.transparent,
         leading: BackButton(
           color: Colors.white,
-          onPressed: () => Get.offAll(() => const HomePage()),
+          onPressed: () => Get.offAll(() => const HomePage(
+                indexFromPrevious: 2,
+              )),
         ),
         title: const Text('Change Name', style: TextStyle(color: Colors.white)),
         actions: [
@@ -137,7 +139,8 @@ class ChangeNameState extends State<ChangeNamePage> {
                                   EasyLoading.show(status: 'Changing Name...');
                                   final result = await ChangeNameApi()
                                       .changeName(nameController.text);
-                                  EasyLoading.dismiss;
+
+                                  EasyLoading.dismiss();
 
                                   if (!context.mounted) return;
                                   if (result['status'] == 'success') {
@@ -157,7 +160,9 @@ class ChangeNameState extends State<ChangeNamePage> {
                                       desc:
                                           'We\'ve changed your name, please proceed.',
                                       btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage());
+                                        Get.offAll(() => const HomePage(
+                                              indexFromPrevious: 2,
+                                            ));
                                       },
                                     ).show();
                                   } else {

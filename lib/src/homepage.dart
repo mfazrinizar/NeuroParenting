@@ -16,7 +16,9 @@ import 'package:neuroparenting/src/pages/settings/settings.dart';
 import 'reusable_comp/theme_changer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int? indexFromPrevious;
+
+  const HomePage({super.key, this.indexFromPrevious});
 
   @override
   HomePageState createState() => HomePageState();
@@ -32,6 +34,7 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isDarkMode = Get.isDarkMode;
+    _currentTabIndex = widget.indexFromPrevious ?? 0;
   }
 
   final buttonTitles = [

@@ -69,6 +69,7 @@ flutter {
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.firebase.crashlytics'
 
 dependencies {
     implementation "androidx.activity:activity:1.6.0-alpha05"

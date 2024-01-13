@@ -142,8 +142,11 @@ class SettingsPageState extends State<SettingsPage> {
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator.adaptive();
+          EasyLoading.show(status: 'Loading Settings...');
+          return Container();
         } else {
+          EasyLoading.dismiss();
+
           final userDoc = snapshot.data!;
           final userType = userDoc['userType'];
           var userTags = userType == 'Parent'
@@ -162,8 +165,7 @@ class SettingsPageState extends State<SettingsPage> {
                       ? FileImage(newProfileImage!)
                       : user != null && user!.photoURL != null
                           ? NetworkImage(user!.photoURL!)
-                          : const AssetImage(
-                                  'assets/images/default_profile_picture.png')
+                          : const AssetImage('assets/icons/logo.png')
                               as ImageProvider<Object>?,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -230,7 +232,7 @@ class SettingsPageState extends State<SettingsPage> {
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                (userType == 'Parent')
+                (userType != null && userType == 'Parent')
                     ? Wrap(
                         spacing: 8.0, // gap between adjacent chips
                         runSpacing: 4.0, // gap between lines
@@ -263,9 +265,11 @@ class SettingsPageState extends State<SettingsPage> {
                           );
 
                           if (result != null) {
-                            setState(() {
-                              userTags = result;
-                            });
+                            setState(
+                              () {
+                                userTags = result;
+                              },
+                            );
 
                             // Update the userTags field in Firestore
                             final user = FirebaseAuth.instance.currentUser;
