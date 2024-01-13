@@ -39,6 +39,16 @@ class ThemeClass {
     colorScheme: const ColorScheme.dark().copyWith(
       primary: _themeClass.darkPrimaryColor,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: HexColor('#C30101'),
+        ),
+      ),
+      errorStyle: TextStyle(
+        color: HexColor('#C30101'),
+      ),
+    ),
   );
 }
 

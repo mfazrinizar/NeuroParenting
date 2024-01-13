@@ -12,7 +12,7 @@ class FormValidator {
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your password.';
+      return 'Please enter your password';
     } else if (RegExp(r'^[0-9]+$').hasMatch(value)) {
       return 'Password must contains non-numerical character(s).';
     } else if (value.length < 8) {
