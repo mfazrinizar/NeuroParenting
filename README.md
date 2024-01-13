@@ -33,8 +33,8 @@ Welcome to NeuroParenting, an app designed to provide support and resources for 
 
 ### Home Page
 Here after you successfully login, you got variety of feature to use...
-<div style="clear: both;">
-  <img src="NeuroParentingUI/Homepage.png" width="250" height="500" align="left">
+<div style="display: flex; flex-direction: column; align-items: flex-start;">
+  <img src="NeuroParentingUI/Homepage.png" width="250" height="500">
 </div>
 
 ###
