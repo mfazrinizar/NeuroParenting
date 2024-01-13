@@ -39,6 +39,13 @@ Here after you successfully login, you got variety of feature to use...
 
 ###
 
+## Tech Stack
+- Flutter
+- Firebase
+- Android
+- Midtrans API (Payment Gateway, not yet implemented)
+- Gemini AI Model
+
 ## Downloads (Current Release)
 
 Download the latest version of NeuroParenting according to your Android device's architecture type:
