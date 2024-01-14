@@ -51,7 +51,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'NeuroParenting',
       theme: ThemeClass.lightTheme,
       darkTheme: ThemeClass.darkTheme,
       themeMode: _themeMode,
