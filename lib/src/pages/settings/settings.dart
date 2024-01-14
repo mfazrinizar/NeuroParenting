@@ -180,7 +180,7 @@ class SettingsPageState extends State<SettingsPage> {
                       child: IconButton(
                         onPressed: () async {
                           final pickedImage = await filePicking.pickImage();
-                          if (pickedImage != null) {
+                          if (user != null && pickedImage != null) {
                             EasyLoading.show(status: 'Uploading...');
 
                             // Upload the image to Firebase Storage
@@ -190,7 +190,7 @@ class SettingsPageState extends State<SettingsPage> {
                                   .ref()
                                   .child('profile_pictures')
                                   .child(
-                                      '${user!.uid}${path.extension(newProfileImage!.path)}');
+                                      '${user!.uid}${path.extension(pickedImage.path)}');
 
                               await ref.putFile(File(pickedImage.path));
 

@@ -29,7 +29,6 @@ class ChangePasswordApi {
         };
       }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       return {'status': 'error', 'message': e.code};
     } catch (e) {
       return {'status': 'error', 'message': 'An error occurred'};
