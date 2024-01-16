@@ -50,9 +50,12 @@ class ForumPageState extends State<ForumPage> {
   final titlePostController = TextEditingController();
   final descriptionPostController = TextEditingController();
   final tagPostController = TextEditingController();
+  final searchController = TextEditingController();
+  List<Discussion> filteredDiscussions = [];
   final themeClass = ThemeClass();
   File? newPostImage;
   List<bool> hasLiked = [];
+  List<bool> hasLikedFiltered = [];
   int current = 0;
   String userType = 'Parent';
   bool isDarkMode = Get.isDarkMode;
@@ -66,21 +69,62 @@ class ForumPageState extends State<ForumPage> {
 
   List<Discussion> discussions = [];
 
+  void filterDiscussions() {
+    setState(() {
+      List<Discussion> newFilteredDiscussions = [];
+      List<bool> newHasLikedFiltered = [];
+
+      for (var discussion in discussions) {
+        bool shouldInclude = discussion.title.toLowerCase().contains(
+                  searchController.text.toLowerCase(),
+                ) ||
+            discussion.descriptionPost.toLowerCase().contains(
+                  searchController.text.toLowerCase(),
+                ) ||
+            discussion.tags.any(
+              (tag) => tag.split(',').any(
+                    (individualTag) => individualTag
+                        .toLowerCase()
+                        .trim()
+                        .replaceFirst('#', '')
+                        .contains(
+                          searchController.text
+                              .toLowerCase()
+                              .replaceFirst('#', ''),
+                        ),
+                  ),
+            );
+
+        if (shouldInclude) {
+          newFilteredDiscussions.add(discussion);
+          newHasLikedFiltered.add(hasLiked[discussions.indexOf(discussion)]);
+        }
+      }
+
+      filteredDiscussions = newFilteredDiscussions;
+      hasLikedFiltered = newHasLikedFiltered;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     current = widget.current;
     isDarkMode = Get.isDarkMode;
     hasLiked = List<bool>.filled(discussions.length, false);
-    fetchDiscussions();
+    fetchDiscussions().then((_) {
+      filterDiscussions();
+      searchController.addListener(filterDiscussions);
+    });
   }
 
   final user = FirebaseAuth.instance.currentUser;
 
   Future<void> fetchDiscussions() async {
-    EasyLoading.show(status: 'Loading...');
+    EasyLoading.show(status: 'Loading Forum...');
     final fetchedDiscussions = await ForumApi.fetchDiscussions();
 
+    discussions = fetchedDiscussions;
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       // Handle the case when the user is not signed in
@@ -96,6 +140,7 @@ class ForumPageState extends State<ForumPage> {
 
     setState(() {
       discussions = fetchedDiscussions;
+      filteredDiscussions = discussions;
       hasLiked = hasLikedFetched;
     });
     EasyLoading.dismiss();
@@ -122,6 +167,7 @@ class ForumPageState extends State<ForumPage> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: searchController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor:
@@ -283,7 +329,7 @@ class ForumPageState extends State<ForumPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: discussions.length,
+              itemCount: filteredDiscussions.length,
               itemBuilder: (context, index) {
                 return Card(
                   color: Theme.of(context).brightness == Brightness.dark
@@ -297,7 +343,7 @@ class ForumPageState extends State<ForumPage> {
                           children: [
                             ClipOval(
                               child: FadeInImage.assetNetwork(
-                                image: discussions[index].userAvatarUrl,
+                                image: filteredDiscussions[index].userAvatarUrl,
                                 placeholder:
                                     'assets/images/placeholder_loading.gif',
                                 width: 50, // 2x radius
@@ -306,17 +352,19 @@ class ForumPageState extends State<ForumPage> {
                               ),
                             ),
                             SizedBox(width: widget.width * 0.025),
-                            Text(discussions[index].userName,
+                            Text(filteredDiscussions[index].userName,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                             const Spacer(),
-                            Chip(label: Text(discussions[index].userType)),
+                            Chip(
+                                label:
+                                    Text(filteredDiscussions[index].userType)),
                           ],
                         ),
                         Align(
                           alignment: Alignment.topCenter,
                           child: Text(
-                            discussions[index].title,
+                            filteredDiscussions[index].title,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -325,7 +373,7 @@ class ForumPageState extends State<ForumPage> {
                           alignment: Alignment.bottomRight,
                           child: Wrap(
                             spacing: 10,
-                            children: discussions[index]
+                            children: filteredDiscussions[index]
                                 .tags
                                 .map((tag) => Text('#$tag '))
                                 .toList(),
@@ -335,7 +383,9 @@ class ForumPageState extends State<ForumPage> {
                           children: [
                             TextButton.icon(
                               label: Text(
-                                discussions[index].likesTotal.toString(),
+                                filteredDiscussions[index]
+                                    .likesTotal
+                                    .toString(),
                                 style: TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -343,7 +393,7 @@ class ForumPageState extends State<ForumPage> {
                                         : Colors.black),
                               ),
                               icon: Icon(
-                                  hasLiked[index]
+                                  hasLikedFiltered[index]
                                       ? Icons.thumb_up
                                       : Icons.thumb_up_outlined,
                                   color: Theme.of(context).brightness ==
@@ -353,26 +403,31 @@ class ForumPageState extends State<ForumPage> {
                               onPressed: () {
                                 setState(
                                   () async {
-                                    if (hasLiked[index]) {
+                                    if (hasLikedFiltered[index]) {
                                       await ForumApi.likeOrDislikeDiscussion(
                                           discussionId:
-                                              discussions[index].discussionId);
+                                              filteredDiscussions[index]
+                                                  .discussionId);
                                       setState(
                                         () {
-                                          discussions[index].likesTotal--;
+                                          filteredDiscussions[index]
+                                              .likesTotal--;
                                         },
                                       );
                                     } else {
                                       await ForumApi.likeOrDislikeDiscussion(
                                           discussionId:
-                                              discussions[index].discussionId);
+                                              filteredDiscussions[index]
+                                                  .discussionId);
                                       setState(
                                         () {
-                                          discussions[index].likesTotal++;
+                                          filteredDiscussions[index]
+                                              .likesTotal++;
                                         },
                                       );
                                     }
-                                    hasLiked[index] = !hasLiked[index];
+                                    hasLikedFiltered[index] =
+                                        !hasLikedFiltered[index];
                                   },
                                 );
                                 // Handle like button press
@@ -380,7 +435,7 @@ class ForumPageState extends State<ForumPage> {
                             ),
                             TextButton.icon(
                               label: Text(
-                                discussions[index].comments.toString(),
+                                filteredDiscussions[index].comments.toString(),
                                 style: TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -396,20 +451,25 @@ class ForumPageState extends State<ForumPage> {
                                 setState(() async {
                                   await Get.to(
                                     () => DiscussionPage(
-                                      discussionId:
-                                          discussions[index].discussionId,
-                                      userAvatarUrl:
-                                          discussions[index].userAvatarUrl,
-                                      userName: discussions[index].userName,
-                                      userType: discussions[index].userType,
-                                      title: discussions[index].title,
-                                      tags: discussions[index].tags,
-                                      datePosted: discussions[index].datePosted,
-                                      likes: discussions[index].likes,
-                                      likesTotal: discussions[index].likesTotal,
-                                      comments: discussions[index].comments,
-                                      commentsList:
-                                          discussions[index].commentsList,
+                                      discussionId: filteredDiscussions[index]
+                                          .discussionId,
+                                      userAvatarUrl: filteredDiscussions[index]
+                                          .userAvatarUrl,
+                                      userName:
+                                          filteredDiscussions[index].userName,
+                                      userType:
+                                          filteredDiscussions[index].userType,
+                                      title: filteredDiscussions[index].title,
+                                      tags: filteredDiscussions[index].tags,
+                                      datePosted:
+                                          filteredDiscussions[index].datePosted,
+                                      likes: filteredDiscussions[index].likes,
+                                      likesTotal:
+                                          filteredDiscussions[index].likesTotal,
+                                      comments:
+                                          filteredDiscussions[index].comments,
+                                      commentsList: filteredDiscussions[index]
+                                          .commentsList,
                                     ),
                                   );
                                 });
@@ -419,7 +479,7 @@ class ForumPageState extends State<ForumPage> {
                             const Spacer(),
                             Text(
                               DateFormat('dd-MM-yyyy').format(
-                                discussions[index].datePosted,
+                                filteredDiscussions[index].datePosted,
                               ),
                             ),
                           ],

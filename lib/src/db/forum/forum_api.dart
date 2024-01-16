@@ -33,10 +33,12 @@ class Discussion {
   final int comments;
   final List<Comment> commentsList;
   final String discussionId;
+  final String descriptionPost;
 
   Discussion({
     required this.discussionId,
     required this.userAvatarUrl,
+    required this.descriptionPost,
     required this.userName,
     required this.userType,
     required this.title,
@@ -60,6 +62,7 @@ class ForumApi {
         return Discussion(
           discussionId: data['discussionId'],
           userAvatarUrl: data['discussionUserPhotoProfileUrl'],
+          descriptionPost: data['discussionDescription'],
           userName: data['discussionUserName'],
           userType: data['discussionUserType'],
           title: data['discussionTitle'],

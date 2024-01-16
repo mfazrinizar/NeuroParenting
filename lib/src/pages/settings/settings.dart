@@ -110,6 +110,7 @@ class SettingsPageState extends State<SettingsPage> {
             animType: AnimType.bottomSlide,
             title: 'Exit App',
             desc: 'Are you sure you want to exit the app?',
+            btnOkText: 'Yes',
             btnCancelOnPress: () {},
             btnOkOnPress: () {
               SystemNavigator.pop();
@@ -128,6 +129,7 @@ class SettingsPageState extends State<SettingsPage> {
             animType: AnimType.bottomSlide,
             title: 'Logout',
             desc: 'Are you sure you want to logout?',
+            btnOkText: 'Yes',
             btnCancelOnPress: () {},
             btnOkOnPress: () async {
               await LogoutAPI().logout();

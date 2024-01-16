@@ -116,7 +116,7 @@ class _ArticleContentPageState extends State<ArticleContentPage>
               color: Colors.white,
             ),
             onPressed: () {
-              Get.offAll(() => const HomePage(indexFromPrevious: 2));
+              Get.offAll(() => const HomePage());
             }),
         actions: [
           LanguageSwitcher(

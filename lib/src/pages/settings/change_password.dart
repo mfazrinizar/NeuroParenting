@@ -39,8 +39,13 @@ class ChangePasswordState extends State<ChangePasswordPage> {
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: const BackButton(
+        leading: BackButton(
           color: Colors.white,
+          onPressed: () => Get.offAll(
+            const HomePage(
+              indexFromPrevious: 2,
+            ),
+          ),
         ),
         title: const Text('Change Password',
             style: TextStyle(color: Colors.white)),

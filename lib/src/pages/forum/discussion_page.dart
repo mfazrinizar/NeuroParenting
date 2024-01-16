@@ -57,7 +57,9 @@ class DiscussionState extends State<DiscussionPage> {
         backgroundColor: Colors.transparent,
         leading: BackButton(
             color: Colors.white,
-            onPressed: () => Get.offAll(() => const HomePage())),
+            onPressed: () => Get.offAll(() => const HomePage(
+                  indexFromPrevious: 1,
+                ))),
         title: const Text('Under Construction',
             style: TextStyle(color: Colors.white)),
         actions: [
