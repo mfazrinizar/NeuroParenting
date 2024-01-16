@@ -36,4 +36,20 @@ class FormValidator {
     }
     return null;
   }
+
+  static String? validateTitle(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter something.';
+    } else if (value.length > 100) {
+      return 'Please enter the title no more than 100 characters.';
+    }
+    return null;
+  }
+
+  static String? validateText(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter something.';
+    }
+    return null;
+  }
 }

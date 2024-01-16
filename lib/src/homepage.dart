@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,12 +30,30 @@ class HomePageState extends State<HomePage> {
   final int _current = 0;
   int _currentTabIndex = 0;
   final CarouselController _controller = CarouselController();
+  String? userType;
 
   @override
   void initState() {
     super.initState();
     isDarkMode = Get.isDarkMode;
     _currentTabIndex = widget.indexFromPrevious ?? 0;
+    fetchUserType();
+  }
+
+  void fetchUserType() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (docSnapshot.exists) {
+        setState(() {
+          userType = docSnapshot.data()?['userType'];
+        });
+      }
+    }
   }
 
   final buttonTitles = [
