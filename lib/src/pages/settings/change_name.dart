@@ -35,9 +35,11 @@ class ChangeNameState extends State<ChangeNamePage> {
         backgroundColor: Colors.transparent,
         leading: BackButton(
           color: Colors.white,
-          onPressed: () => Get.offAll(() => const HomePage(
-                indexFromPrevious: 2,
-              )),
+          onPressed: () => Get.offAll(
+            () => const HomePage(
+              indexFromPrevious: 2,
+            ),
+          ),
         ),
         title: const Text('Change Name', style: TextStyle(color: Colors.white)),
         actions: [

@@ -202,6 +202,7 @@ class ForumPageState extends State<ForumPage> {
                     onPressed: () {
                       showDialog(
                         context: context,
+                        barrierDismissible: false,
                         builder: (context) {
                           return AlertDialog(
                             scrollable: true,

@@ -18,6 +18,28 @@ class ChangeNameApi {
           'name': newName,
         });
 
+        final discussions = await _firestore
+            .collection('discussions')
+            .where('discussionPostUserId', isEqualTo: currentUser.uid)
+            .get();
+
+        for (final doc in discussions.docs) {
+          await doc.reference.update({
+            'discussionUserName': newName,
+          });
+        }
+
+        final comments = await _firestore
+            .collectionGroup('commentsList')
+            .where('commenterId', isEqualTo: currentUser.uid)
+            .get();
+
+        for (final doc in comments.docs) {
+          await doc.reference.update({
+            'commenterName': newName,
+          });
+        }
+
         return {'status': 'success', 'message': 'Name changed successfully.'};
       } else {
         return {
