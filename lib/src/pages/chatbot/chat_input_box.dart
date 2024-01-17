@@ -30,7 +30,7 @@ class ChatInputBox extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: IconButton(
                 onPressed: onClickCamera,
-                icon: const Icon(Icons.file_copy_rounded),
+                icon: const Icon(Icons.image),
               ),
             ),
           if (selectedImage != null)

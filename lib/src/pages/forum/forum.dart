@@ -66,6 +66,7 @@ class ForumPageState extends State<ForumPage> {
     'Others': false,
   };
   final _formKey = GlobalKey<FormState>();
+  bool likeChanged = false;
 
   List<Discussion> discussions = [];
 
@@ -401,36 +402,32 @@ class ForumPageState extends State<ForumPage> {
                                           Brightness.dark
                                       ? Colors.black
                                       : themeClass.lightPrimaryColor),
-                              onPressed: () {
-                                setState(
-                                  () async {
-                                    if (hasLikedFiltered[index]) {
-                                      await ForumApi.likeOrDislikeDiscussion(
-                                          discussionId:
-                                              filteredDiscussions[index]
-                                                  .discussionId);
-                                      setState(
-                                        () {
-                                          filteredDiscussions[index]
-                                              .likesTotal--;
-                                        },
-                                      );
-                                    } else {
-                                      await ForumApi.likeOrDislikeDiscussion(
-                                          discussionId:
-                                              filteredDiscussions[index]
-                                                  .discussionId);
-                                      setState(
-                                        () {
-                                          filteredDiscussions[index]
-                                              .likesTotal++;
-                                        },
-                                      );
-                                    }
-                                    hasLikedFiltered[index] =
-                                        !hasLikedFiltered[index];
-                                  },
-                                );
+                              onPressed: () async {
+                                if (hasLikedFiltered[index]) {
+                                  await ForumApi.likeOrDislikeDiscussion(
+                                      discussionId: filteredDiscussions[index]
+                                          .discussionId);
+                                  setState(
+                                    () {
+                                      --filteredDiscussions[index].likesTotal;
+                                    },
+                                  );
+                                } else {
+                                  await ForumApi.likeOrDislikeDiscussion(
+                                      discussionId: filteredDiscussions[index]
+                                          .discussionId);
+                                  setState(
+                                    () {
+                                      ++filteredDiscussions[index].likesTotal;
+                                    },
+                                  );
+                                }
+                                setState(() {
+                                  hasLikedFiltered[index] =
+                                      !hasLikedFiltered[index];
+                                  likeChanged = true;
+                                });
+
                                 // Handle like button press
                               },
                             ),
@@ -449,40 +446,33 @@ class ForumPageState extends State<ForumPage> {
                                       ? Colors.black
                                       : themeClass.lightPrimaryColor),
                               onPressed: () {
-                                setState(
-                                  () {
-                                    Get.to(
-                                      () => DiscussionPage(
-                                        hasLiked: hasLikedFiltered[index],
-                                        discussionId: filteredDiscussions[index]
-                                            .discussionId,
-                                        userAvatarUrl:
-                                            filteredDiscussions[index]
-                                                .userAvatarUrl,
-                                        userName:
-                                            filteredDiscussions[index].userName,
-                                        userType:
-                                            filteredDiscussions[index].userType,
-                                        title: filteredDiscussions[index].title,
-                                        descriptionPost:
-                                            filteredDiscussions[index]
-                                                .descriptionPost,
-                                        discussionImage:
-                                            filteredDiscussions[index]
-                                                .discussionImage,
-                                        tags: filteredDiscussions[index].tags,
-                                        datePosted: filteredDiscussions[index]
-                                            .datePosted,
-                                        likes: filteredDiscussions[index].likes,
-                                        likesTotal: filteredDiscussions[index]
-                                            .likesTotal,
-                                        comments:
-                                            filteredDiscussions[index].comments,
-                                        commentsList: filteredDiscussions[index]
-                                            .commentsList,
-                                      ),
-                                    );
-                                  },
+                                Get.offAll(
+                                  () => DiscussionPage(
+                                    hasLiked: hasLikedFiltered[index],
+                                    discussionId:
+                                        filteredDiscussions[index].discussionId,
+                                    userAvatarUrl: filteredDiscussions[index]
+                                        .userAvatarUrl,
+                                    userName:
+                                        filteredDiscussions[index].userName,
+                                    userType:
+                                        filteredDiscussions[index].userType,
+                                    title: filteredDiscussions[index].title,
+                                    descriptionPost: filteredDiscussions[index]
+                                        .descriptionPost,
+                                    discussionImage: filteredDiscussions[index]
+                                        .discussionImage,
+                                    tags: filteredDiscussions[index].tags,
+                                    datePosted:
+                                        filteredDiscussions[index].datePosted,
+                                    likes: filteredDiscussions[index].likes,
+                                    likesTotal:
+                                        filteredDiscussions[index].likesTotal,
+                                    comments:
+                                        filteredDiscussions[index].comments,
+                                    commentsList:
+                                        filteredDiscussions[index].commentsList,
+                                  ),
                                 );
                                 // Handle comment button press
                               },

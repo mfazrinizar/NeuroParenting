@@ -90,6 +90,19 @@ class ForumApi {
     ).toList();
   }
 
+  static Future<int> fetchLikesTotalOnly(String discussionId) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('discussions')
+        .doc(discussionId)
+        .get();
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Discussion not found');
+    }
+
+    return List<String>.from(data['likes']).length;
+  }
+
   static Future<Discussion> fetchSingleDiscussion(String discussionId) async {
     final doc = await FirebaseFirestore.instance
         .collection('discussions')

@@ -66,9 +66,14 @@ class DiscussionState extends State<DiscussionPage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       hasLiked = widget.hasLiked;
-      likesTotal = widget.likes.length;
+
       commentsList = widget.commentsList;
       commentTotal = commentsList.length;
+      ForumApi.fetchLikesTotalOnly(widget.discussionId).then((likesTotal) {
+        setState(() {
+          this.likesTotal = likesTotal;
+        });
+      });
     } else {
       Get.snackbar('Error', 'Please relog your account.');
     }

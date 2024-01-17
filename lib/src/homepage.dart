@@ -171,8 +171,20 @@ class HomePageState extends State<HomePage> {
                 isDarkMode = !isDarkMode;
               });
             }),
-            Icon(Icons.notifications,
-                color: isDarkMode ? Colors.black : Colors.white),
+            PopupMenuButton<String>(
+              icon: Icon(Icons.notifications,
+                  color: isDarkMode ? Colors.black : Colors.white),
+              onSelected: (String result) {
+                // Handle the selection
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Notification 1',
+                  child: Text('No notifications'),
+                ),
+                // Add more PopupMenuItems for more notifications
+              ],
+            ),
             Builder(
               builder: (BuildContext context) {
                 final user = FirebaseAuth.instance.currentUser;

@@ -210,13 +210,13 @@ class _ArticleContentPageState extends State<ArticleContentPage>
               tabs: [
                 Tab(
                   child: Text(
-                    "Deskripsi",
+                    "Overview",
                     style: GoogleFonts.nunito(fontWeight: FontWeight.w500),
                   ),
                 ),
                 Tab(
                   child: Text(
-                    "Bagaimana",
+                    "Details",
                     style: GoogleFonts.nunito(fontWeight: FontWeight.w500),
                   ),
                 )
