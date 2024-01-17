@@ -78,273 +78,277 @@ class ChangePasswordState extends State<ChangePasswordPage> {
           ),
         ],
       ),
-      body: Column(children: [
-        Expanded(
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                child: SvgPicture.asset(
-                  isDarkMode
-                      ? 'assets/images/changepw1_dark.svg'
-                      : 'assets/images/changepw1_light.svg',
-                  width: width * 0.75,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Positioned(
-                top: height * 0.25,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  decoration: ShapeDecoration(
-                    color: isDarkMode ? ThemeClass().darkRounded : Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(50),
-                          topLeft: Radius.circular(50)),
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  child: SvgPicture.asset(
+                    isDarkMode
+                        ? 'assets/images/changepw1_dark.svg'
+                        : 'assets/images/changepw1_light.svg',
+                    width: width * 0.75,
+                    fit: BoxFit.fill,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.05,
-                            ),
-                            const Text('Please Fill the Form',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                )),
-                            StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return TextFormField(
-                                  controller: oldPasswordController,
-                                  validator: FormValidator.validatePassword,
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    labelStyle: const TextStyle(
-                                      color: Colors
-                                          .black, // Change this to your desired color
-                                    ),
-                                    hintText: '********',
-                                    labelText: 'Current Password',
-                                    prefixIcon: const Icon(Icons.lock,
-                                        color: Colors.black),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          // Based on passwordVisible state choose the icon
-                                          oldPasswordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: Colors.black),
-                                      onPressed: () {
-                                        // Update the state i.e. toggle the state of passwordVisible variable
-                                        setState(() {
-                                          oldPasswordVisible =
-                                              !oldPasswordVisible;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  obscureText: !oldPasswordVisible,
-                                );
-                              },
-                            ),
-                            StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return TextFormField(
-                                  controller: newPasswordController,
-                                  validator: FormValidator.validatePassword,
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    labelStyle: const TextStyle(
-                                      color: Colors
-                                          .black, // Change this to your desired color
-                                    ),
-                                    hintText: '********',
-                                    labelText: 'New Password',
-                                    prefixIcon: const Icon(Icons.password,
-                                        color: Colors.black),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          // Based on passwordVisible state choose the icon
-                                          newPasswordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: Colors.black),
-                                      onPressed: () {
-                                        // Update the state i.e. toggle the state of passwordVisible variable
-                                        setState(() {
-                                          newPasswordVisible =
-                                              !newPasswordVisible;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  obscureText: !newPasswordVisible,
-                                );
-                              },
-                            ),
-                            StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return TextFormField(
-                                  controller: newRePasswordController,
-                                  validator: (value) =>
-                                      FormValidator.validateRePassword(
-                                          newPasswordController.text,
-                                          newRePasswordController.text),
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    labelStyle: const TextStyle(
-                                      color: Colors
-                                          .black, // Change this to your desired color
-                                    ),
-                                    hintText: '********',
-                                    labelText: 'Re-enter New Password',
-                                    prefixIcon: const Icon(Icons.restart_alt,
-                                        color: Colors.black),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          // Based on passwordVisible state choose the icon
-                                          newRePasswordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          color: Colors.black),
-                                      onPressed: () {
-                                        // Update the state i.e. toggle the state of passwordVisible variable
-                                        setState(() {
-                                          newRePasswordVisible =
-                                              !newRePasswordVisible;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  obscureText: !newRePasswordVisible,
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: height * 0.1,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shadowColor: Colors.grey,
-                                elevation: 5,
+                ),
+                Positioned(
+                  top: height * 0.25,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: ShapeDecoration(
+                      color:
+                          isDarkMode ? ThemeClass().darkRounded : Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(50),
+                            topLeft: Radius.circular(50)),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.05,
                               ),
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  EasyLoading.show(status: 'Changing Password');
-                                  final result = await ChangePasswordApi()
-                                      .changePassword(
-                                          oldPasswordController.text,
-                                          newPasswordController.text);
-                                  EasyLoading.dismiss();
+                              const Text('Please Fill the Form',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )),
+                              StatefulBuilder(
+                                builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  return TextFormField(
+                                    controller: oldPasswordController,
+                                    validator: FormValidator.validatePassword,
+                                    style: const TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      labelStyle: const TextStyle(
+                                        color: Colors
+                                            .black, // Change this to your desired color
+                                      ),
+                                      hintText: '********',
+                                      labelText: 'Current Password',
+                                      prefixIcon: const Icon(Icons.lock,
+                                          color: Colors.black),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                            // Based on passwordVisible state choose the icon
+                                            oldPasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.black),
+                                        onPressed: () {
+                                          // Update the state i.e. toggle the state of passwordVisible variable
+                                          setState(() {
+                                            oldPasswordVisible =
+                                                !oldPasswordVisible;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    obscureText: !oldPasswordVisible,
+                                  );
+                                },
+                              ),
+                              StatefulBuilder(
+                                builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  return TextFormField(
+                                    controller: newPasswordController,
+                                    validator: FormValidator.validatePassword,
+                                    style: const TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      labelStyle: const TextStyle(
+                                        color: Colors
+                                            .black, // Change this to your desired color
+                                      ),
+                                      hintText: '********',
+                                      labelText: 'New Password',
+                                      prefixIcon: const Icon(Icons.password,
+                                          color: Colors.black),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                            // Based on passwordVisible state choose the icon
+                                            newPasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.black),
+                                        onPressed: () {
+                                          // Update the state i.e. toggle the state of passwordVisible variable
+                                          setState(() {
+                                            newPasswordVisible =
+                                                !newPasswordVisible;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    obscureText: !newPasswordVisible,
+                                  );
+                                },
+                              ),
+                              StatefulBuilder(
+                                builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  return TextFormField(
+                                    controller: newRePasswordController,
+                                    validator: (value) =>
+                                        FormValidator.validateRePassword(
+                                            newPasswordController.text,
+                                            newRePasswordController.text),
+                                    style: const TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      labelStyle: const TextStyle(
+                                        color: Colors
+                                            .black, // Change this to your desired color
+                                      ),
+                                      hintText: '********',
+                                      labelText: 'Re-enter New Password',
+                                      prefixIcon: const Icon(Icons.restart_alt,
+                                          color: Colors.black),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                            // Based on passwordVisible state choose the icon
+                                            newRePasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.black),
+                                        onPressed: () {
+                                          // Update the state i.e. toggle the state of passwordVisible variable
+                                          setState(() {
+                                            newRePasswordVisible =
+                                                !newRePasswordVisible;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    obscureText: !newRePasswordVisible,
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: height * 0.1,
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shadowColor: Colors.grey,
+                                  elevation: 5,
+                                ),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    EasyLoading.show(
+                                        status: 'Changing Password');
+                                    final result = await ChangePasswordApi()
+                                        .changePassword(
+                                            oldPasswordController.text,
+                                            newPasswordController.text);
+                                    EasyLoading.dismiss();
 
-                                  if (!context.mounted) return;
-                                  if (result['status'] == 'SUCCESS_SIR') {
-                                    AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.success,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Password Changed',
-                                      desc:
-                                          'We\'ve changed your password, please proceed.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage(
-                                              indexFromPrevious: 2,
-                                            ));
-                                      },
-                                    ).show();
-                                  } else if (result['status'] == 'NO_USER') {
-                                    AwesomeDialog(
-                                      context: context,
-                                      btnOkColor:
-                                          ThemeClass().lightPrimaryColor,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.error,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Back",
-                                      title: 'Error Occured',
-                                      desc:
-                                          'There was an error changing your email, please relogin and try again.',
-                                      btnOkOnPress: () {
-                                        Get.offAll(() => const HomePage(
-                                              indexFromPrevious: 2,
-                                            ));
-                                      },
-                                    ).show();
-                                  } else if (result['message'] ==
-                                      'too-many-requests') {
-                                    AwesomeDialog(
+                                    if (!context.mounted) return;
+                                    if (result['status'] == 'SUCCESS_SIR') {
+                                      AwesomeDialog(
                                         context: context,
-                                        btnOkColor: Colors.red,
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.success,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Back",
+                                        title: 'Password Changed',
+                                        desc:
+                                            'We\'ve changed your password, please proceed.',
+                                        btnOkOnPress: () {
+                                          Get.offAll(() => const HomePage(
+                                                indexFromPrevious: 2,
+                                              ));
+                                        },
+                                      ).show();
+                                    } else if (result['status'] == 'NO_USER') {
+                                      AwesomeDialog(
+                                        context: context,
+                                        btnOkColor:
+                                            ThemeClass().lightPrimaryColor,
                                         keyboardAware: true,
                                         dismissOnBackKeyPress: false,
                                         dialogType: DialogType.error,
                                         animType: AnimType.scale,
                                         transitionAnimationDuration:
                                             const Duration(milliseconds: 200),
-                                        btnOkText: "Ok",
+                                        btnOkText: "Back",
                                         title: 'Error Occured',
                                         desc:
-                                            'Too many failed reset password requests, please try again later.',
+                                            'There was an error changing your email, please relogin and try again.',
                                         btnOkOnPress: () {
-                                          DismissType.btnOk;
-                                        }).show();
-                                  } else {
-                                    AwesomeDialog(
-                                        context: context,
-                                        btnOkColor: Colors.red,
-                                        keyboardAware: true,
-                                        dismissOnBackKeyPress: false,
-                                        dialogType: DialogType.error,
-                                        animType: AnimType.scale,
-                                        transitionAnimationDuration:
-                                            const Duration(milliseconds: 200),
-                                        btnOkText: "Ok",
-                                        title: 'Error Occured',
-                                        desc:
-                                            'Please check your current password or internet connection and try again.',
-                                        btnOkOnPress: () {
-                                          DismissType.btnOk;
-                                        }).show();
+                                          Get.offAll(() => const HomePage(
+                                                indexFromPrevious: 2,
+                                              ));
+                                        },
+                                      ).show();
+                                    } else if (result['message'] ==
+                                        'too-many-requests') {
+                                      AwesomeDialog(
+                                          context: context,
+                                          btnOkColor: Colors.red,
+                                          keyboardAware: true,
+                                          dismissOnBackKeyPress: false,
+                                          dialogType: DialogType.error,
+                                          animType: AnimType.scale,
+                                          transitionAnimationDuration:
+                                              const Duration(milliseconds: 200),
+                                          btnOkText: "Ok",
+                                          title: 'Error Occured',
+                                          desc:
+                                              'Too many failed reset password requests, please try again later.',
+                                          btnOkOnPress: () {
+                                            DismissType.btnOk;
+                                          }).show();
+                                    } else {
+                                      AwesomeDialog(
+                                          context: context,
+                                          btnOkColor: Colors.red,
+                                          keyboardAware: true,
+                                          dismissOnBackKeyPress: false,
+                                          dialogType: DialogType.error,
+                                          animType: AnimType.scale,
+                                          transitionAnimationDuration:
+                                              const Duration(milliseconds: 200),
+                                          btnOkText: "Ok",
+                                          title: 'Error Occured',
+                                          desc:
+                                              'Please check your current password or internet connection and try again.',
+                                          btnOkOnPress: () {
+                                            DismissType.btnOk;
+                                          }).show();
+                                    }
                                   }
-                                }
-                              },
-                              child: const Text('  Change Password  ',
-                                  style: TextStyle(fontSize: 20)),
-                            ),
-                          ],
+                                },
+                                child: const Text('  Change Password  ',
+                                    style: TextStyle(fontSize: 20)),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

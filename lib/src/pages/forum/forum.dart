@@ -449,31 +449,44 @@ class ForumPageState extends State<ForumPage> {
                                       ? Colors.black
                                       : themeClass.lightPrimaryColor),
                               onPressed: () {
-                                setState(() async {
-                                  await Get.to(
-                                    () => DiscussionPage(
-                                      discussionId: filteredDiscussions[index]
-                                          .discussionId,
-                                      userAvatarUrl: filteredDiscussions[index]
-                                          .userAvatarUrl,
-                                      userName:
-                                          filteredDiscussions[index].userName,
-                                      userType:
-                                          filteredDiscussions[index].userType,
-                                      title: filteredDiscussions[index].title,
-                                      tags: filteredDiscussions[index].tags,
-                                      datePosted:
-                                          filteredDiscussions[index].datePosted,
-                                      likes: filteredDiscussions[index].likes,
-                                      likesTotal:
-                                          filteredDiscussions[index].likesTotal,
-                                      comments:
-                                          filteredDiscussions[index].comments,
-                                      commentsList: filteredDiscussions[index]
-                                          .commentsList,
-                                    ),
-                                  );
-                                });
+                                setState(
+                                  () {
+                                    print(discussions[index].commentsList);
+                                    print(filteredDiscussions[index]
+                                        .commentsList);
+                                    Get.to(
+                                      () => DiscussionPage(
+                                        hasLiked: hasLikedFiltered[index],
+                                        discussionId: filteredDiscussions[index]
+                                            .discussionId,
+                                        userAvatarUrl:
+                                            filteredDiscussions[index]
+                                                .userAvatarUrl,
+                                        userName:
+                                            filteredDiscussions[index].userName,
+                                        userType:
+                                            filteredDiscussions[index].userType,
+                                        title: filteredDiscussions[index].title,
+                                        descriptionPost:
+                                            filteredDiscussions[index]
+                                                .descriptionPost,
+                                        discussionImage:
+                                            filteredDiscussions[index]
+                                                .discussionImage,
+                                        tags: filteredDiscussions[index].tags,
+                                        datePosted: filteredDiscussions[index]
+                                            .datePosted,
+                                        likes: filteredDiscussions[index].likes,
+                                        likesTotal: filteredDiscussions[index]
+                                            .likesTotal,
+                                        comments:
+                                            filteredDiscussions[index].comments,
+                                        commentsList: filteredDiscussions[index]
+                                            .commentsList,
+                                      ),
+                                    );
+                                  },
+                                );
                                 // Handle comment button press
                               },
                             ),

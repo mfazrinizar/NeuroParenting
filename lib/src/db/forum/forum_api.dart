@@ -34,6 +34,7 @@ class Discussion {
   final List<Comment> commentsList;
   final String discussionId;
   final String descriptionPost;
+  final String discussionImage;
 
   Discussion({
     required this.discussionId,
@@ -48,6 +49,7 @@ class Discussion {
     required this.likesTotal,
     required this.comments,
     required this.commentsList,
+    required this.discussionImage,
   });
 }
 
@@ -66,6 +68,7 @@ class ForumApi {
           userName: data['discussionUserName'],
           userType: data['discussionUserType'],
           title: data['discussionTitle'],
+          discussionImage: data['discussionImage'],
           tags: List<String>.from(data['discussionTags']),
           datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
           likes: List<String>.from(data['likes']),
@@ -78,13 +81,80 @@ class ForumApi {
                 avatarUrl: commentData['avatarUrl'],
                 commenterName: commentData['commenterName'],
                 commenterId: commentData['commenterId'],
-                commentDate: commentData['commentDate'],
+                commentDate: (commentData['commentDate'] as Timestamp).toDate(),
               );
             },
           ).toList(),
         );
       },
     ).toList();
+  }
+
+  static Future<Discussion> fetchSingleDiscussion(String discussionId) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('discussions')
+        .doc(discussionId)
+        .get();
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Discussion not found');
+    }
+
+    return Discussion(
+      discussionId: data['discussionId'],
+      userAvatarUrl: data['discussionUserPhotoProfileUrl'],
+      descriptionPost: data['discussionDescription'],
+      userName: data['discussionUserName'],
+      userType: data['discussionUserType'],
+      title: data['discussionTitle'],
+      discussionImage: data['discussionImage'],
+      tags: List<String>.from(data['discussionTags']),
+      datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
+      likes: List<String>.from(data['likes']),
+      likesTotal: List<String>.from(data['likes']).length,
+      comments: data['commentTotal'],
+      commentsList: (data['commentsList'] as List).map(
+        (commentData) {
+          return Comment(
+            text: commentData['text'],
+            avatarUrl: commentData['avatarUrl'],
+            commenterName: commentData['commenterName'],
+            commenterId: commentData['commenterId'],
+            commentDate: (commentData['commentDate'] as Timestamp).toDate(),
+          );
+        },
+      ).toList(),
+    );
+  }
+
+  static Future<Map<String, dynamic>> fetchOnlyComments(
+      String discussionId) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('discussions')
+        .doc(discussionId)
+        .get();
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Discussion not found');
+    }
+
+    final comments = data['commentTotal'];
+    final commentsList = (data['commentsList'] as List).map(
+      (commentData) {
+        return Comment(
+          text: commentData['text'],
+          avatarUrl: commentData['avatarUrl'],
+          commenterName: commentData['commenterName'],
+          commenterId: commentData['commenterId'],
+          commentDate: (commentData['commentDate'] as Timestamp).toDate(),
+        );
+      },
+    ).toList();
+
+    return {
+      'commentTotal': comments,
+      'commentsList': commentsList,
+    };
   }
 
   static Future<void> postComment({
@@ -108,18 +178,31 @@ class ForumApi {
     };
 
     // Add the comment to the 'comments' subcollection of the discussion
-    final docRef = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('discussions')
         .doc(discussionId)
-        .collection('commentsList')
-        .add(commentData);
-
-    await docRef.update({'commentId': docRef.id});
+        .update({
+      'commentsList': FieldValue.arrayUnion([commentData]),
+    });
 
     await FirebaseFirestore.instance
         .collection('discussions')
         .doc(discussionId)
         .update({'commentTotal': FieldValue.increment(1)});
+  }
+
+  static Future<void> toggleSingleDiscussionLike(
+      {required String discussionId, required String userId}) async {
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final likes = List<String>.from(doc.data()?['likes'] ?? []);
+    if (likes.contains(userId)) {
+      likes.remove(userId);
+    } else {
+      likes.add(userId);
+    }
+    await docRef.update({'likes': likes});
   }
 
   static Future<void> likeOrDislikeDiscussion({
@@ -164,7 +247,7 @@ class ForumApi {
     }
     List<String> likes = [];
     const int initialComment = 0;
-    List<Comment> comments = [];
+
     final postDateAndTime = DateTime.now();
 
     // Upload the image to Firebase Storage
@@ -192,7 +275,7 @@ class ForumApi {
           .toList(), // Only true tags
       'postDateAndTime': postDateAndTime,
       'commentTotal': initialComment,
-      'commentsList': comments,
+
       'likes': likes,
     };
 
