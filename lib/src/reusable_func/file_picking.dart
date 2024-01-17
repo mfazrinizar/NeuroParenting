@@ -7,7 +7,7 @@ class FilePicking {
   final ImagePicker _picker = ImagePicker();
 
   Future<File?> pickImage() async {
-    final status = await _requestPermission();
+    final status = await requestPermission();
     if (!status.isGranted) {
       return null;
     }
@@ -21,7 +21,7 @@ class FilePicking {
   }
 
   Future<String?> pickImagePath() async {
-    final status = await _requestPermission();
+    final status = await requestPermission();
     if (!status.isGranted) {
       return null;
     }
@@ -34,7 +34,7 @@ class FilePicking {
     }
   }
 
-  Future<PermissionStatus> _requestPermission() async {
+  Future<PermissionStatus> requestPermission() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (Platform.isAndroid && androidInfo.version.sdkInt >= 33) {

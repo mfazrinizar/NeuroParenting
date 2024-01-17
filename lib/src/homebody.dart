@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
+import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 
 class HomePageBody extends StatefulWidget {
   final double height;
@@ -156,6 +157,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
             );
             // Navigate to ArticleContentPage with the dummy ArticleOverview instance
             Get.to(() => ArticleContentPage(articleOverview));
+          } else if (title == 'ChatBot') {
+            Get.to(() => const ChatBotPage());
           } else {
             Get.to(() => const UnderConstructionPage());
           }

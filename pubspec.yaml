@@ -63,6 +63,10 @@ dependencies:
   flutter_native_splash: ^2.3.9
   firebase_core: ^2.24.2
   path: ^1.8.3
+  flutter_gemini: ^2.0.1
+  flutter_markdown: ^0.6.18+3
+
+
 
 flutter_launcher_icons:
   image_path: "assets/icons/logo.png"

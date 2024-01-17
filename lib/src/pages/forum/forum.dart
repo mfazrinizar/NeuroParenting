@@ -451,9 +451,6 @@ class ForumPageState extends State<ForumPage> {
                               onPressed: () {
                                 setState(
                                   () {
-                                    print(discussions[index].commentsList);
-                                    print(filteredDiscussions[index]
-                                        .commentsList);
                                     Get.to(
                                       () => DiscussionPage(
                                         hasLiked: hasLikedFiltered[index],
