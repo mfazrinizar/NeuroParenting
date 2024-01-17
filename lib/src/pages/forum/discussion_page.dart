@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/form_validator.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/homepage.dart';
@@ -50,6 +51,7 @@ class DiscussionPage extends StatefulWidget {
 }
 
 class DiscussionState extends State<DiscussionPage> {
+  final _formKey = GlobalKey<FormState>();
   bool isDarkMode = Get.isDarkMode;
   TextEditingController commentController = TextEditingController();
   FocusNode commentFocusNode = FocusNode();
@@ -238,60 +240,68 @@ class DiscussionState extends State<DiscussionPage> {
             const SizedBox(
               height: 10,
             ),
-            StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return TextFormField(
-                  focusNode: commentFocusNode,
-                  controller: commentController,
-                  decoration: InputDecoration(
-                    labelStyle: const TextStyle(
-                      color: Colors.black, // Change this to your desired color
+            Form(
+              key: _formKey,
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return TextFormField(
+                    validator: FormValidator.validateText,
+                    focusNode: commentFocusNode,
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      labelStyle: const TextStyle(
+                        color:
+                            Colors.black, // Change this to your desired color
+                      ),
+                      hintText: 'Write a comment...',
+                      prefixIcon: const Icon(Icons.comment),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user != null &&
+                                user.photoURL != null &&
+                                user.displayName != null) {
+                              EasyLoading.show(status: 'Posting comment...');
+                              final comment = Comment(
+                                text: commentController.text,
+                                avatarUrl: user
+                                    .photoURL!, // Replace with the URL of the user's avatar
+                                commenterName: user
+                                    .displayName!, // Replace with the name of the user
+                                commenterId:
+                                    user.uid, // Replace with the ID of the user
+                                commentDate: DateTime.now(),
+                              );
+
+                              await ForumApi.postComment(
+                                discussionId: widget
+                                    .discussionId, // Replace with the ID of the discussion
+                                comment: comment,
+                              );
+
+                              final updatedComments =
+                                  await ForumApi.fetchOnlyComments(
+                                      widget.discussionId);
+
+                              commentController.clear();
+                              setState(() {
+                                commentsList = updatedComments['commentsList'];
+                                commentTotal = updatedComments['commentTotal'];
+                              });
+                              EasyLoading.dismiss();
+                            } else {
+                              Get.snackbar(
+                                  'Error', 'Please relog your account.');
+                            }
+                          }
+                        },
+                      ),
                     ),
-                    hintText: 'Write a comment...',
-                    prefixIcon: const Icon(Icons.comment),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () async {
-                        final user = FirebaseAuth.instance.currentUser;
-                        if (user != null &&
-                            user.photoURL != null &&
-                            user.displayName != null) {
-                          EasyLoading.show(status: 'Posting comment...');
-                          final comment = Comment(
-                            text: commentController.text,
-                            avatarUrl: user
-                                .photoURL!, // Replace with the URL of the user's avatar
-                            commenterName: user
-                                .displayName!, // Replace with the name of the user
-                            commenterId:
-                                user.uid, // Replace with the ID of the user
-                            commentDate: DateTime.now(),
-                          );
-
-                          await ForumApi.postComment(
-                            discussionId: widget
-                                .discussionId, // Replace with the ID of the discussion
-                            comment: comment,
-                          );
-
-                          final updatedComments =
-                              await ForumApi.fetchOnlyComments(
-                                  widget.discussionId);
-
-                          commentController.clear();
-                          setState(() {
-                            commentsList = updatedComments['commentsList'];
-                            commentTotal = updatedComments['commentTotal'];
-                          });
-                          EasyLoading.dismiss();
-                        } else {
-                          Get.snackbar('Error', 'Please relog your account.');
-                        }
-                      },
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
 
             ListView.builder(
