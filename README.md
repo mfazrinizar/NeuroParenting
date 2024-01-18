@@ -1,12 +1,28 @@
-# NeuroParenting
+![image](https://github.com/mfazrinizar/NeuroParenting/assets/43740735/fecf0673-45d4-44a1-affd-ec51894ba0a1)# NeuroParenting
+![Group 140146](https://github.com/mfazrinizar/NeuroParenting/blob/main/assets/icons/logo.png?raw=true)
 
 ## Introduction
 
 >“It is not our differences that divide us. It is our inability to recognize, accept, and celebrate those differences.” –   Audre Lorde
 
-Welcome to NeuroParenting, an app designed to provide support and resources for parents who are raising neurodivergent children. Whether your child has autism, ADHD, dyslexia, or any other neurodivergent condition. With feature such as Games, Forum, Course and much more, this app aims to be a valuable tool to assist you in navigating the challenges and joys of parenting.
+Welcome to NeuroParenting, an app designed to provide support and resources for parents who are raising neurodivergent children. Whether your child has autism, ADHD, dyslexia, DCD, or any other neurodivergent condition. With feature such as Games, Forum, Course and much more, this app aims to be a valuable tool to assist you in navigating the challenges and joys of parenting.
 
-## Feature
+## Problem Statement
+Inadequate foundational support during early childhood can have adverse effects on the development of neurodivergent children.
+
+## Proposed Solution
+Empower parents by providing them with the necessary knowledge, resources, and support to effectively address the distinctive requirements of neurodivergent children.
+
+## Overview
+NeuroParenting            | UI Scheme 1
+:-------------------------:|:-------------------------:|
+![NP](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/1.png?raw=true)|![UI1](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/2.jpg?raw=true)|
+
+UI Scheme 2                      | UI Scheme 3
+:-------------------------:|:-------------------------:|
+![UI2](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/3.jpg?raw=true)|![UI3](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/4.jpg?raw=true)|
+
+## Features
 1. Forum, a supportive online forum designed for parents of neurodivergent children and experienced psychologists specializing in neurodevelopmental disorders. Our community is a safe and empathetic space where parents can come together to share experiences, seek advice, and build a network of support while benefiting from the professional insights provided by expert psychologists. another.
 
 2. Articles, connects you to helpful articles from trusted sources outside the app. Get practical tips, the latest research, and personal stories covering various aspects of neurodivergence.NeuroParenting facilitates your exploration, ensuring that valuable information and support are readily accessible with just a tap.
@@ -19,12 +35,11 @@ Welcome to NeuroParenting, an app designed to provide support and resources for 
 
 6. Chatbot, This interactive feature is designed to provide quick answers to your questions, offer helpful tips, and guide you through various aspects of neurodiverse parenting. Seamlessly integrated into the app, our Chatbot is available 24/7, ensuring support is just a message away.
 
-
 7. Campaign, consist of positive affirmation and encouragement for both the parent and children to take a step forward.
 
 8. Donate, join us in our mission to increase the quality of education. Every donation, big or small, contributes to creating a positive impact. With a few clicks, you can be part of something meaningful, making the world a better place for everyone.
 
-## User Interface
+## Application Screenshots
 1. Extremely adaptable and responsive UI.
 2. Perfectly wrapped expandable widget in flex widget.
 3. Ultra-comfort theme changing.
