@@ -49,10 +49,10 @@ Here after you successfully login, you got variety of feature to use...
 ## Downloads (Current Release)
 
 Download the latest version of NeuroParenting according to your Android device's architecture type:
-- [Fat Apk](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.1/NeuroParenting-app-release.apk) (Fat APK, if you don't know your Android architecture)
-- [Arm64-v8a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.1/NeuroParenting-app-arm64-v8a-release.apk) (APK for arm64-v8a)
-- [Armeabi-v7a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.1/NeuroParenting-app-armeabi-v7a-release.apk) (APK for armeabi-v7a or arm32)
-- [x86_64](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.1/NeuroParenting-app-x86_64-release.apk) (APK for x86_64)
+- [Fat Apk](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-release.apk) (Fat APK, if you don't know your Android architecture)
+- [Arm64-v8a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-arm64-v8a-release.apk) (APK for arm64-v8a)
+- [Armeabi-v7a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-armeabi-v7a-release.apk) (APK for armeabi-v7a or arm32)
+- [x86_64](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-x86_64-release.apk) (APK for x86_64)
 
 ## About Us
 Hey There! We're a group of four students developing NeuroParenting from Sriwijaya University. Each of our role is :
