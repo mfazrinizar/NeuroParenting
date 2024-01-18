@@ -41,18 +41,38 @@ UI Scheme 2                      | UI Scheme 3
 
 ## Application Screenshots
 1. Extremely adaptable and responsive UI.
-2. Perfectly wrapped expandable widget in flex widget.
-3. Ultra-comfort theme changing.
-4. Wide variety of features
-5. Accessible in two languages, English and Indonesian Language
+2. Ultra-comfort theme changing.
+3. Wide variety of features.
+4. Accessible in two languages, English and Indonesian Language.
 
-### Home Page
-Here after you successfully login, you got variety of feature to use...
-<div style="display: flex; flex-direction: column; align-items: flex-start;">
-  <img src="NeuroParentingUI/Homepage.png" width="250" height="500">
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding1.png" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding1Dark.png" alt="screen_2" width="200"/>
+  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2.png" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2Dark.png" alt="screen_4" width="200"/>
+</div>
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Homepage.png" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/HomePageDark.png" alt="screen_2" width="200"/>
+  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum.png" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/ForumDark.png" alt="screen_4" width="200"/>
 </div>
 
-###
+## How to Compile & Run
+1. Install Java JDK (add to PATH), Android Studio, VS Code (or any preferred IDE), Flutter SDK, etc. to install all needed tools (SDK, NDK, extra tools) for Android development toolchain, please refer to this [link](https://docs.flutter.dev/get-started/install/windows/mobile).
+2. Clone this repository.
+3. Run `flutter pub get` to get rid of problems of missing dependencies.
+4. Generate keystore to sign in release mode with command `keytool -genkey -alias server -validity 9999 -keyalg RSA -keystore keystore` using keytool from Java.
+5. Rename the generated keystore with `<anyName>.keystore`.
+6. Place the `<anyName>.keystore` to app-level Android folder (android/app/).
+7. Create new file with name `key.properties` inside project-level Android folder (android/) with properties/contents as follow:
+`storePassword=<yourKeyPassword>
+keyPassword=<yourKeyPassword>
+keyAlias=<yourKeyAlias>
+storeFile=<anyName>.keystore`
+8. Run `flutter build apk --release --split-per-abi --obfuscate --split-debug-info=/debug_info/` for splitted APK (each architecture) or `flutter build apk --release --obfuscate --split-debug-info=/debug_info/` for FAT APK (contains all ABIs)
+9. Your build should be at `build/app/outputs/flutter-apk`
+Facing problems? Kindly open an issue.
 
 ## Tech Stack
 - Flutter
@@ -75,9 +95,3 @@ Hey There! We're a group of four students developing NeuroParenting from Sriwija
 2. AISYAH FATIMAH as a Hipster
 3. M. FAZRI NIZAR as a Hacker
 4. FACHRY GHIFARY as a Hacker
-
-Follow us on our social media :
-Instagram :
-Youtube :
-Facebook :
-Twitter :
