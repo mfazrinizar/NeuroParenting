@@ -169,6 +169,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
                     loading = false;
                   });
                 } else {
+                  chatsTextOnly.add(Content(
+                    role: 'user',
+                    parts: [Parts(text: searchedText)],
+                  ));
                   gemini.chat(chatsTextOnly).then((value) {
                     chats.add(
                       ChatItem(

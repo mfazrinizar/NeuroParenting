@@ -29,14 +29,22 @@ class ChangeNameApi {
           });
         }
 
-        final comments = await _firestore
-            .collectionGroup('commentsList')
-            .where('commenterId', isEqualTo: currentUser.uid)
-            .get();
+        final comments = await _firestore.collection('discussions').get();
 
         for (final doc in comments.docs) {
+          final commentsList =
+              List<Map<String, dynamic>>.from(doc.data()['commentsList'] ?? []);
+
+          // Update the avatarUrl for comments made by the current user
+          for (final comment in commentsList) {
+            if (comment['commenterId'] == currentUser.uid) {
+              comment['commenterName'] = newName;
+            }
+          }
+
+          // Update the commentsList field in the discussion document
           await doc.reference.update({
-            'commenterName': newName,
+            'commentsList': commentsList,
           });
         }
 

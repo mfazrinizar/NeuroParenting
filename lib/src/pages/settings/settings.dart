@@ -218,14 +218,25 @@ class SettingsPageState extends State<SettingsPage> {
                               }
 
                               final comments = await firestore
-                                  .collectionGroup('commentsList')
-                                  .where('commenterId',
-                                      isEqualTo: currentUser.uid)
+                                  .collection('discussions')
                                   .get();
 
                               for (final doc in comments.docs) {
+                                final commentsList =
+                                    List<Map<String, dynamic>>.from(
+                                        doc.data()['commentsList'] ?? []);
+
+                                // Update the avatarUrl for comments made by the current user
+                                for (final comment in commentsList) {
+                                  if (comment['commenterId'] ==
+                                      currentUser.uid) {
+                                    comment['avatarUrl'] = url;
+                                  }
+                                }
+
+                                // Update the commentsList field in the discussion document
                                 await doc.reference.update({
-                                  'avatarUrl': url,
+                                  'commentsList': commentsList,
                                 });
                               }
 

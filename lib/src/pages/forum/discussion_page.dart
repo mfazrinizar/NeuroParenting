@@ -309,10 +309,8 @@ class DiscussionState extends State<DiscussionPage> {
               ),
             ),
 
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: commentsList.length,
-              itemBuilder: (context, index) {
+            Column(
+              children: List.generate(commentsList.length, (index) {
                 final comment = commentsList[index];
                 return ListTile(
                   leading: ClipOval(
@@ -332,7 +330,7 @@ class DiscussionState extends State<DiscussionPage> {
                   trailing: Text(DateFormat('yyyy-MM-dd – kk:mm')
                       .format(comment.commentDate)),
                 );
-              },
+              }),
             ),
           ],
         ),

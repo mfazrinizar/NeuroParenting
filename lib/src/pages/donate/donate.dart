@@ -157,7 +157,7 @@ class DonateState extends State<DonatePage> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // Call loginUser from LoginApi
+                                  // TODO: Payment Implementation with Midtrans SDK (awaiting API)
                                   EasyLoading.show(
                                       status: 'Processing Payment...');
 
