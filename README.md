@@ -1,4 +1,4 @@
-![image](https://github.com/mfazrinizar/NeuroParenting/assets/43740735/fecf0673-45d4-44a1-affd-ec51894ba0a1)# NeuroParenting
+# NeuroParenting
 ![Group 140146](https://github.com/mfazrinizar/NeuroParenting/blob/main/assets/icons/logo.png?raw=true)
 
 ## Introduction
