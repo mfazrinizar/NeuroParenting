@@ -14,10 +14,10 @@ class NST extends StatefulWidget {
   const NST({super.key});
 
   @override
-  _NSTState createState() => _NSTState();
+  NSTState createState() => NSTState();
 }
 
-class _NSTState extends State<NST> {
+class NSTState extends State<NST> {
   List<List<int>> gridData = [];
   int answer = 1;
   int answerRight = 0;
@@ -200,10 +200,6 @@ class _NSTState extends State<NST> {
                             answerWrong++;
                             answer++;
                           }
-
-                          print('Answerd: $answer');
-                          print('Right: $answerRight');
-                          print('Wrong: $answerWrong');
                         },
                         child: GridTile(
                           // child: Container(

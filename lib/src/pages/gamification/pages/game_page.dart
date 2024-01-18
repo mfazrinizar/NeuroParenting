@@ -11,12 +11,12 @@ import 'package:neuroparenting/src/pages/gamification/size_config.dart';
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
   @override
-  _GamePageState createState() => _GamePageState();
+  GamePageState createState() => GamePageState();
 }
 
 final User? user = Auth().currentUser;
 
-class _GamePageState extends State<GamePage> {
+class GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);

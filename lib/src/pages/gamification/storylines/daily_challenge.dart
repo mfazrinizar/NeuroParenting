@@ -122,6 +122,7 @@ class DailyChallenge extends HookWidget {
                           await DatabaseManager().updateUserLastDailyChallenge(
                               email: user?.email,
                               lastDailyChallenge: currentDate);
+                          if (!context.mounted) return;
                           Navigator.of(context).pop();
                         },
                         child: const Text("Finish"))
