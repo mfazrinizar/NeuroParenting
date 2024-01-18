@@ -101,9 +101,10 @@ class ForumPageState extends State<ForumPage> {
           newHasLikedFiltered.add(hasLiked[discussions.indexOf(discussion)]);
         }
       }
-
-      filteredDiscussions = newFilteredDiscussions;
-      hasLikedFiltered = newHasLikedFiltered;
+      setState(() {
+        filteredDiscussions = newFilteredDiscussions;
+        hasLikedFiltered = newHasLikedFiltered;
+      });
     });
   }
 
@@ -367,6 +368,7 @@ class ForumPageState extends State<ForumPage> {
                           alignment: Alignment.topCenter,
                           child: Text(
                             filteredDiscussions[index].title,
+                            textAlign: TextAlign.center,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

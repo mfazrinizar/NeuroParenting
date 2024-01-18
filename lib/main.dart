@@ -1,19 +1,19 @@
 // main.dart
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:neuroparenting/src/homepage.dart';
-import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'firebase_options.dart';
-import 'src/localization/app_localizations_delegate.dart';
 import 'src/pages/onboarding/onboarding_screen.dart';
+import 'src/localization/app_localizations_delegate.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -258,7 +258,7 @@ class ForumApi {
       // Handle the case when the user is not signed in
       return;
     }
-    List<String> likes = [];
+    List<String> likes = [], commentsList = [];
     const int initialComment = 0;
 
     final postDateAndTime = DateTime.now();
@@ -285,7 +285,8 @@ class ForumApi {
       'discussionTags': tagCheckboxes.entries
           .where((entry) => entry.value)
           .map((entry) => entry.key)
-          .toList(), // Only true tags
+          .toList(),
+      'commentsList': commentsList, // Only true tags
       'postDateAndTime': postDateAndTime,
       'commentTotal': initialComment,
 

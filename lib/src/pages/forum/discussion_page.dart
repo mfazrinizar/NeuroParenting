@@ -12,6 +12,7 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/db/forum/forum_api.dart';
+import 'package:photo_view/photo_view.dart';
 
 class DiscussionPage extends StatefulWidget {
   final String userAvatarUrl;
@@ -128,13 +129,15 @@ class DiscussionState extends State<DiscussionPage> {
           children: [
             Align(
               alignment: Alignment.topLeft,
-              child: Text(
-                '  ${widget.title}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24),
+                ),
               ),
             ),
-
             ListTile(
               leading: ClipOval(
                 child: FadeInImage.assetNetwork(
@@ -177,7 +180,6 @@ class DiscussionState extends State<DiscussionPage> {
                     .toList(),
               ),
             ),
-
             Container(
               height:
                   2.0, // This can be adjusted to change the thickness of the underline
@@ -197,17 +199,58 @@ class DiscussionState extends State<DiscussionPage> {
             const SizedBox(
               height: 10,
             ),
-            Text(widget.descriptionPost),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                widget.descriptionPost,
+                textAlign: TextAlign.justify,
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),
-            FadeInImage.assetNetwork(
-              image: widget.discussionImage,
-              placeholder: 'assets/images/placeholder_loading.gif',
-              width: width * 0.75, // 2x radius
-              // 2x radius
-              fit: BoxFit.scaleDown,
-            ), // Replace with your actual description
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: Stack(
+                      children: [
+                        PhotoView(
+                          imageProvider: NetworkImage(widget.discussionImage),
+                          initialScale: PhotoViewComputedScale.contained,
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: IconButton(
+                            icon: const Icon(Icons.close, color: Colors.blue),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              child: Stack(
+                children: [
+                  FadeInImage.assetNetwork(
+                    image: widget.discussionImage,
+                    placeholder: 'assets/images/placeholder_loading.gif',
+                    width: width * 0.85, // 2x radius
+                    fit: BoxFit.scaleDown,
+                  ),
+                  const Positioned(
+                    right: 10,
+                    bottom: 10,
+                    child: Icon(Icons.zoom_in, color: Colors.blue),
+                  ),
+                ],
+              ),
+            ),
             Row(
               children: [
                 IconButton(
@@ -308,7 +351,6 @@ class DiscussionState extends State<DiscussionPage> {
                 },
               ),
             ),
-
             Column(
               children: List.generate(commentsList.length, (index) {
                 final comment = commentsList[index];
@@ -322,13 +364,27 @@ class DiscussionState extends State<DiscussionPage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  title: Text(
-                    comment.commenterName,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  title: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${comment.commenterName} | ',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          DateFormat('yyyy-MM-dd – kk:mm')
+                              .format(comment.commentDate),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
-                  subtitle: Text(comment.text),
-                  trailing: Text(DateFormat('yyyy-MM-dd – kk:mm')
-                      .format(comment.commentDate)),
+                  subtitle: Text(
+                    comment.text,
+                    textAlign: TextAlign.justify,
+                  ),
                 );
               }),
             ),
