@@ -1,5 +1,5 @@
 # NeuroParenting
-![Group 140146](https://github.com/mfazrinizar/NeuroParenting/blob/main/assets/icons/logo.png?raw=true)
+![Icon](https://github.com/mfazrinizar/NeuroParenting/blob/main/assets/icons/logo.png?raw=true)
 
 ## Introduction
 
@@ -52,12 +52,21 @@ UI Scheme 2                      | UI Scheme 3
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2Dark.png" alt="screen_4" width="200"/>
 </div>
 <div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Register.png" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/RegisterDark.png" alt="screen_2" width="200"/>
+  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Login.png" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/LoginDark.png" alt="screen_4" width="200"/>
+</div>
+<div style="display:flex;">
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Homepage.png" alt="screen_1" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/HomePageDark.png" alt="screen_2" width="200"/>
-  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum.png" alt="screen_3" width="200"/>
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/ForumDark.png" alt="screen_4" width="200"/>
+  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.jpeg" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1Dark.jpeg" alt="screen_4" width="200"/>
 </div>
-
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2.jpeg" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2Dark.jpeg" alt="screen_2" width="200"/>
+</div>
 ## How to Compile & Run
 1. Install Java JDK (add to PATH), Android Studio, VS Code (or any preferred IDE), Flutter SDK, etc. to install all needed tools (SDK, NDK, extra tools) for Android development toolchain, please refer to this [link](https://docs.flutter.dev/get-started/install/windows/mobile).
 2. Clone this repository.
