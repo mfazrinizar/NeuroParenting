@@ -8,6 +8,7 @@ import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
+import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
 
 class HomePageBody extends StatefulWidget {
   final double height;
@@ -162,6 +163,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
             Get.to(() => const ChatBotPage());
           } else if (title == 'Donate') {
             Get.to(() => const DonatePage());
+          } else if (title == 'Games') {
+            Get.to(() => const GamePage());
           } else {
             Get.to(() => const UnderConstructionPage());
           }

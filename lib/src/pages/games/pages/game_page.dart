@@ -7,6 +7,7 @@ import 'package:neuroparenting/src/pages/games/auth.dart';
 import 'package:neuroparenting/src/pages/games/pages/nst.dart';
 import 'package:neuroparenting/src/pages/games/phonetic%20list/phonetic_list.dart';
 import 'package:neuroparenting/src/pages/games/size_config.dart';
+import 'package:neuroparenting/src/homepage.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -31,7 +32,9 @@ class GamePageState extends State<GamePage> {
             icon: const Icon(Icons.arrow_back),
             color: const Color.fromARGB(255, 255, 255, 255),
             onPressed: () {
-              Get.offAll(const GamePage());
+              Get.offAll(const HomePage(
+                indexFromPrevious: 0,
+              ));
             }),
       ),
       body: SingleChildScrollView(
