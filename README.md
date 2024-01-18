@@ -67,6 +67,7 @@ UI Scheme 2                      | UI Scheme 3
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2.jpeg" alt="screen_1" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2Dark.jpeg" alt="screen_2" width="200"/>
 </div>
+
 ## How to Compile & Run
 1. Install Java JDK (add to PATH), Android Studio, VS Code (or any preferred IDE), Flutter SDK, etc. to install all needed tools (SDK, NDK, extra tools) for Android development toolchain, please refer to this [link](https://docs.flutter.dev/get-started/install/windows/mobile).
 2. Clone this repository.
