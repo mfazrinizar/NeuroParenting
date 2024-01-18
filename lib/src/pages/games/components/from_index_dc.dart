@@ -1,4 +1,4 @@
-import 'package:neuroparenting/src/pages/gamification/storylines/txt/dailychallenge_txt.dart';
+import 'package:neuroparenting/src/pages/games/storylines/txt/dailychallenge_txt.dart';
 
 String questionFromIndex(int index) {
   String question = "";

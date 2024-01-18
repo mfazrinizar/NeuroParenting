@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:neuroparenting/src/pages/gamification/components/custom_container.dart';
-import 'package:neuroparenting/src/pages/gamification/components/from_index_dc.dart';
-import 'package:neuroparenting/src/pages/gamification/db.dart';
+import 'package:neuroparenting/src/pages/games/components/custom_container.dart';
+import 'package:neuroparenting/src/pages/games/components/from_index_dc.dart';
+import 'package:neuroparenting/src/pages/games/db.dart';
 
 class DailyChallenge extends HookWidget {
   final User? user;

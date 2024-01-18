@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neuroparenting/src/pages/gamification/components/base_storyline.dart';
-import 'package:neuroparenting/src/pages/gamification/components/from_index.dart';
-import 'package:neuroparenting/src/pages/gamification/db.dart';
-import 'package:neuroparenting/src/pages/gamification/theme_game.dart';
+import 'package:neuroparenting/src/pages/games/components/base_storyline.dart';
+import 'package:neuroparenting/src/pages/games/components/from_index.dart';
+import 'package:neuroparenting/src/pages/games/db.dart';
+import 'package:neuroparenting/src/pages/games/theme_game.dart';
 
-class SecondStoryLine extends HookWidget {
+class FirstStoryLine extends HookWidget {
   final User? user;
-  const SecondStoryLine({super.key, required this.user});
+  const FirstStoryLine({super.key, required this.user});
 
   Color? getOptionColor(int index, int selectedOption, int correctOption) {
     if (selectedOption == index) {
@@ -27,7 +27,7 @@ class SecondStoryLine extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return baseWidget(context, "Second Story Line", _body(context), user);
+    return baseWidget(context, "First Story Line", _body(context), user);
   }
 
   Widget _body(BuildContext context) {
@@ -43,7 +43,7 @@ class SecondStoryLine extends HookWidget {
     final displayQuestion = useState(false);
     tts.setSpeechRate(0.6);
 
-    final parsableText = questionFromIndex(2, questionIndex.value);
+    final parsableText = questionFromIndex(1, questionIndex.value);
     final text = parsableText
         .map((paragraph) => TypewriterAnimatedText(
               paragraph,
@@ -55,7 +55,7 @@ class SecondStoryLine extends HookWidget {
             ))
         .toList();
     List<ListTile> options = [];
-    List<String> parsableOptions = optionsFromIndex(2, questionIndex.value);
+    List<String> parsableOptions = optionsFromIndex(1, questionIndex.value);
     for (var i = 1; i <= parsableOptions.length; i++) {
       options.add(ListTile(
           tileColor:
@@ -84,10 +84,10 @@ class SecondStoryLine extends HookWidget {
       ),
       const SizedBox(height: 70),
       Image.asset(
-        "assets/images/dyslexiagame.png",
-        height: 200,
+        "assets/images/autismgame.png",
+        height: 300,
       ),
-      const SizedBox(height: 20),
+      const SizedBox(height: 5),
       (displayQuestion.value)
           ? Container(
               width: MediaQuery.of(context).size.width - 20,
@@ -100,13 +100,11 @@ class SecondStoryLine extends HookWidget {
                       offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
-                  color: const Color.fromARGB(255, 227, 227, 227),
+                  color: const Color.fromARGB(255, 242, 242, 242),
                   borderRadius: const BorderRadius.all(Radius.circular(10))),
               child: AnimatedTextKit(
                 animatedTexts: text,
-                displayFullTextOnTap: true,
                 repeatForever: false,
-                stopPauseOnTap: true,
                 pause: const Duration(seconds: 5),
                 totalRepeatCount: 1,
                 onFinished: () {
@@ -121,8 +119,7 @@ class SecondStoryLine extends HookWidget {
                 },
               ),
             )
-          : const SizedBox(height: 0, width: 0),
-      const SizedBox(height: 10),
+          : const SizedBox(height: 10),
       (displayOptions.value)
           ? Column(children: [
               (displayReply.value)
@@ -138,7 +135,7 @@ class SecondStoryLine extends HookWidget {
                                   0, 3), // changes position of shadow
                             ),
                           ],
-                          color: Colors.white,
+                          color: const Color.fromARGB(255, 242, 242, 242),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10))),
                       child: AnimatedTextKit(
@@ -149,18 +146,18 @@ class SecondStoryLine extends HookWidget {
                                 textAlign: TextAlign.center,
                                 textStyle: GoogleFonts.nunito(
                                     fontSize: 20, fontWeight: FontWeight.w400),
-                                replyFromIndex(2, selectedOption.value,
+                                replyFromIndex(1, selectedOption.value,
                                     correctOption.value, questionIndex.value))
                           ],
-                          pause: const Duration(seconds: 5),
                           repeatForever: false,
                           totalRepeatCount: 1,
+                          pause: const Duration(seconds: 5),
                           onFinished: () {
                             submitted.value = true;
                           },
                           onNextBeforePause: (idx, b) async {
                             await tts.speak(replyFromIndex(
-                                2,
+                                1,
                                 selectedOption.value,
                                 correctOption.value,
                                 questionIndex.value));
@@ -169,8 +166,7 @@ class SecondStoryLine extends HookWidget {
                             await tts.awaitSpeakCompletion(true);
                           }),
                     )
-                  : const SizedBox(height: 0, width: 0),
-              const SizedBox(height: 10),
+                  : const SizedBox(height: 10),
               Column(children: [
                 ListBody(children: options),
               ]),
@@ -253,6 +249,9 @@ class SecondStoryLine extends HookWidget {
                                     )))),
                       )
                     : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: darkBlueColor, // Background color
+                        ),
                         onPressed: () {
                           questionIndex.value++;
                           if (questionIndex.value <= 4) {
@@ -347,10 +346,10 @@ class SecondStoryLine extends HookWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   child: Text(
-                      "\nDiagnosis dengan disleksia dan kesulitan serta hal positif yang dialami sepanjang hidupnya. Kami belajar bagaimana orang dengan disleksia terpengaruh dari cerita ini.",
+                      "\nDiagnosis dengan autisme dan kesulitan serta hal positif yang dialami sepanjang hidupnya. Kami belajar bagaimana orang dengan autisme terpengaruh dari cerita ini.",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.w600, fontSize: 20))),
+                          fontWeight: FontWeight.w400, fontSize: 20))),
               const SizedBox(height: 20),
               SizedBox(
                   height: 50,

@@ -8,10 +8,10 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   late final PageManager _pageManager;
 
   @override
@@ -37,7 +37,6 @@ class _MyAppState extends State<MyApp> {
                     buffered: value.buffered,
                     total: value.total,
                   );
-                  
                 },
               ),
               ValueListenableBuilder<ButtonState>(

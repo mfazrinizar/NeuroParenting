@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neuroparenting/src/pages/gamification/animal_test/animal_test.dart';
-import 'package:neuroparenting/src/pages/gamification/auth.dart';
-import 'package:neuroparenting/src/pages/gamification/pages/nst.dart';
-import 'package:neuroparenting/src/pages/gamification/phonetic%20list/phonetic_list.dart';
-import 'package:neuroparenting/src/pages/gamification/size_config.dart';
+import 'package:neuroparenting/src/pages/games/animal_test/animal_test.dart';
+import 'package:neuroparenting/src/pages/games/auth.dart';
+import 'package:neuroparenting/src/pages/games/pages/nst.dart';
+import 'package:neuroparenting/src/pages/games/phonetic%20list/phonetic_list.dart';
+import 'package:neuroparenting/src/pages/games/size_config.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});

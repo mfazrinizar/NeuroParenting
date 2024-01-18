@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neuroparenting/src/pages/gamification/components/custom_container.dart';
+import 'package:neuroparenting/src/pages/games/components/custom_container.dart';
 
 class SpeechPractice extends StatefulWidget {
   final User? user;
@@ -40,28 +40,24 @@ class _SpeechPracticeState extends State<SpeechPractice> {
 
     _flutterTts.setStartHandler(() {
       setState(() {
-        print("Playing");
         _ttsState = TtsState.playing;
       });
     });
 
     _flutterTts.setCompletionHandler(() {
       setState(() {
-        print("Complete");
         _ttsState = TtsState.stopped;
       });
     });
 
     _flutterTts.setCancelHandler(() {
       setState(() {
-        print("Cancel");
         _ttsState = TtsState.stopped;
       });
     });
 
     _flutterTts.setErrorHandler((message) {
       setState(() {
-        print("Error: $message");
         _ttsState = TtsState.stopped;
       });
     });

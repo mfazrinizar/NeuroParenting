@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:neuroparenting/src/pages/gamification/components/custom_container.dart';
+import 'package:neuroparenting/src/pages/games/components/custom_container.dart';
 
 class MentalDisorders extends StatelessWidget {
   final User? user;

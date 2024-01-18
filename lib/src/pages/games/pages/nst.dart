@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroparenting/src/homepage.dart';
-import 'package:neuroparenting/src/pages/gamification/pages/game_page.dart';
-import 'package:neuroparenting/src/pages/gamification/theme_game.dart';
+import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
+import 'package:neuroparenting/src/pages/games/theme_game.dart';
 import 'package:quickalert/quickalert.dart';
 
 class NST extends StatefulWidget {

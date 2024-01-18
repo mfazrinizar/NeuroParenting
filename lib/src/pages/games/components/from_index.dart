@@ -1,5 +1,5 @@
-import 'package:neuroparenting/src/pages/gamification/storylines/txt/story1_txt.dart';
-import 'package:neuroparenting/src/pages/gamification/storylines/txt/story2_txt.dart';
+import 'package:neuroparenting/src/pages/games/storylines/txt/story1_txt.dart';
+import 'package:neuroparenting/src/pages/games/storylines/txt/story2_txt.dart';
 
 List<String> questionFromIndex(int story, int index) {
   List<String> question;
