@@ -128,9 +128,37 @@ class _ChatBotPageState extends State<ChatBotPage> {
               if (!status.isGranted) {
                 return;
               }
+              if (!context.mounted) return;
+              final action = await showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Choose an action'),
+                  content: const Text(
+                      'Pick an image from the gallery or take a new photo?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Gallery'),
+                      child: const Text('Gallery'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Camera'),
+                      child: const Text('Camera'),
+                    ),
+                  ],
+                ),
+              );
 
-              final XFile? photo =
-                  await picker.pickImage(source: ImageSource.gallery);
+              ImageSource source;
+              if (action == 'Gallery') {
+                source = ImageSource.gallery;
+              } else if (action == 'Camera') {
+                source = ImageSource.camera;
+              } else {
+                // The user cancelled the dialog
+                return;
+              }
+
+              final XFile? photo = await picker.pickImage(source: source);
 
               if (photo != null) {
                 photo.readAsBytes().then((value) => setState(() {

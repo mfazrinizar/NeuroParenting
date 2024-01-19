@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/pages/auth/login.dart';
 import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
@@ -122,7 +123,39 @@ class RegisterState extends State<RegisterPage> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              final pickedImage = await filePicking.pickImage();
+                              final action = await showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('Choose an action'),
+                                  content: const Text(
+                                      'Pick an image from the gallery or take a new photo?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Gallery'),
+                                      child: const Text('Gallery'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Camera'),
+                                      child: const Text('Camera'),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              ImageSource source;
+                              if (action == 'Gallery') {
+                                source = ImageSource.gallery;
+                              } else if (action == 'Camera') {
+                                source = ImageSource.camera;
+                              } else {
+                                // The user cancelled the dialog
+                                return;
+                              }
+
+                              final pickedImage =
+                                  await filePicking.pickImage(source);
                               if (pickedImage != null) {
                                 setState(() {
                                   profileImage = pickedImage;

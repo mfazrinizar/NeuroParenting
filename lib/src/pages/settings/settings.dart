@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
@@ -181,7 +182,39 @@ class SettingsPageState extends State<SettingsPage> {
                       ),
                       child: IconButton(
                         onPressed: () async {
-                          final pickedImage = await filePicking.pickImage();
+                          final action = await showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Choose an action'),
+                              content: const Text(
+                                  'Pick an image from the gallery or take a new photo?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Gallery'),
+                                  child: const Text('Gallery'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Camera'),
+                                  child: const Text('Camera'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          ImageSource source;
+                          if (action == 'Gallery') {
+                            source = ImageSource.gallery;
+                          } else if (action == 'Camera') {
+                            source = ImageSource.camera;
+                          } else {
+                            // The user cancelled the dialog
+                            return;
+                          }
+
+                          final pickedImage =
+                              await filePicking.pickImage(source);
                           if (user != null && pickedImage != null) {
                             EasyLoading.show(status: 'Uploading...');
 
