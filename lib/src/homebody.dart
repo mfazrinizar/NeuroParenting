@@ -150,6 +150,7 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
       ),
       child: InkWell(
         onTap: () {
+<<<<<<< Updated upstream
           // if (title == 'Articles') {
           //   // Create a dummy ArticleOverview instance
           //   ArticleOverview articleOverview = ArticleOverview(
@@ -162,6 +163,19 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
           //   Get.to(() => ArticleContentPage(articleOverview));
           if (title == 'Acticles') {
             Get.to(() => ArticleDictionaryPage());
+=======
+          if (title == 'Articles') {
+            // Create a dummy ArticleOverview instance
+            ArticleOverview articleOverview = ArticleOverview(
+              id: '1',
+              title: 'Artikel Autisme',
+              description: 'Dummy Description',
+              imageURL:
+                  'https://www.mendelian.co/uploads/190813/autism-150-rare-diseases.jpg',
+            );
+            // Navigate to ArticleContentPage with the dummy ArticleOverview instance
+            Get.to(() => ArticleContentPage(articleOverview));
+>>>>>>> Stashed changes
           } else if (title == 'ChatBot') {
             Get.to(() => const ChatBotPage());
           } else if (title == 'Donate') {

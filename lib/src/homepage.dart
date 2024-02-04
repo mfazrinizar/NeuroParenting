@@ -79,9 +79,9 @@ class HomePageState extends State<HomePage> {
   ];
 
   final List<String> imgList = [
-    'https://via.placeholder.com/1920x1080', // Replace with your image urls
-    'https://via.placeholder.com/450',
-    'https://via.placeholder.com/550',
+    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg', // Replace with your image urls
+    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
+    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
   ];
 
   final List<String> urlList = [

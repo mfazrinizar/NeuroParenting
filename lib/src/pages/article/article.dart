@@ -31,7 +31,8 @@ class ArticleOverview {
         id: index.toString(),
         title: 'Article $index',
         description: 'Description of Article $index',
-        imageURL: 'https://via.placeholder.com/150',
+        imageURL:
+            'https://www.mendelian.co/uploads/190813/autism-150-rare-diseases.jpg',
       ),
     );
   }
@@ -49,8 +50,9 @@ class ArticleContent {
   static Future<ArticleContent> getDataFromFirestore(String id) async {
     // Dummy data, replace this with your actual data fetching logic
     return ArticleContent(
-      overview: 'Overview content for article $id',
-      howToAddress: 'How to address content for article $id',
+      overview: 'Autisme pada Anak Bisa Terjadi karena Faktor Lingkungan?',
+      howToAddress:
+          'Gangguan perkembangan autisme dapat membuat anak sulit berinteraksi, berkomunikasi, dan berperilaku seperti anak pada umumnya. Gejala autisme umumnya dapat didiagnosis pertama kali pada tahun pertama, atau mungkin lebih awal pada usia bayi. Lalu, apa penyebab terjadinya autisme pada anak? ',
     );
   }
 }
