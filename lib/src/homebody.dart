@@ -9,6 +9,7 @@ import 'package:neuroparenting/src/pages/under_construction/under_construction.d
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
+import 'package:neuroparenting/src/pages/article/article.dart';
 
 class HomePageBody extends StatefulWidget {
   final double height;
@@ -149,16 +150,18 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
       ),
       child: InkWell(
         onTap: () {
-          if (title == 'Articles') {
-            // Create a dummy ArticleOverview instance
-            ArticleOverview articleOverview = ArticleOverview(
-              id: '1',
-              title: 'Dummy Article',
-              description: 'Dummy Description',
-              imageURL: 'https://via.placeholder.com/150',
-            );
-            // Navigate to ArticleContentPage with the dummy ArticleOverview instance
-            Get.to(() => ArticleContentPage(articleOverview));
+          // if (title == 'Articles') {
+          //   // Create a dummy ArticleOverview instance
+          //   ArticleOverview articleOverview = ArticleOverview(
+          //     id: '1',
+          //     title: 'Dummy Article',
+          //     description: 'Dummy Description',
+          //     imageURL: 'https://via.placeholder.com/150',
+          //   );
+          //   // Navigate to ArticleContentPage with the dummy ArticleOverview instance
+          //   Get.to(() => ArticleContentPage(articleOverview));
+          if (title == 'Acticles') {
+            Get.to(() => ArticleDictionaryPage());
           } else if (title == 'ChatBot') {
             Get.to(() => const ChatBotPage());
           } else if (title == 'Donate') {
