@@ -51,6 +51,8 @@ class UploadArticlePageState extends State<UploadArticlePage> {
                 }
                 return null;
               },
+              keyboardType: TextInputType.multiline, 
+              maxLines: null,
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
@@ -78,6 +80,7 @@ class UploadArticlePageState extends State<UploadArticlePage> {
 
                   if (uploadingProcess == 'Success') {
                     Get.snackbar('Success', 'Articles posted successfully.');
+                     Navigator.pop(context);
                   } else {
                     Get.snackbar('Error', 'Something went wrong, check logs.');
                   }
