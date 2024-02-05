@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Article {
   final String title;
@@ -37,21 +38,29 @@ class ArticleApi {
     required String body,
     required File image,
   }) async {
-    final ref = FirebaseStorage.instance.ref().child('article_images').child(
-        '${DateTime.now().toIso8601String()}${path.extension(image.path)}');
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if ((userDoc.data())!.containsKey('adminAccess') &&
+        userDoc['adminAccess'] == true) {
+      final ref = FirebaseStorage.instance.ref().child('article_images').child(
+          '${DateTime.now().toIso8601String()}${path.extension(image.path)}');
 
-    await ref.putFile(image);
+      await ref.putFile(image);
 
-    final url = await ref.getDownloadURL();
+      final url = await ref.getDownloadURL();
 
-    final article = {
-      'title': title,
-      'body': body,
-      'imageUrl': url,
-    };
+      final article = {
+        'title': title,
+        'body': body,
+        'imageUrl': url,
+      };
 
-    await FirebaseFirestore.instance.collection('articles').add(article);
+      await FirebaseFirestore.instance.collection('articles').add(article);
 
-    return 'Success';
+      return 'SUCCESS';
+    } else {
+      return 'NOT-ADMIN';
+    }
   }
 }

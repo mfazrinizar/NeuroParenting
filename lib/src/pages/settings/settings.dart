@@ -79,14 +79,14 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(context) {
-    final tilesData = [
-      {
-        'icon': Icons.upload,
-        'title': 'Upload Article',
-        'onTap': () {
-          Get.to(() => const UploadArticlePage());
-        }
-      },
+    List<Map<String, Object>> tilesData = [
+      // {
+      //   'icon': Icons.upload,
+      //   'title': 'Upload Article',
+      //   'onTap': () {
+      //     Get.to(() => const UploadArticlePage());
+      //   }
+      // },
       {
         'icon': Icons.person,
         'title': 'Change Name',
@@ -163,6 +163,19 @@ class SettingsPageState extends State<SettingsPage> {
           var userTags = userType == 'Parent'
               ? (userDoc['userTags'] as List).cast<String>()
               : null;
+
+          if ((userDoc.data() as Map<String, dynamic>?)!
+                  .containsKey('adminAccess') &&
+              userDoc['adminAccess'] == true) {
+            tilesData.add({
+              'icon': Icons.upload,
+              'title': 'Upload Article',
+              'onTap': () {
+                Get.to(() => const UploadArticlePage());
+              }
+            });
+          }
+
           return SingleChildScrollView(
             child: Column(
               children: [

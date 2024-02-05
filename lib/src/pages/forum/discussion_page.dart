@@ -1,5 +1,6 @@
 // under_construction.dart
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -28,6 +29,7 @@ class DiscussionPage extends StatefulWidget {
   final String discussionId;
   final String descriptionPost;
   final String discussionImage;
+  final String discussionPostUserId;
   final bool hasLiked;
 
   const DiscussionPage(
@@ -45,6 +47,7 @@ class DiscussionPage extends StatefulWidget {
       required this.commentsList,
       required this.discussionImage,
       required this.hasLiked,
+      required this.discussionPostUserId,
       super.key});
 
   @override
@@ -60,12 +63,14 @@ class DiscussionState extends State<DiscussionPage> {
   int likesTotal = 0;
   List<Comment> commentsList = [];
   int commentTotal = 0;
+  String userId = "null-string";
 
   @override
   void initState() {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      userId = user.uid;
       hasLiked = widget.hasLiked;
 
       commentsList = widget.commentsList;
@@ -295,6 +300,58 @@ class DiscussionState extends State<DiscussionPage> {
                     },
                   ),
                   Text('$commentTotal comment${commentTotal > 1 ? 's' : ''}'),
+                  if (userId == widget.discussionPostUserId)
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () async {
+                        AwesomeDialog(
+                          dismissOnTouchOutside: false,
+                          context: context,
+                          keyboardAware: true,
+                          dismissOnBackKeyPress: false,
+                          dialogType: DialogType.question,
+                          animType: AnimType.scale,
+                          transitionAnimationDuration:
+                              const Duration(milliseconds: 200),
+                          btnOkText: "Delete",
+                          btnCancelText: "Cancel",
+                          title: 'Delete Discussion',
+                          desc:
+                              "Are you sure you want to delete this discussion?",
+                          btnCancelOnPress: () {},
+                          btnOkOnPress: () async {
+                            final result = await ForumApi.deleteDiscussion(
+                              discussionId: widget.discussionId,
+                            );
+
+                            switch (result) {
+                              case 'NULL':
+                                Get.snackbar(
+                                    'Error', 'Please relog your account.');
+                                break;
+                              case 'NOT-OWNER':
+                                Get.snackbar('Error',
+                                    'You do not have permission to delete this discussion.');
+                                break;
+                              case 'SUCCESS':
+                                Get.snackbar('Success',
+                                    'Discussion deleted successfully.');
+                                Get.offAll(
+                                  () => const HomePage(
+                                    indexFromPrevious: 1,
+                                  ),
+                                );
+                                break;
+                            }
+                          },
+                        ).show();
+                      },
+                    ),
+                  if (userId == widget.discussionPostUserId)
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {},
+                    )
                 ],
               ),
               const SizedBox(

@@ -509,6 +509,9 @@ class ForumPageState extends State<ForumPage> {
                                         filteredDiscussions[index].comments,
                                     commentsList:
                                         filteredDiscussions[index].commentsList,
+                                    discussionPostUserId:
+                                        filteredDiscussions[index]
+                                            .discussionPostUserId,
                                   ),
                                 );
                                 // Handle comment button press

@@ -76,8 +76,11 @@ class UploadArticlePageState extends State<UploadArticlePage> {
                     image: _image!,
                   );
 
-                  if (uploadingProcess == 'Success') {
+                  if (uploadingProcess == 'SUCCESS') {
                     Get.snackbar('Success', 'Articles posted successfully.');
+                  } else if (uploadingProcess == 'NOT-ADMIN') {
+                    Get.snackbar(
+                        'Error', 'You are not authorized to post articles.');
                   } else {
                     Get.snackbar('Error', 'Something went wrong, check logs.');
                   }

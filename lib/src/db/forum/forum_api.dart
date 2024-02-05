@@ -35,6 +35,7 @@ class Discussion {
   final String discussionId;
   final String descriptionPost;
   final String discussionImage;
+  final String discussionPostUserId;
 
   Discussion({
     required this.discussionId,
@@ -50,6 +51,7 @@ class Discussion {
     required this.comments,
     required this.commentsList,
     required this.discussionImage,
+    required this.discussionPostUserId,
   });
 }
 
@@ -74,6 +76,7 @@ class ForumApi {
           likes: List<String>.from(data['likes']),
           likesTotal: List<String>.from(data['likes']).length,
           comments: data['commentTotal'],
+          discussionPostUserId: data['discussionPostUserId'],
           commentsList: (data['commentsList'] as List).map(
             (commentData) {
               return Comment(
@@ -126,6 +129,7 @@ class ForumApi {
       likes: List<String>.from(data['likes']),
       likesTotal: List<String>.from(data['likes']).length,
       comments: data['commentTotal'],
+      discussionPostUserId: data['discussionPostUserId'],
       commentsList: (data['commentsList'] as List).map(
         (commentData) {
           return Comment(
@@ -289,7 +293,6 @@ class ForumApi {
       'commentsList': commentsList, // Only true tags
       'postDateAndTime': postDateAndTime,
       'commentTotal': initialComment,
-
       'likes': likes,
     };
 
@@ -302,5 +305,31 @@ class ForumApi {
     await docRef.update(
       {'discussionId': docRef.id},
     );
+  }
+
+  static Future<String> deleteDiscussion({
+    required String discussionId,
+  }) async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle the case when the user is not signed in
+      return "NULL";
+    }
+
+    // Get the discussion document
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    // Check if the discussion was posted by the current user
+    if (data != null && data['discussionPostUserId'] == user.uid) {
+      // Delete the discussion
+      await docRef.delete();
+    } else {
+      return "NOT-OWNER";
+    }
+    return "SUCCESS";
   }
 }
