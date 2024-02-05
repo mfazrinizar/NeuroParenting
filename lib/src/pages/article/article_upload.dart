@@ -43,6 +43,8 @@ class UploadArticlePageState extends State<UploadArticlePage> {
               },
             ),
             TextFormField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               controller: _bodyController,
               decoration: const InputDecoration(labelText: 'Body'),
               validator: (value) {
