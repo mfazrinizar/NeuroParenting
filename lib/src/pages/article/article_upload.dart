@@ -83,6 +83,8 @@ class UploadArticlePageState extends State<UploadArticlePage> {
                   } else if (uploadingProcess == 'NOT-ADMIN') {
                     Get.snackbar(
                         'Error', 'You are not authorized to post articles.');
+                    // if (!context.mounted) return;
+                    // Navigator.pop(context); // Mungkin tidak perlu? Supaya user tetap bisa upload article lagi.
                   } else {
                     Get.snackbar('Error', 'Something went wrong, check logs.');
                   }
