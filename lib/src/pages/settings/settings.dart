@@ -12,6 +12,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout.dart';
+import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
@@ -79,6 +80,13 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(context) {
     final tilesData = [
+      {
+        'icon': Icons.upload,
+        'title': 'Upload Article',
+        'onTap': () {
+          Get.to(() => const UploadArticlePage());
+        }
+      },
       {
         'icon': Icons.person,
         'title': 'Change Name',

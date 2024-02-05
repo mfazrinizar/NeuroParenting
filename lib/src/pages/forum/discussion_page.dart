@@ -12,7 +12,7 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/db/forum/forum_api.dart';
-// import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view.dart';
 
 class DiscussionPage extends StatefulWidget {
   final String userAvatarUrl;
@@ -228,10 +228,10 @@ class DiscussionState extends State<DiscussionPage> {
                     builder: (context) => Dialog(
                       child: Stack(
                         children: [
-                          // PhotoView(
-                          //   imageProvider: NetworkImage(widget.discussionImage),
-                          //   initialScale: PhotoViewComputedScale.contained,
-                          // ),
+                          PhotoView(
+                            imageProvider: NetworkImage(widget.discussionImage),
+                            initialScale: PhotoViewComputedScale.contained,
+                          ),
                           Positioned(
                             top: 10,
                             right: 10,

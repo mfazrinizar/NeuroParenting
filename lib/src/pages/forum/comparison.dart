@@ -98,11 +98,9 @@ class ForumPageState extends State<ForumPage> {
 
       if (shouldInclude) {
         newFilteredDiscussions.add(discussion);
-        int originalIndex = discussions.indexOf(discussion);
-        newHasLikedFiltered.add(hasLiked[originalIndex]);
+        newHasLikedFiltered.add(hasLiked[discussions.indexOf(discussion)]);
       }
     }
-
     setState(() {
       filteredDiscussions = newFilteredDiscussions;
       hasLikedFiltered = newHasLikedFiltered;
@@ -114,8 +112,8 @@ class ForumPageState extends State<ForumPage> {
     super.initState();
     current = widget.current;
     isDarkMode = Get.isDarkMode;
-    hasLiked = List<bool>.filled(discussions.length, false);
     fetchDiscussions().then((_) {
+      hasLiked = List<bool>.filled(discussions.length, false);
       filterDiscussions();
       searchController.addListener(filterDiscussions);
     });
@@ -137,13 +135,14 @@ class ForumPageState extends State<ForumPage> {
       return;
     }
 
-    hasLiked = fetchedDiscussions
+    final hasLikedFetched = fetchedDiscussions
         .map((discussion) => discussion.likes.contains(user.uid))
         .toList();
 
     setState(() {
       discussions = fetchedDiscussions;
-      filterDiscussions(); // Call filterDiscussions here
+      filteredDiscussions = discussions;
+      hasLikedFiltered = hasLikedFetched;
     });
     EasyLoading.dismiss();
   }
@@ -169,8 +168,8 @@ class ForumPageState extends State<ForumPage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: searchController,
                       keyboardType: TextInputType.visiblePassword,
+                      controller: searchController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor:
@@ -451,7 +450,6 @@ class ForumPageState extends State<ForumPage> {
                                   setState(
                                     () {
                                       --filteredDiscussions[index].likesTotal;
-                                      hasLikedFiltered[index] = false;
                                     },
                                   );
                                 } else {
@@ -461,11 +459,16 @@ class ForumPageState extends State<ForumPage> {
                                   setState(
                                     () {
                                       ++filteredDiscussions[index].likesTotal;
-                                      hasLikedFiltered[index] = true;
                                     },
                                   );
                                 }
-                                likeChanged = true;
+                                setState(() {
+                                  hasLikedFiltered[index] =
+                                      !hasLikedFiltered[index];
+                                  likeChanged = true;
+                                });
+
+                                // Handle like button press
                               },
                             ),
                             TextButton.icon(
