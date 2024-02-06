@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
@@ -49,6 +50,7 @@ class HomePageBodyState extends State<HomePageBody> {
     super.initState();
     current = widget.current;
     isDarkMode = Get.isDarkMode;
+    EasyLoading.dismiss();
   }
 
   @override

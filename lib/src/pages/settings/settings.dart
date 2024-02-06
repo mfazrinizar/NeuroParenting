@@ -57,11 +57,16 @@ class SettingsPageState extends State<SettingsPage> {
   final user = FirebaseAuth.instance.currentUser;
 
   Future<DocumentSnapshot> getUserData() async {
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get();
-    return userDoc;
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      return userDoc;
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+      rethrow;
+    }
   }
 
   File? newProfileImage;
@@ -158,15 +163,19 @@ class SettingsPageState extends State<SettingsPage> {
         } else {
           EasyLoading.dismiss();
 
-          final userDoc = snapshot.data!;
+          final userDoc = snapshot.data;
+
+          if (userDoc == null || !userDoc.exists) {
+            return Container();
+          }
           final userType = userDoc['userType'];
           var userTags = userType == 'Parent'
               ? (userDoc['userTags'] as List).cast<String>()
               : null;
-
-          if ((userDoc.data() as Map<String, dynamic>?)!
-                  .containsKey('adminAccess') &&
-              userDoc['adminAccess'] == true) {
+          final userData = userDoc.data() as Map<String, dynamic>?;
+          if (userData != null &&
+              userData.containsKey('adminAccess') &&
+              userData['adminAccess'] == true) {
             tilesData.add({
               'icon': Icons.upload,
               'title': 'Upload Article',
