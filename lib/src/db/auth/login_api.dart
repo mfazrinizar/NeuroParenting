@@ -40,7 +40,8 @@ class LoginApi {
       // Return the error code
       if (e.code == 'wrong-password' ||
           e.code == 'invalid-email' ||
-          e.code == 'user-not-found') {
+          e.code == 'user-not-found' || 
+          e.code == 'invalid-credential') {
         return {'status': 'error', 'message': 'Wrong email or password.'};
       } else if (e.code == 'user-disabled') {
         return {
