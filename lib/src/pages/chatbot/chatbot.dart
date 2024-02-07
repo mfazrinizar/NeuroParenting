@@ -162,9 +162,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
               final XFile? photo = await picker.pickImage(source: source);
 
               if (photo != null) {
-                photo.readAsBytes().then((value) => setState(() {
-                      selectedImage = value;
-                    }));
+                photo.readAsBytes().then(
+                      (value) => setState(
+                        () {
+                          selectedImage = value;
+                        },
+                      ),
+                    );
               }
             },
             onSend: () async {

@@ -5,6 +5,8 @@ import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: depend_on_referenced_packages
+import 'package:uuid/uuid.dart';
 
 class Comment {
   final String text;
@@ -12,6 +14,7 @@ class Comment {
   final String commenterName;
   final String commenterId;
   final DateTime commentDate;
+  final String commentId;
 
   Comment({
     required this.text,
@@ -19,6 +22,7 @@ class Comment {
     required this.commenterName,
     required this.commenterId,
     required this.commentDate,
+    required this.commentId,
   });
 }
 
@@ -85,6 +89,7 @@ class ForumApi {
                 avatarUrl: commentData['avatarUrl'],
                 commenterName: commentData['commenterName'],
                 commenterId: commentData['commenterId'],
+                commentId: commentData['commentId'] ?? "null",
                 commentDate: (commentData['commentDate'] as Timestamp).toDate(),
               );
             },
@@ -138,6 +143,7 @@ class ForumApi {
             avatarUrl: commentData['avatarUrl'],
             commenterName: commentData['commenterName'],
             commenterId: commentData['commenterId'],
+            commentId: commentData['commentId'] ?? "null",
             commentDate: (commentData['commentDate'] as Timestamp).toDate(),
           );
         },
@@ -165,6 +171,7 @@ class ForumApi {
           avatarUrl: commentData['avatarUrl'],
           commenterName: commentData['commenterName'],
           commenterId: commentData['commenterId'],
+          commentId: commentData['commentId'] ?? "null",
           commentDate: (commentData['commentDate'] as Timestamp).toDate(),
         );
       },
@@ -187,10 +194,13 @@ class ForumApi {
       return;
     }
 
+    final commentId = const Uuid().v4();
+
     // Prepare the comment details
     final commentData = {
       'text': comment.text,
       'avatarUrl': comment.avatarUrl,
+      'commentId': commentId,
       'commenterName': comment.commenterName,
       'commenterId': user.uid, // Use the user's ID
       'commentDate': DateTime.now(),
@@ -331,6 +341,48 @@ class ForumApi {
       await docRef.delete();
     } else {
       return "NOT-OWNER";
+    }
+    return "SUCCESS";
+  }
+
+  static Future<String> deleteComment({
+    required String discussionId,
+    required String commentId,
+  }) async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle the case when the user is not signed in
+      return "NULL";
+    }
+
+    // Get the discussion document
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    // Check if the comment exists in the discussion
+    if (data != null) {
+      final commentsList =
+          List<Map<String, dynamic>>.from(data['commentsList']);
+      final commentIndex = commentsList
+          .indexWhere((comment) => comment['commentId'] == commentId);
+
+      // Check if the comment was posted by the current user
+      if (commentIndex != -1 &&
+          commentsList[commentIndex]['commenterId'] == user.uid) {
+        // Delete the comment
+        commentsList.removeAt(commentIndex);
+        await docRef.update({'commentsList': commentsList});
+
+        await FirebaseFirestore.instance
+            .collection('discussions')
+            .doc(discussionId)
+            .update({'commentTotal': FieldValue.increment(-1)});
+      } else {
+        return "NOT-OWNER";
+      }
     }
     return "SUCCESS";
   }

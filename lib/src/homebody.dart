@@ -141,47 +141,53 @@ class HomePageBodyState extends State<HomePageBody> {
 
 Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
   bool isDarkMode = HomePageBodyState().isDarkMode;
-  return Column(children: [
-    Card(
-      color: isDarkMode
-          ? ThemeClass().darkRounded
-          : ThemeClass().lightPrimaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), // This makes the card rounded
-      ),
-      child: InkWell(
-        onTap: () {
-          if (title == 'Articles') {
-            // Create a dummy ArticleOverview instance
-            ArticleOverview articleOverview = ArticleOverview(
-              id: '1',
-              title: 'Artikel Autisme',
-              description: 'Dummy Description',
-              imageURL:
-                  'https://www.mendelian.co/uploads/190813/autism-150-rare-diseases.jpg',
-            );
-            // Navigate to ArticleContentPage with the dummy ArticleOverview instance
-            Get.to(() => ArticleContentPage(articleOverview));
-          } else if (title == 'ChatBot') {
-            Get.to(() => const ChatBotPage());
-          } else if (title == 'Donate') {
-            Get.to(() => const DonatePage());
-          } else if (title == 'Games') {
-            Get.to(() => const GamePage());
-          } else {
-            Get.to(() => const UnderConstructionPage());
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            icon,
-            size: 30,
-            color: isDarkMode ? Colors.black : Colors.white,
-          ), // Adjust the size as needed
+  double deviceWidth = MediaQuery.of(context).size.width;
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        Card(
+          color: isDarkMode
+              ? ThemeClass().darkRounded
+              : ThemeClass().lightPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(16), // This makes the card rounded
+          ),
+          child: InkWell(
+            onTap: () {
+              if (title == 'Articles') {
+                // Create a dummy ArticleOverview instance
+                ArticleOverview articleOverview = ArticleOverview(
+                  id: '1',
+                  title: 'Artikel Autisme',
+                  description: 'Dummy Description',
+                  imageURL:
+                      'https://www.mendelian.co/uploads/190813/autism-150-rare-diseases.jpg',
+                );
+                // Navigate to ArticleContentPage with the dummy ArticleOverview instance
+                Get.to(() => ArticleContentPage(articleOverview));
+              } else if (title == 'ChatBot') {
+                Get.to(() => const ChatBotPage());
+              } else if (title == 'Donate') {
+                Get.to(() => const DonatePage());
+              } else if (title == 'Games') {
+                Get.to(() => const GamePage());
+              } else {
+                Get.to(() => const UnderConstructionPage());
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                icon,
+                size: deviceWidth * 0.1,
+                color: isDarkMode ? Colors.black : Colors.white,
+              ), // Adjust the size as needed
+            ),
+          ),
         ),
-      ),
+        Text(title),
+      ],
     ),
-    Text(title),
-  ]);
+  );
 }

@@ -387,8 +387,8 @@ class DiscussionState extends State<DiscussionPage> {
                                       .photoURL!, // Replace with the URL of the user's avatar
                                   commenterName: user
                                       .displayName!, // Replace with the name of the user
-                                  commenterId: user
-                                      .uid, // Replace with the ID of the user
+                                  commenterId: user.uid,
+                                  commentId: "",
                                   commentDate: DateTime.now(),
                                 );
 
@@ -423,41 +423,102 @@ class DiscussionState extends State<DiscussionPage> {
                 ),
               ),
               Column(
-                children: List.generate(commentsList.length, (index) {
-                  final comment = commentsList[index];
-                  return ListTile(
-                    leading: ClipOval(
-                      child: FadeInImage.assetNetwork(
-                        image: comment.avatarUrl,
-                        placeholder: 'assets/images/placeholder_loading.gif',
-                        width: 50, // 2x radius
-                        height: 50, // 2x radius
-                        fit: BoxFit.cover,
+                children: List.generate(
+                  commentsList.length,
+                  (index) {
+                    final Comment comment = commentsList[index];
+                    return ListTile(
+                      leading: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          image: comment.avatarUrl,
+                          placeholder: 'assets/images/placeholder_loading.gif',
+                          width: 50, // 2x radius
+                          height: 50, // 2x radius
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    title: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Text(
-                            '${comment.commenterName} | ',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            DateFormat('yyyy-MM-dd – kk:mm')
-                                .format(comment.commentDate),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.normal, fontSize: 12),
-                          ),
-                        ],
+                      title: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Text(
+                              '${comment.commenterName} | ',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat('yyyy-MM-dd – kk:mm  ')
+                                  .format(comment.commentDate),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal, fontSize: 12),
+                            ),
+                            if (userId == comment.commenterId)
+                              InkWell(
+                                onTap: () async {
+                                  AwesomeDialog(
+                                      dismissOnTouchOutside: false,
+                                      context: context,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.question,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Delete",
+                                      btnCancelText: "Cancel",
+                                      title: 'Delete Discussion',
+                                      desc:
+                                          "Are you sure you want to delete this discussion?",
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () async {
+                                        EasyLoading.show(
+                                            status: "Deleting comment...");
+                                        String result =
+                                            await ForumApi.deleteComment(
+                                          discussionId: widget.discussionId,
+                                          commentId: comment.commentId,
+                                        );
+                                        switch (result) {
+                                          case 'NULL':
+                                            Get.snackbar('Error',
+                                                'Please relog your account.');
+                                            break;
+                                          case 'NOT-OWNER':
+                                            Get.snackbar('Error',
+                                                'You do not have permission to delete this comment.');
+                                            break;
+                                          case 'SUCCESS':
+                                            Get.snackbar('Success',
+                                                'Comment deleted successfully.');
+                                            final updatedComments =
+                                                await ForumApi
+                                                    .fetchOnlyComments(
+                                                        widget.discussionId);
+                                            setState(() {
+                                              commentsList = updatedComments[
+                                                  'commentsList'];
+                                              commentTotal = updatedComments[
+                                                  'commentTotal'];
+                                            });
+                                            break;
+                                        }
+                                        EasyLoading.dismiss();
+                                      }).show();
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
-                    ),
-                    subtitle: Text(
-                      comment.text,
-                      textAlign: TextAlign.justify,
-                    ),
-                  );
-                }),
+                      subtitle: Text(
+                        comment.text,
+                        textAlign: TextAlign.justify,
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
