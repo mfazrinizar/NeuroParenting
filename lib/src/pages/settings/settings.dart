@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:neuroparenting/src/db/auth/logout.dart';
+import 'package:neuroparenting/src/db/auth/logout_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
 import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';

@@ -376,6 +376,7 @@ class ForumApi {
         commentsList.removeAt(commentIndex);
         await docRef.update({'commentsList': commentsList});
 
+        // Decrement commentTotal by 1 (or increment by -1)
         await FirebaseFirestore.instance
             .collection('discussions')
             .doc(discussionId)
