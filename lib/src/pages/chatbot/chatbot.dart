@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_svg/svg.dart';
@@ -33,7 +34,7 @@ class ChatItem {
 class _ChatBotPageState extends State<ChatBotPage> {
   final ImagePicker picker = ImagePicker();
   final controller = TextEditingController();
-  final gemini = Gemini.instance;
+  Gemini gemini = Gemini.instance;
   bool _loading = false;
   Uint8List? selectedImage;
 
@@ -166,7 +167,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                     }));
               }
             },
-            onSend: () {
+            onSend: () async {
               if (controller.text.isNotEmpty) {
                 final searchedText = controller.text;
                 chats.add(
@@ -182,38 +183,54 @@ class _ChatBotPageState extends State<ChatBotPage> {
                 controller.clear();
                 loading = true;
 
-                if (selectedImage != null) {
-                  gemini.textAndImage(
-                      text: searchedText,
-                      images: [selectedImage!]).then((value) {
-                    chats.add(
-                      ChatItem(
-                        content: Content(
-                          role: 'model',
-                          parts: [Parts(text: value?.output)],
+                try {
+                  if (selectedImage != null) {
+                    await gemini
+                        .textAndImage(
+                            text: searchedText, images: [selectedImage!])
+                        .timeout(const Duration(seconds: 10))
+                        .then((value) {
+                          chats.add(
+                            ChatItem(
+                              content: Content(
+                                role: 'model',
+                                parts: [Parts(text: value?.output)],
+                              ),
+                            ),
+                          );
+                        }); // Set a timeout
+                  } else {
+                    print(chatsTextOnly);
+                    chatsTextOnly.add(Content(
+                      role: 'user',
+                      parts: [Parts(text: searchedText)],
+                    ));
+
+                    await gemini
+                        .chat(chatsTextOnly)
+                        .timeout(const Duration(seconds: 10))
+                        .then((value) {
+                      chats.add(
+                        ChatItem(
+                          content: Content(
+                            role: 'model',
+                            parts: [
+                              Parts(text: value?.output),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                    loading = false;
-                  });
-                } else {
-                  chatsTextOnly.add(Content(
-                    role: 'user',
-                    parts: [Parts(text: searchedText)],
-                  ));
-                  gemini.chat(chatsTextOnly).then((value) {
-                    chats.add(
-                      ChatItem(
-                        content: Content(
-                          role: 'model',
-                          parts: [
-                            Parts(text: value?.output),
-                          ],
-                        ),
-                      ),
-                    );
-                    loading = false;
-                  });
+                      );
+                    }); // Set a timeout
+                  }
+                } on TimeoutException catch (_) {
+                  Get.snackbar('Error', 'Timeout occurred. Please try again.');
+                  loading = false; // Stop the Gemini instance
+                } catch (e) {
+                  Get.snackbar('Error', 'An error occurred. Please try again.');
+                  print(e.toString());
+                } finally {
+                  loading = false;
+                  chatsTextOnly.clear();
                 }
               }
             },

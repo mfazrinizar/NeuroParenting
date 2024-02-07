@@ -1,5 +1,6 @@
 // under construction
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -152,7 +153,8 @@ class ForumApi {
         .get();
     final data = doc.data();
     if (data == null) {
-      throw Exception('Discussion not found');
+      Get.snackbar('Error', 'Discussion not found.');
+      throw Exception('Discussion not found.');
     }
 
     final comments = data['commentTotal'];
