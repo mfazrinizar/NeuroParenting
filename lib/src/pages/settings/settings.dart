@@ -88,28 +88,28 @@ class SettingsPageState extends State<SettingsPage> {
       //   'icon': Icons.upload,
       //   'title': 'Upload Article',
       //   'onTap': () {
-      //     Get.to(() => const UploadArticlePage());
+      //     Get.offAll(() => const UploadArticlePage());
       //   }
       // },
       {
         'icon': Icons.person,
         'title': 'Change Name',
         'onTap': () {
-          Get.to(() => const ChangeNamePage());
+          Get.offAll(() => const ChangeNamePage());
         }
       },
       {
         'icon': Icons.email,
         'title': 'Change Email',
         'onTap': () {
-          Get.to(() => const ChangeEmailPage());
+          Get.offAll(() => const ChangeEmailPage());
         }
       },
       {
         'icon': Icons.lock,
         'title': 'Change Password',
         'onTap': () {
-          Get.to(() => const ChangePasswordPage());
+          Get.offAll(() => const ChangePasswordPage());
         }
       },
       {
@@ -179,7 +179,7 @@ class SettingsPageState extends State<SettingsPage> {
               'icon': Icons.upload,
               'title': 'Upload Article',
               'onTap': () {
-                Get.to(() => const UploadArticlePage());
+                Get.offAll(() => const UploadArticlePage());
               }
             });
           }
