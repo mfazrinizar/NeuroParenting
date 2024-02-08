@@ -10,6 +10,7 @@ pubspec.lock
 .vscode
 *.keystore
 key.properties
+gradle.properties
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.

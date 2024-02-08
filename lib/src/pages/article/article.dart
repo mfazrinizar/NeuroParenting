@@ -1,5 +1,6 @@
 // Dummy, not yet implemented
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -131,14 +132,42 @@ class _ArticleContentPageState extends State<ArticleContentPage>
               isDarkMode = !isDarkMode;
             });
           }),
-          Icon(Icons.notifications,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black
-                  : Colors.white),
-          Icon(Icons.person,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black
-                  : Colors.white),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.notifications,
+                color: isDarkMode ? Colors.black : Colors.white),
+            onSelected: (String result) {
+              // Handle the selection
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Notification 1',
+                child: Text('No notifications'),
+              ),
+              // Add more PopupMenuItems for more notifications
+            ],
+          ),
+          Builder(
+            builder: (BuildContext context) {
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null && user.photoURL != null) {
+                return ClipOval(
+                  child: FadeInImage.assetNetwork(
+                    image: user.photoURL!,
+                    placeholder: 'assets/images/placeholder_loading.gif',
+                    fit: BoxFit.cover,
+                    width: 45,
+                    height: 45,
+                  ),
+                ); // display the user's profile picture
+              } else {
+                return Icon(Icons.account_circle,
+                    color: isDarkMode
+                        ? Colors.black
+                        : Colors
+                            .white); // show a default icon if the user is not logged in or doesn't have a profile picture
+              }
+            },
+          ),
         ],
       ),
       body: NestedScrollView(
