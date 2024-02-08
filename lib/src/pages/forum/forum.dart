@@ -126,6 +126,7 @@ class ForumPageState extends State<ForumPage> {
   Future<void> fetchDiscussions() async {
     EasyLoading.show(status: 'Loading Forum...');
     final fetchedDiscussions = await ForumApi.fetchDiscussions();
+    final fetchedUserType = await ForumApi.fetchUserType();
 
     discussions = fetchedDiscussions;
     final user = FirebaseAuth.instance.currentUser;
@@ -142,6 +143,7 @@ class ForumPageState extends State<ForumPage> {
         .toList();
 
     setState(() {
+      userType = fetchedUserType;
       discussions = fetchedDiscussions;
       filterDiscussions(); // Call filterDiscussions here
     });

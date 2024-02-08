@@ -99,6 +99,19 @@ class ForumApi {
     ).toList();
   }
 
+  static Future<String> fetchUserType() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return 'Parent';
+    }
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    return doc.data()?['userType'] ?? 'Parent';
+  }
+
   static Future<int> fetchLikesTotalOnly(String discussionId) async {
     final doc = await FirebaseFirestore.instance
         .collection('discussions')
