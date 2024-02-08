@@ -6,13 +6,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:neuroparenting/src/reusable_func/form_validator.dart';
-import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:get/get.dart';
 import 'package:neuroparenting/src/db/forum/forum_api.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
+import 'package:neuroparenting/src/reusable_func/form_validator.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
 import 'discussion_page.dart';
 // import 'package:neuroparenting/src/reusable_func/theme_change.dart';
