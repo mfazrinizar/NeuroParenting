@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -165,12 +166,19 @@ class RegisterState extends State<RegisterPage> {
                             // This method opens the file picker
                             child: ClipOval(
                               child: profileImage != null
-                                  ? Image.file(
-                                      profileImage!,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    )
+                                  ? kIsWeb
+                                      ? Image.network(
+                                          profileImage!.path,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.file(
+                                          profileImage!,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        )
                                   : Container(
                                       color: Colors.grey,
                                       width: 100,
