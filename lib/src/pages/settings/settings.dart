@@ -6,15 +6,16 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:neuroparenting/src/db/auth/logout.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:neuroparenting/src/db/auth/logout_api.dart';
+import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
+import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
 
 import '../onboarding/onboarding_screen.dart';
@@ -55,11 +56,16 @@ class SettingsPageState extends State<SettingsPage> {
   final user = FirebaseAuth.instance.currentUser;
 
   Future<DocumentSnapshot> getUserData() async {
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get();
-    return userDoc;
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      return userDoc;
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+      rethrow;
+    }
   }
 
   File? newProfileImage;
@@ -77,7 +83,14 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(context) {
-    final tilesData = [
+    List<Map<String, Object>> tilesData = [
+      // {
+      //   'icon': Icons.upload,
+      //   'title': 'Upload Article',
+      //   'onTap': () {
+      //     Get.to(() => const UploadArticlePage());
+      //   }
+      // },
       {
         'icon': Icons.person,
         'title': 'Change Name',
@@ -149,11 +162,28 @@ class SettingsPageState extends State<SettingsPage> {
         } else {
           EasyLoading.dismiss();
 
-          final userDoc = snapshot.data!;
+          final userDoc = snapshot.data;
+
+          if (userDoc == null || !userDoc.exists) {
+            return Container();
+          }
           final userType = userDoc['userType'];
           var userTags = userType == 'Parent'
               ? (userDoc['userTags'] as List).cast<String>()
               : null;
+          final userData = userDoc.data() as Map<String, dynamic>?;
+          if (userData != null &&
+              userData.containsKey('adminAccess') &&
+              userData['adminAccess'] == true) {
+            tilesData.add({
+              'icon': Icons.upload,
+              'title': 'Upload Article',
+              'onTap': () {
+                Get.to(() => const UploadArticlePage());
+              }
+            });
+          }
+
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -181,75 +211,47 @@ class SettingsPageState extends State<SettingsPage> {
                       ),
                       child: IconButton(
                         onPressed: () async {
-                          final pickedImage = await filePicking.pickImage();
+                          final action = await showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Choose an action'),
+                              content: const Text(
+                                  'Pick an image from the gallery or take a new photo?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Gallery'),
+                                  child: const Text('Gallery'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Camera'),
+                                  child: const Text('Camera'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          ImageSource source;
+                          if (action == 'Gallery') {
+                            source = ImageSource.gallery;
+                          } else if (action == 'Camera') {
+                            source = ImageSource.camera;
+                          } else {
+                            // The user cancelled the dialog
+                            return;
+                          }
+
+                          final pickedImage =
+                              await filePicking.pickImage(source);
+                          final changeProfilePictureApi =
+                              ChangeProfilePictureApi();
                           if (user != null && pickedImage != null) {
-                            EasyLoading.show(status: 'Uploading...');
-
-                            // Upload the image to Firebase Storage
-                            try {
-                              final currentUser =
-                                  FirebaseAuth.instance.currentUser;
-                              final firestore = FirebaseFirestore.instance;
-                              // Upload the image to Firebase Storage
-                              final ref = FirebaseStorage.instance
-                                  .ref()
-                                  .child('profile_pictures')
-                                  .child(
-                                      '${user!.uid}${path.extension(pickedImage.path)}');
-
-                              await ref.putFile(File(pickedImage.path));
-
-                              // Get the URL of the uploaded image
-                              final url = await ref.getDownloadURL();
-
-                              // Update the user's photoURL with the URL of the uploaded image
-                              await currentUser!.updatePhotoURL(url);
-
-                              final discussions = await firestore
-                                  .collection('discussions')
-                                  .where('discussionPostUserId',
-                                      isEqualTo: currentUser.uid)
-                                  .get();
-
-                              for (final doc in discussions.docs) {
-                                await doc.reference.update({
-                                  'discussionUserPhotoProfileUrl': url,
-                                });
-                              }
-
-                              final comments = await firestore
-                                  .collection('discussions')
-                                  .get();
-
-                              for (final doc in comments.docs) {
-                                final commentsList =
-                                    List<Map<String, dynamic>>.from(
-                                        doc.data()['commentsList'] ?? []);
-
-                                // Update the avatarUrl for comments made by the current user
-                                for (final comment in commentsList) {
-                                  if (comment['commenterId'] ==
-                                      currentUser.uid) {
-                                    comment['avatarUrl'] = url;
-                                  }
-                                }
-
-                                // Update the commentsList field in the discussion document
-                                await doc.reference.update({
-                                  'commentsList': commentsList,
-                                });
-                              }
-
-                              EasyLoading.dismiss();
-                              Get.snackbar(
-                                  'Success', 'Image uploaded successfully.');
-                              setState(() {
-                                newProfileImage = pickedImage;
-                              });
-                            } catch (e) {
-                              EasyLoading.dismiss();
-                              Get.snackbar('Error', 'Failed to upload image.');
-                            }
+                            await changeProfilePictureApi
+                                .changeProfilePicture(pickedImage);
+                            setState(() {
+                              newProfileImage = pickedImage;
+                            });
                           }
                         },
                         icon: Icon(

@@ -30,10 +30,9 @@ if (flutterVersionName == null) {
 }
 
 android {
-    ndkVersion "26.1.10909125"
+    ndkVersion "25.1.8937393"
     namespace "com.mogger.neuroparenting"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

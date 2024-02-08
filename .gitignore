@@ -11,7 +11,8 @@ pubspec.lock
 *.keystore
 key.properties
 gradle.properties
-
+.VSCodeCounter/
+.VSCodeCounter
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
 doc/api/

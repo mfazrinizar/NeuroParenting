@@ -1,9 +1,12 @@
 // under construction
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: depend_on_referenced_packages
+import 'package:uuid/uuid.dart';
 
 class Comment {
   final String text;
@@ -11,6 +14,7 @@ class Comment {
   final String commenterName;
   final String commenterId;
   final DateTime commentDate;
+  final String commentId;
 
   Comment({
     required this.text,
@@ -18,6 +22,7 @@ class Comment {
     required this.commenterName,
     required this.commenterId,
     required this.commentDate,
+    required this.commentId,
   });
 }
 
@@ -35,6 +40,7 @@ class Discussion {
   final String discussionId;
   final String descriptionPost;
   final String discussionImage;
+  final String discussionPostUserId;
 
   Discussion({
     required this.discussionId,
@@ -50,6 +56,7 @@ class Discussion {
     required this.comments,
     required this.commentsList,
     required this.discussionImage,
+    required this.discussionPostUserId,
   });
 }
 
@@ -74,6 +81,7 @@ class ForumApi {
           likes: List<String>.from(data['likes']),
           likesTotal: List<String>.from(data['likes']).length,
           comments: data['commentTotal'],
+          discussionPostUserId: data['discussionPostUserId'],
           commentsList: (data['commentsList'] as List).map(
             (commentData) {
               return Comment(
@@ -81,6 +89,7 @@ class ForumApi {
                 avatarUrl: commentData['avatarUrl'],
                 commenterName: commentData['commenterName'],
                 commenterId: commentData['commenterId'],
+                commentId: commentData['commentId'] ?? "null",
                 commentDate: (commentData['commentDate'] as Timestamp).toDate(),
               );
             },
@@ -126,6 +135,7 @@ class ForumApi {
       likes: List<String>.from(data['likes']),
       likesTotal: List<String>.from(data['likes']).length,
       comments: data['commentTotal'],
+      discussionPostUserId: data['discussionPostUserId'],
       commentsList: (data['commentsList'] as List).map(
         (commentData) {
           return Comment(
@@ -133,6 +143,7 @@ class ForumApi {
             avatarUrl: commentData['avatarUrl'],
             commenterName: commentData['commenterName'],
             commenterId: commentData['commenterId'],
+            commentId: commentData['commentId'] ?? "null",
             commentDate: (commentData['commentDate'] as Timestamp).toDate(),
           );
         },
@@ -148,7 +159,8 @@ class ForumApi {
         .get();
     final data = doc.data();
     if (data == null) {
-      throw Exception('Discussion not found');
+      Get.snackbar('Error', 'Discussion not found.');
+      throw Exception('Discussion not found.');
     }
 
     final comments = data['commentTotal'];
@@ -159,6 +171,7 @@ class ForumApi {
           avatarUrl: commentData['avatarUrl'],
           commenterName: commentData['commenterName'],
           commenterId: commentData['commenterId'],
+          commentId: commentData['commentId'] ?? "null",
           commentDate: (commentData['commentDate'] as Timestamp).toDate(),
         );
       },
@@ -181,10 +194,13 @@ class ForumApi {
       return;
     }
 
+    final commentId = const Uuid().v4();
+
     // Prepare the comment details
     final commentData = {
       'text': comment.text,
       'avatarUrl': comment.avatarUrl,
+      'commentId': commentId,
       'commenterName': comment.commenterName,
       'commenterId': user.uid, // Use the user's ID
       'commentDate': DateTime.now(),
@@ -258,7 +274,7 @@ class ForumApi {
       // Handle the case when the user is not signed in
       return;
     }
-    List<String> likes = [];
+    List<String> likes = [], commentsList = [];
     const int initialComment = 0;
 
     final postDateAndTime = DateTime.now();
@@ -285,10 +301,10 @@ class ForumApi {
       'discussionTags': tagCheckboxes.entries
           .where((entry) => entry.value)
           .map((entry) => entry.key)
-          .toList(), // Only true tags
+          .toList(),
+      'commentsList': commentsList, // Only true tags
       'postDateAndTime': postDateAndTime,
       'commentTotal': initialComment,
-
       'likes': likes,
     };
 
@@ -301,5 +317,74 @@ class ForumApi {
     await docRef.update(
       {'discussionId': docRef.id},
     );
+  }
+
+  static Future<String> deleteDiscussion({
+    required String discussionId,
+  }) async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle the case when the user is not signed in
+      return "NULL";
+    }
+
+    // Get the discussion document
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    // Check if the discussion was posted by the current user
+    if (data != null && data['discussionPostUserId'] == user.uid) {
+      // Delete the discussion
+      await docRef.delete();
+    } else {
+      return "NOT-OWNER";
+    }
+    return "SUCCESS";
+  }
+
+  static Future<String> deleteComment({
+    required String discussionId,
+    required String commentId,
+  }) async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle the case when the user is not signed in
+      return "NULL";
+    }
+
+    // Get the discussion document
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    // Check if the comment exists in the discussion
+    if (data != null) {
+      final commentsList =
+          List<Map<String, dynamic>>.from(data['commentsList']);
+      final commentIndex = commentsList
+          .indexWhere((comment) => comment['commentId'] == commentId);
+
+      // Check if the comment was posted by the current user
+      if (commentIndex != -1 &&
+          commentsList[commentIndex]['commenterId'] == user.uid) {
+        // Delete the comment
+        commentsList.removeAt(commentIndex);
+        await docRef.update({'commentsList': commentsList});
+
+        // Decrement commentTotal by 1 (or increment by -1)
+        await FirebaseFirestore.instance
+            .collection('discussions')
+            .doc(discussionId)
+            .update({'commentTotal': FieldValue.increment(-1)});
+      } else {
+        return "NOT-OWNER";
+      }
+    }
+    return "SUCCESS";
   }
 }

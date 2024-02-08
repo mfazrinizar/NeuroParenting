@@ -6,13 +6,13 @@ import 'package:permission_handler/permission_handler.dart';
 class FilePicking {
   final ImagePicker _picker = ImagePicker();
 
-  Future<File?> pickImage() async {
+  Future<File?> pickImage(ImageSource source) async {
     final status = await requestPermission();
     if (!status.isGranted) {
       return null;
     }
 
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       return File(pickedFile.path);
     } else {
@@ -20,13 +20,13 @@ class FilePicking {
     }
   }
 
-  Future<String?> pickImagePath() async {
+  Future<String?> pickImagePath(ImageSource source) async {
     final status = await requestPermission();
     if (!status.isGranted) {
       return null;
     }
 
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       return pickedFile.path;
     } else {
