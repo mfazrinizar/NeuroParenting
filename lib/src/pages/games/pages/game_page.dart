@@ -201,8 +201,8 @@ class GamePageState extends State<GamePage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const PhonetikList()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const PhonetikList()));
               },
               child: Stack(
                 alignment: Alignment.center,
@@ -263,7 +263,7 @@ class GamePageState extends State<GamePage> {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AnimalTest()));
+                    MaterialPageRoute(builder: (context) => const AnimalTest()));
               },
               child: Stack(
                 alignment: Alignment.center,

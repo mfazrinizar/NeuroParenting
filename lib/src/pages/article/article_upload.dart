@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/article/article_api.dart';
+import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 
 class UploadArticlePage extends StatefulWidget {
@@ -27,6 +28,13 @@ class UploadArticlePageState extends State<UploadArticlePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Upload Article'),
+        leading: BackButton(
+          onPressed: () => Get.offAll(
+            () => const HomePage(
+              indexFromPrevious: 2,
+            ),
+          ),
+        ),
       ),
       body: Form(
         key: _formKey,

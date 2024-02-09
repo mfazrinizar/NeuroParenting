@@ -38,6 +38,11 @@ class PhonetikListState extends State<PhonetikList> {
     );
   }
 
+/*
+The supplied phased action failed with an exception.
+Could not create task ':flutter_plugin_android_lifecycle:compileDebugUnitTestSources'.
+this and base files have different roots: D:\VSCode\Flutter\clone\NeuroParenting\build\flutter_plugin_android_lifecycle and C:\Users\User\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.17\android.
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
