@@ -3,10 +3,10 @@ import 'package:hexcolor/hexcolor.dart';
 
 class ThemeClass {
   Color lightPrimaryColor = HexColor('#4173CA');
-  Color darkPrimaryColor = HexColor('#2B2D30');
+  Color darkPrimaryColor = HexColor('#031525');
   Color secondaryColor = HexColor('#FF8B6A');
   Color accentColor = HexColor('#FFD2BB');
-  Color darkRounded = HexColor('#7D818C');
+  Color darkRounded = HexColor('#162c46');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
@@ -26,6 +26,7 @@ class ThemeClass {
   );
 
   static ThemeData darkTheme = ThemeData(
+    scaffoldBackgroundColor: const Color.fromARGB(255, 3, 21, 37),
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(

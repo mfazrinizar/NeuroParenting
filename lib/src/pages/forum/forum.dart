@@ -179,7 +179,7 @@ class ForumPageState extends State<ForumPage> {
                         filled: true,
                         fillColor:
                             Theme.of(context).brightness == Brightness.dark
-                                ? Colors.black
+                                ? const Color.fromARGB(255, 3, 21, 37)
                                 : Colors.white,
                         prefixIcon: const Icon(
                           Icons.search,
@@ -204,7 +204,7 @@ class ForumPageState extends State<ForumPage> {
                     icon: Icon(Icons.add,
                         size: 50,
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.black
+                            ? const Color.fromARGB(255, 211, 227, 253)
                             : Colors.white),
                     onPressed: () {
                       showDialog(
@@ -212,6 +212,7 @@ class ForumPageState extends State<ForumPage> {
                         barrierDismissible: false,
                         builder: (context) {
                           return AlertDialog(
+                            backgroundColor: themeClass.darkRounded,
                             scrollable: true,
                             title: const Text('Post Discussion'),
                             content: StatefulBuilder(
@@ -247,6 +248,9 @@ class ForumPageState extends State<ForumPage> {
                                         ...tagCheckboxes.entries.map(
                                           (entry) {
                                             return CheckboxListTile(
+                                              checkColor: Colors.white,
+                                              activeColor: const Color.fromARGB(
+                                                  255, 3, 21, 37),
                                               title: Text(entry.key),
                                               value: entry.value,
                                               onChanged: (bool? value) {
@@ -259,6 +263,10 @@ class ForumPageState extends State<ForumPage> {
                                           },
                                         ).toList(),
                                         ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 3, 21, 37)),
                                           onPressed: () async {
                                             final filePicking = FilePicking();
 
@@ -267,6 +275,9 @@ class ForumPageState extends State<ForumPage> {
                                               context: context,
                                               builder: (BuildContext context) =>
                                                   AlertDialog(
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 3, 21, 37),
                                                 title: const Text(
                                                     'Choose an action'),
                                                 content: const Text(
@@ -276,8 +287,9 @@ class ForumPageState extends State<ForumPage> {
                                                     onPressed: () =>
                                                         Navigator.pop(
                                                             context, 'Gallery'),
-                                                    child:
-                                                        const Text('Gallery'),
+                                                    child: const Text(
+                                                      'Gallery',
+                                                    ),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>
@@ -303,7 +315,9 @@ class ForumPageState extends State<ForumPage> {
                                                 .pickImage(source);
                                             setState(() {});
                                           },
-                                          child: const Text('Choose Photo'),
+                                          child: const Text(
+                                            'Choose Photo',
+                                          ),
                                         ),
                                         if (newPostImage != null)
                                           Image.file(
@@ -317,6 +331,10 @@ class ForumPageState extends State<ForumPage> {
                                         else
                                           const Text('No image selected'),
                                         ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 3, 21, 37)),
                                           onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {
@@ -348,9 +366,15 @@ class ForumPageState extends State<ForumPage> {
                                               }
                                             }
                                           },
-                                          child: const Text('Post Discussion'),
+                                          child: const Text(
+                                            'Post Discussion',
+                                          ),
                                         ),
                                         ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 3, 21, 37)),
                                           onPressed: () async {
                                             setState(() {
                                               newPostImage == null;
@@ -380,7 +404,7 @@ class ForumPageState extends State<ForumPage> {
               itemBuilder: (context, index) {
                 return Card(
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 124, 129, 140)
+                      ? themeClass.darkRounded
                       : const Color.fromARGB(255, 243, 243, 243),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -407,6 +431,10 @@ class ForumPageState extends State<ForumPage> {
                             const Spacer(),
                             Chip(
                               label: Text(filteredDiscussions[index].userType),
+                              backgroundColor: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? const Color.fromARGB(255, 3, 21, 37)
+                                  : Colors.white,
                             ),
                           ],
                         ),
@@ -439,7 +467,8 @@ class ForumPageState extends State<ForumPage> {
                                 style: TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? Colors.white
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
                                         : Colors.black),
                               ),
                               icon: Icon(
@@ -448,7 +477,7 @@ class ForumPageState extends State<ForumPage> {
                                       : Icons.thumb_up_outlined,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.black
+                                      ? const Color.fromARGB(255, 211, 227, 253)
                                       : themeClass.lightPrimaryColor),
                               onPressed: () async {
                                 if (isLikingOrDisliking) {
@@ -504,13 +533,14 @@ class ForumPageState extends State<ForumPage> {
                                 style: TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? Colors.white
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
                                         : Colors.black),
                               ),
                               icon: Icon(Icons.comment,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.black
+                                      ? const Color.fromARGB(255, 211, 227, 253)
                                       : themeClass.lightPrimaryColor),
                               onPressed: () {
                                 Get.offAll(
@@ -556,7 +586,8 @@ class ForumPageState extends State<ForumPage> {
                                 icon: Icon(Icons.delete,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? Colors.black
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
                                         : themeClass.lightPrimaryColor),
                                 onPressed: () async {
                                   AwesomeDialog(

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
-import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
+import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
 class HomePageBody extends StatefulWidget {
   final double height;
@@ -181,7 +181,9 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
               child: Icon(
                 icon,
                 size: deviceWidth * 0.1,
-                color: isDarkMode ? Colors.black : Colors.white,
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.white,
               ), // Adjust the size as needed
             ),
           ),

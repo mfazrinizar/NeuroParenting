@@ -110,7 +110,7 @@ class GamePageState extends State<GamePage> {
                           filled: true,
                           fillColor:
                               Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.black
+                                  ? const Color.fromARGB(255, 22, 44, 70)
                                   : Colors.white,
                           prefixIcon: const Icon(
                             Icons.search,
@@ -201,8 +201,8 @@ class GamePageState extends State<GamePage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const PhonetikList()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PhonetikList()));
               },
               child: Stack(
                 alignment: Alignment.center,
@@ -262,8 +262,8 @@ class GamePageState extends State<GamePage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const AnimalTest()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AnimalTest()));
               },
               child: Stack(
                 alignment: Alignment.center,

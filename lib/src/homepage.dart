@@ -1,19 +1,18 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/pages/forum/forum.dart';
+import 'package:neuroparenting/src/pages/settings/settings.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'homebody.dart';
-import 'package:neuroparenting/src/pages/forum/forum.dart';
-import 'package:neuroparenting/src/pages/settings/settings.dart';
 
+import 'homebody.dart';
 import 'reusable_comp/theme_changer.dart';
 
 class HomePage extends StatefulWidget {
@@ -150,30 +149,31 @@ class HomePageState extends State<HomePage> {
                   : _currentTabIndex == 1
                       ? 'Forum'
                       : 'Settings',
-              style:
-                  TextStyle(color: isDarkMode ? Colors.black : Colors.white)),
+              style: const TextStyle(color: Colors.white)),
           leading: IconButton(
-              icon: isDarkMode
-                  ? SvgPicture.asset('assets/icons/logo_black.svg')
-                  : Image.asset('assets/icons/logo.png'),
+              icon: Image.asset('assets/icons/logo.png'),
               onPressed: () {
                 // Get.offAll(() => const OnboardingScreen());
               }),
           actions: [
             LanguageSwitcher(
               onPressed: localizationChange,
-              textColor: isDarkMode ? Colors.black : Colors.white,
+              textColor: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.white,
             ),
             ThemeSwitcher(onPressed: () async {
               themeChange();
-
+              
               setState(() {
                 isDarkMode = !isDarkMode;
               });
-            }),
+            },),
             PopupMenuButton<String>(
               icon: Icon(Icons.notifications,
-                  color: isDarkMode ? Colors.black : Colors.white),
+                  color: isDarkMode
+                      ? const Color.fromARGB(255, 211, 227, 253)
+                      : Colors.white),
               onSelected: (String result) {
                 // Handle the selection
               },
@@ -210,11 +210,16 @@ class HomePageState extends State<HomePage> {
           ],
         ),
         bottomNavigationBar: ConvexAppBar(
-          color: isDarkMode ? Colors.black : Colors.white,
+          color: isDarkMode
+              ? const Color.fromARGB(255, 211, 227, 253)
+              : Colors.white,
           backgroundColor: isDarkMode
               ? ThemeClass().darkRounded
               : ThemeClass().lightPrimaryColor,
           style: TabStyle.reactCircle,
+          activeColor: isDarkMode
+              ? const Color.fromARGB(255, 211, 227, 253)
+              : Colors.white,
           items: const [
             TabItem(icon: Icons.home, title: 'Home'),
             TabItem(icon: Icons.forum, title: 'Forum'),

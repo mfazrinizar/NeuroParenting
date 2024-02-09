@@ -7,16 +7,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout_api.dart';
+import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
-import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
-import 'package:flutter/services.dart';
 
 import '../onboarding/onboarding_screen.dart';
 import 'change_email.dart';
@@ -214,6 +214,8 @@ class SettingsPageState extends State<SettingsPage> {
                           final action = await showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 22, 44, 70),
                               title: const Text('Choose an action'),
                               content: const Text(
                                   'Pick an image from the gallery or take a new photo?'),
@@ -221,12 +223,18 @@ class SettingsPageState extends State<SettingsPage> {
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Gallery'),
-                                  child: const Text('Gallery'),
+                                  child: const Text(
+                                    'Gallery',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Camera'),
-                                  child: const Text('Camera'),
+                                  child: const Text(
+                                    'Camera',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ],
                             ),
@@ -257,7 +265,7 @@ class SettingsPageState extends State<SettingsPage> {
                         icon: Icon(
                           Icons.camera_alt,
                           color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black
+                              ? const Color.fromARGB(255, 211, 227, 253)
                               : Colors.white,
                           size: widget.height * 0.05,
                         ),
@@ -271,7 +279,9 @@ class SettingsPageState extends State<SettingsPage> {
                       ? user!.displayName!
                       : 'Guest',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 (userType != null && userType == 'Parent')
                     ? Wrap(
@@ -326,15 +336,15 @@ class SettingsPageState extends State<SettingsPage> {
                           Icons.edit,
                           size: 24,
                           color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                              ? const Color.fromARGB(255, 211, 227, 253)
+                              : Colors.white,
                         ),
                         label: Text(
                           'Edit Needs',
                           style: TextStyle(
                             color:
                                 Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
+                                    ? const Color.fromARGB(255, 211, 227, 253)
                                     : Colors.black,
                             fontSize: 16,
                           ),
