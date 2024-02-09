@@ -69,6 +69,7 @@ class ForumPageState extends State<ForumPage> {
   };
   final _formKey = GlobalKey<FormState>();
   bool likeChanged = false;
+  bool isLikingOrDisliking = false;
 
   List<Discussion> discussions = [];
 
@@ -450,6 +451,24 @@ class ForumPageState extends State<ForumPage> {
                                       ? Colors.black
                                       : themeClass.lightPrimaryColor),
                               onPressed: () async {
+                                if (isLikingOrDisliking) {
+                                  // If a like/dislike operation is already in progress, do nothing
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.warning,
+                                    animType: AnimType.bottomSlide,
+                                    title: 'Please wait...',
+                                    desc:
+                                        'Slow down folk, the like/dislike operation is on progress.',
+                                    dismissOnTouchOutside: false,
+                                    dismissOnBackKeyPress: false,
+                                    btnOkOnPress: () {},
+                                  ).show();
+                                  return;
+                                }
+
+                                isLikingOrDisliking = true;
+
                                 if (hasLikedFiltered[index]) {
                                   await ForumApi.likeOrDislikeDiscussion(
                                       discussionId: filteredDiscussions[index]
@@ -471,7 +490,9 @@ class ForumPageState extends State<ForumPage> {
                                     },
                                   );
                                 }
+
                                 likeChanged = true;
+                                isLikingOrDisliking = false;
                               },
                             ),
                             TextButton.icon(
