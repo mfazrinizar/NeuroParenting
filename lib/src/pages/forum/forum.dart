@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,7 @@ class ForumPageState extends State<ForumPage> {
   };
   final _formKey = GlobalKey<FormState>();
   bool likeChanged = false;
+  bool isLikingOrDisliking = false;
 
   List<Discussion> discussions = [];
 
@@ -333,16 +335,17 @@ class ForumPageState extends State<ForumPage> {
                                                     newPostImage: newPostImage!,
                                                     userType: userType);
                                                 setState(() {
-                                                  newPostImage == null;
+                                                  newPostImage = null;
                                                 });
                                                 await fetchDiscussions();
                                                 EasyLoading.dismiss();
+                                                if (!context.mounted) return;
+                                                Navigator.of(context).pop();
                                               } else {
                                                 Get.snackbar('Error',
                                                     'Make sure you have entered all fields, chosen a photo, and connected to internet.');
+                                                EasyLoading.dismiss();
                                               }
-                                              if (!context.mounted) return;
-                                              Navigator.of(context).pop();
                                             }
                                           },
                                           child: const Text('Post Discussion'),
@@ -396,13 +399,15 @@ class ForumPageState extends State<ForumPage> {
                               ),
                             ),
                             SizedBox(width: widget.width * 0.025),
-                            Text(filteredDiscussions[index].userName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              filteredDiscussions[index].userName,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             const Spacer(),
                             Chip(
-                                label:
-                                    Text(filteredDiscussions[index].userType)),
+                              label: Text(filteredDiscussions[index].userType),
+                            ),
                           ],
                         ),
                         Align(
@@ -446,6 +451,24 @@ class ForumPageState extends State<ForumPage> {
                                       ? Colors.black
                                       : themeClass.lightPrimaryColor),
                               onPressed: () async {
+                                if (isLikingOrDisliking) {
+                                  // If a like/dislike operation is already in progress, do nothing
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.warning,
+                                    animType: AnimType.bottomSlide,
+                                    title: 'Please wait...',
+                                    desc:
+                                        'Slow down folk, the like/dislike operation is on progress.',
+                                    dismissOnTouchOutside: false,
+                                    dismissOnBackKeyPress: false,
+                                    btnOkOnPress: () {},
+                                  ).show();
+                                  return;
+                                }
+
+                                isLikingOrDisliking = true;
+
                                 if (hasLikedFiltered[index]) {
                                   await ForumApi.likeOrDislikeDiscussion(
                                       discussionId: filteredDiscussions[index]
@@ -467,12 +490,17 @@ class ForumPageState extends State<ForumPage> {
                                     },
                                   );
                                 }
+
                                 likeChanged = true;
+                                isLikingOrDisliking = false;
                               },
                             ),
                             TextButton.icon(
                               label: Text(
-                                filteredDiscussions[index].comments.toString(),
+                                filteredDiscussions[index]
+                                    .commentsList
+                                    .length
+                                    .toString(),
                                 style: TextStyle(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -519,6 +547,56 @@ class ForumPageState extends State<ForumPage> {
                                 // Handle comment button press
                               },
                             ),
+                            if (user != null &&
+                                user!.uid ==
+                                    filteredDiscussions[index]
+                                        .discussionPostUserId)
+                              TextButton.icon(
+                                label: const Text(""),
+                                icon: Icon(Icons.delete,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.black
+                                        : themeClass.lightPrimaryColor),
+                                onPressed: () async {
+                                  AwesomeDialog(
+                                    dismissOnTouchOutside: false,
+                                    context: context,
+                                    keyboardAware: true,
+                                    dismissOnBackKeyPress: false,
+                                    dialogType: DialogType.question,
+                                    animType: AnimType.scale,
+                                    transitionAnimationDuration:
+                                        const Duration(milliseconds: 200),
+                                    btnOkText: "Delete",
+                                    btnCancelText: "Cancel",
+                                    title: 'Delete Discussion',
+                                    desc:
+                                        "Are you sure you want to delete this discussion?",
+                                    btnCancelOnPress: () {},
+                                    btnOkOnPress: () async {
+                                      String result =
+                                          await ForumApi.deleteDiscussion(
+                                        discussionId: filteredDiscussions[index]
+                                            .discussionId,
+                                      );
+                                      if (result == "SUCCESS") {
+                                        setState(() {
+                                          filteredDiscussions.removeAt(index);
+                                        });
+                                        Get.snackbar('Success',
+                                            'Discussion deleted successfully.');
+                                      } else if (result == "NOT-OWNER") {
+                                        Get.snackbar('Error',
+                                            'You are not the owner of this discussion.');
+                                      } else {
+                                        Get.snackbar('Error',
+                                            'Failed to delete discussion.');
+                                      }
+                                    },
+                                  ).show();
+                                },
+                              ),
                             const Spacer(),
                             Text(
                               DateFormat('dd-MM-yyyy').format(

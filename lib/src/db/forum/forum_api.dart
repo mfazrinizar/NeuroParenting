@@ -1,5 +1,6 @@
 // under construction
 import 'dart:io';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,6 +62,14 @@ class Discussion {
 }
 
 class ForumApi {
+  static String randomSixChars() {
+    const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const randStringLength = 6;
+    final random = Random();
+    return String.fromCharCodes(Iterable.generate(randStringLength,
+        (_) => randomChars.codeUnitAt(random.nextInt(randomChars.length))));
+  }
+
   static Future<List<Discussion>> fetchDiscussions() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('discussions').get();
@@ -68,6 +77,7 @@ class ForumApi {
     return snapshot.docs.map(
       (doc) {
         final data = doc.data();
+
         return Discussion(
           discussionId: data['discussionId'],
           userAvatarUrl: data['discussionUserPhotoProfileUrl'],
@@ -97,6 +107,45 @@ class ForumApi {
         );
       },
     ).toList();
+  }
+
+  static Future<Discussion> fetchOnlyOneDiscussion(String discussionId) async {
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    if (data != null) {
+      return Discussion(
+        discussionId: data['discussionId'],
+        userAvatarUrl: data['discussionUserPhotoProfileUrl'],
+        descriptionPost: data['discussionDescription'],
+        userName: data['discussionUserName'],
+        userType: data['discussionUserType'],
+        title: data['discussionTitle'],
+        discussionImage: data['discussionImage'],
+        tags: List<String>.from(data['discussionTags']),
+        datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
+        likes: List<String>.from(data['likes']),
+        likesTotal: List<String>.from(data['likes']).length,
+        comments: data['commentTotal'],
+        discussionPostUserId: data['discussionPostUserId'],
+        commentsList: (data['commentsList'] as List).map(
+          (commentData) {
+            return Comment(
+              text: commentData['text'],
+              avatarUrl: commentData['avatarUrl'],
+              commenterName: commentData['commenterName'],
+              commenterId: commentData['commenterId'],
+              commentId: commentData['commentId'] ?? "null",
+              commentDate: (commentData['commentDate'] as Timestamp).toDate(),
+            );
+          },
+        ).toList(),
+      );
+    } else {
+      throw Exception('Discussion not found');
+    }
   }
 
   static Future<String> fetchUserType() async {
@@ -294,7 +343,7 @@ class ForumApi {
 
     // Upload the image to Firebase Storage
     final ref = FirebaseStorage.instance.ref().child('discussion_images').child(
-        '${postDateAndTime.toIso8601String()}${path.extension(newPostImage.path)}');
+        '${postDateAndTime.toIso8601String()}-${randomSixChars()}${path.extension(newPostImage.path)}');
 
     await ref.putFile(newPostImage);
 
@@ -330,6 +379,76 @@ class ForumApi {
     await docRef.update(
       {'discussionId': docRef.id},
     );
+  }
+
+  static Future<void> editDiscussion({
+    required String discussionId,
+    String? titlePost,
+    String? descriptionPost,
+    Map<String, bool>? tagCheckboxes,
+    File? newPostImage,
+    String? userType,
+  }) async {
+    // Get the current user
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle the case when the user is not signed in
+      return;
+    }
+
+    // Get the discussion document
+    final docRef =
+        FirebaseFirestore.instance.collection('discussions').doc(discussionId);
+    final doc = await docRef.get();
+    final data = doc.data();
+
+    // Check if the discussion was posted by the current user
+    if (data != null && data['discussionPostUserId'] == user.uid) {
+      // Prepare the updated discussion details
+      final updatedDiscussion = <String, dynamic>{};
+
+      if (titlePost != null && titlePost != data['discussionTitle']) {
+        updatedDiscussion['discussionTitle'] = titlePost;
+      }
+
+      if (descriptionPost != null &&
+          descriptionPost != data['discussionDescription']) {
+        updatedDiscussion['discussionDescription'] = descriptionPost;
+      }
+
+      if (userType != null && userType != data['discussionUserType']) {
+        updatedDiscussion['discussionUserType'] = userType;
+      }
+
+      if (tagCheckboxes != null) {
+        final tags = tagCheckboxes.entries
+            .where((entry) => entry.value)
+            .map((entry) => entry.key)
+            .toList();
+        if (tags
+            .toSet()
+            .difference(List<String>.from(data['discussionTags']).toSet())
+            .isNotEmpty) {
+          updatedDiscussion['discussionTags'] = tags;
+        }
+      }
+
+      if (newPostImage != null) {
+        // Upload the new image to Firebase Storage
+        final ref = FirebaseStorage.instance.ref().child('discussion_images').child(
+            '${DateTime.now().toIso8601String()}-${randomSixChars()}${path.extension(newPostImage.path)}');
+
+        await ref.putFile(newPostImage);
+
+        // Get the URL of the uploaded image
+        final url = await ref.getDownloadURL();
+
+        updatedDiscussion['discussionImage'] = url;
+      }
+
+      // Update the discussion details in Firestore
+      await docRef.update(updatedDiscussion);
+    }
   }
 
   static Future<String> deleteDiscussion({

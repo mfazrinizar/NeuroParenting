@@ -3,12 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
-import 'package:neuroparenting/src/pages/games/theme_game.dart';
+import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
+import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/localization_change.dart';
+import 'package:neuroparenting/src/reusable_func/theme_change.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
-class AnimalTest extends StatelessWidget {
-  AnimalTest({super.key});
+class AnimalTest extends StatefulWidget {
+  const AnimalTest({super.key});
 
+  @override
+  AnimalTestState createState() => AnimalTestState();
+}
+
+class AnimalTestState extends State<AnimalTest> {
   final player = AudioPlayer();
+
+  bool isDarkMode = Get.isDarkMode;
 
   // Function to generate a single card
   Widget generateCard(String letter) {
@@ -31,9 +42,12 @@ class AnimalTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkBlueColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? ThemeClass().darkRounded
+            : ThemeClass().lightPrimaryColor,
         title: Text(
-          'Tebak hewan untuk Autisme',
+          'Guess the Animal',
+          // 'Tebak hewan untuk Autisme',
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -45,6 +59,20 @@ class AnimalTest extends StatelessWidget {
             onPressed: () {
               Get.offAll(const GamePage());
             }),
+        actions: [
+          LanguageSwitcher(
+            onPressed: localizationChange,
+            textColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+          ),
+          ThemeSwitcher(onPressed: () async {
+            themeChange();
+            setState(() {
+              isDarkMode = !isDarkMode;
+            });
+          }),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

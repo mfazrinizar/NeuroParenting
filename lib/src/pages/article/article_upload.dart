@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -65,7 +66,8 @@ class UploadArticlePageState extends State<UploadArticlePage> {
                 });
               },
             ),
-            if (_image != null) Image.file(_image!),
+            if (_image != null)
+              kIsWeb ? Image.network(_image!.path) : Image.file(_image!),
             const SizedBox(height: 16.0),
             ElevatedButton(
               child: const Text('Submit'),

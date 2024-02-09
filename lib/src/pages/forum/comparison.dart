@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
@@ -301,14 +302,23 @@ class ForumPageState extends State<ForumPage> {
                                           child: const Text('Choose Photo'),
                                         ),
                                         if (newPostImage != null)
-                                          Image.file(
-                                            newPostImage!,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.75,
-                                            fit: BoxFit.cover,
-                                          )
+                                          kIsWeb
+                                              ? Image.network(
+                                                  newPostImage!.path,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.75,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.file(
+                                                  newPostImage!,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.75,
+                                                  fit: BoxFit.cover,
+                                                )
                                         else
                                           const Text('No image selected'),
                                         ElevatedButton(

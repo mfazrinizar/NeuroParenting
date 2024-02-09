@@ -204,6 +204,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                           );
                         }); // Set a timeout
                   } else {
+                    // print(chatsTextOnly);
                     chatsTextOnly.add(Content(
                       role: 'user',
                       parts: [Parts(text: searchedText)],
@@ -230,6 +231,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   loading = false; // Stop the Gemini instance
                 } catch (e) {
                   Get.snackbar('Error', 'An error occurred. Please try again.');
+                  // print(e.toString());
                 } finally {
                   loading = false;
                   chatsTextOnly.clear();
