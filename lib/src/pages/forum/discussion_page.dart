@@ -118,6 +118,42 @@ class DiscussionState extends State<DiscussionPage> {
     });
   }
 
+  Future<void> postComment() async {
+    if (_editFormKey.currentState!.validate()) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && user.photoURL != null && user.displayName != null) {
+        EasyLoading.show(status: 'Posting comment...');
+        final comment = Comment(
+          text: commentController.text,
+          avatarUrl: user.photoURL!,
+          commenterName: user.displayName!,
+          commenterId: user.uid,
+          commentId: "",
+          commentDate: DateTime.now(),
+        );
+
+        await ForumApi.postComment(
+          discussionId: widget.discussionId,
+          comment: comment,
+        );
+
+        final updatedComments = await ForumApi.fetchOnlyComments(
+            updatedDiscussion?.discussionId ?? widget.discussionId);
+
+        commentController.clear();
+        setState(() {
+          commentsList = updatedComments['commentsList'];
+          commentTotal = updatedComments['commentTotal'];
+        });
+        EasyLoading.dismiss();
+        Get.snackbar('Success', 'Comment posted.');
+      } else {
+        EasyLoading.dismiss();
+        Get.snackbar('Error', 'Please relog your account.');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -636,50 +672,7 @@ class DiscussionState extends State<DiscussionPage> {
                           prefixIcon: const Icon(Icons.comment),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.send),
-                            onPressed: () async {
-                              if (_editFormKey.currentState!.validate()) {
-                                final user = FirebaseAuth.instance.currentUser;
-                                if (user != null &&
-                                    user.photoURL != null &&
-                                    user.displayName != null) {
-                                  EasyLoading.show(
-                                      status: 'Posting comment...');
-                                  final comment = Comment(
-                                    text: commentController.text,
-                                    avatarUrl: user
-                                        .photoURL!, // Replace with the URL of the user's avatar
-                                    commenterName: user
-                                        .displayName!, // Replace with the name of the user
-                                    commenterId: user.uid,
-                                    commentId: "",
-                                    commentDate: DateTime.now(),
-                                  );
-
-                                  await ForumApi.postComment(
-                                    discussionId: widget
-                                        .discussionId, // Replace with the ID of the discussion
-                                    comment: comment,
-                                  );
-
-                                  final updatedComments =
-                                      await ForumApi.fetchOnlyComments(
-                                          updatedDiscussion?.discussionId ??
-                                              widget.discussionId);
-
-                                  commentController.clear();
-                                  setState(() {
-                                    commentsList =
-                                        updatedComments['commentsList'];
-                                    commentTotal =
-                                        updatedComments['commentTotal'];
-                                  });
-                                  EasyLoading.dismiss();
-                                } else {
-                                  Get.snackbar(
-                                      'Error', 'Please relog your account.');
-                                }
-                              }
-                            },
+                            onPressed: postComment,
                           ),
                         ),
                       );
