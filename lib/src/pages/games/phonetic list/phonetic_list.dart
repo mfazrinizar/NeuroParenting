@@ -3,12 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
-import 'package:neuroparenting/src/pages/games/theme_game.dart';
+import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
+import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/localization_change.dart';
+import 'package:neuroparenting/src/reusable_func/theme_change.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 
-class PhonetikList extends StatelessWidget {
-  PhonetikList({super.key});
+class PhonetikList extends StatefulWidget {
+  const PhonetikList({super.key});
 
+  @override
+  PhonetikListState createState() => PhonetikListState();
+}
+
+class PhonetikListState extends State<PhonetikList> {
   final player = AudioPlayer();
+
+  bool isDarkMode = Get.isDarkMode;
 
   // Function to generate a single card
   Widget generateCard(String letter) {
@@ -31,9 +42,12 @@ class PhonetikList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkBlueColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? ThemeClass().darkRounded
+            : ThemeClass().lightPrimaryColor,
         title: Text(
-          'Phonetic untuk Disleksia',
+          'Phonetic',
+          // 'Phonetic untuk Disleksia',
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -45,6 +59,20 @@ class PhonetikList extends StatelessWidget {
             onPressed: () {
               Get.offAll(const GamePage());
             }),
+        actions: [
+          LanguageSwitcher(
+            onPressed: localizationChange,
+            textColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+          ),
+          ThemeSwitcher(onPressed: () async {
+            themeChange();
+            setState(() {
+              isDarkMode = !isDarkMode;
+            });
+          }),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

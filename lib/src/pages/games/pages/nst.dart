@@ -8,6 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
 import 'package:neuroparenting/src/pages/games/theme_game.dart';
+import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
+import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/localization_change.dart';
+import 'package:neuroparenting/src/reusable_func/theme_change.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:quickalert/quickalert.dart';
 
 class NST extends StatefulWidget {
@@ -25,6 +30,8 @@ class NSTState extends State<NST> {
 
   List<int> angkaList = List.generate(36, (index) => index + 1);
   int? angkaAcak;
+
+  bool isDarkMode = Get.isDarkMode;
 
   void generateRandomNumber() {
     Random random = Random();
@@ -112,9 +119,11 @@ class NSTState extends State<NST> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkBlueColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? ThemeClass().darkRounded
+            : ThemeClass().lightPrimaryColor,
         title: Text(
-          "NST untuk Disleksia",
+          "Matching Games",
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -126,6 +135,20 @@ class NSTState extends State<NST> {
             onPressed: () {
               Get.offAll(const GamePage());
             }),
+        actions: [
+          LanguageSwitcher(
+            onPressed: localizationChange,
+            textColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+          ),
+          ThemeSwitcher(onPressed: () async {
+            themeChange();
+            setState(() {
+              isDarkMode = !isDarkMode;
+            });
+          }),
+        ],
       ),
       body: PopScope(
         canPop: true,
@@ -140,7 +163,8 @@ class NSTState extends State<NST> {
                   height: 20,
                 ),
                 Text(
-                  'Temukan Gambar yang Sama',
+                  'Find the Same Image',
+                  // 'Temukan Gambar yang Sama',
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -249,7 +273,8 @@ class NSTState extends State<NST> {
               shadowColor: MaterialStateProperty.all(Colors.yellow[700]),
             ),
             child: Text(
-              'Kembali',
+              'Back',
+              // 'Kembali',
               style: GoogleFonts.nunito(color: Colors.white),
             ),
             onPressed: () {

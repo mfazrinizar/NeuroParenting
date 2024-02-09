@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
-import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'chat_input_box.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});
@@ -204,7 +204,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
                           );
                         }); // Set a timeout
                   } else {
-                    print(chatsTextOnly);
                     chatsTextOnly.add(Content(
                       role: 'user',
                       parts: [Parts(text: searchedText)],
@@ -231,7 +230,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   loading = false; // Stop the Gemini instance
                 } catch (e) {
                   Get.snackbar('Error', 'An error occurred. Please try again.');
-                  print(e.toString());
                 } finally {
                   loading = false;
                   chatsTextOnly.clear();

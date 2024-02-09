@@ -166,7 +166,7 @@ class GamePageState extends State<GamePage> {
                               children: [
                                 Text(
                                   // "Permainan Pra Membaca cocok gambar NST untuk Disleksia",
-                                  "Matching Games for Dyslexia",
+                                  "Matching Games NST for Dyslexia",
                                   style: GoogleFonts.nunito(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -201,8 +201,8 @@ class GamePageState extends State<GamePage> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => PhonetikList()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PhonetikList()));
               },
               child: Stack(
                 alignment: Alignment.center,
