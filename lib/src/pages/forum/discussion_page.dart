@@ -18,6 +18,7 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/db/forum/forum_api.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:photo_view/photo_view.dart';
 
 class DiscussionPage extends StatefulWidget {
@@ -186,32 +187,19 @@ class DiscussionState extends State<DiscussionPage> {
               'Discussion',
             ),
             actions: [
-              Container(
-                decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.transparent : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                  ),
-                ),
-                child: const LanguageSwitcher(onPressed: localizationChange),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.transparent : Colors.white,
-                ),
-                child: ThemeSwitcher(
-                  color: isDarkMode
-                      ? const Color.fromARGB(255, 211, 227, 253)
-                      : Colors.black,
-                  onPressed: () {
-                    setState(
-                      () {
-                        themeChange();
-                        isDarkMode = !isDarkMode;
-                      },
-                    );
-                  },
-                ),
+              const LanguageSwitcher(onPressed: localizationChange),
+              ThemeSwitcher(
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.black,
+                onPressed: () {
+                  setState(
+                    () {
+                      themeChange();
+                      isDarkMode = !isDarkMode;
+                    },
+                  );
+                },
               ),
             ],
           ),
@@ -501,9 +489,11 @@ class DiscussionState extends State<DiscussionPage> {
                                               (entry) {
                                                 return CheckboxListTile(
                                                   checkColor: Colors.white,
-                                                  activeColor:
-                                                      const Color.fromARGB(
-                                                          255, 3, 21, 37),
+                                                  activeColor: isDarkMode
+                                                      ? const Color.fromARGB(
+                                                          255, 3, 21, 37)
+                                                      : ThemeClass()
+                                                          .lightPrimaryColor,
                                                   title: Text(entry.key),
                                                   value: entry.value,
                                                   onChanged: (bool? value) {

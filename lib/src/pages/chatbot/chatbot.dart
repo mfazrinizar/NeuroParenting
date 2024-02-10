@@ -139,11 +139,25 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Gallery'),
-                      child: const Text('Gallery'),
+                      child: Text(
+                        'Gallery',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                      ),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Camera'),
-                      child: const Text('Camera'),
+                      child: Text(
+                        'Camera',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                      ),
                     ),
                   ],
                 ),

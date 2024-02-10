@@ -249,8 +249,11 @@ class ForumPageState extends State<ForumPage> {
                                           (entry) {
                                             return CheckboxListTile(
                                               checkColor: Colors.white,
-                                              activeColor: const Color.fromARGB(
-                                                  255, 3, 21, 37),
+                                              activeColor: isDarkMode
+                                                  ? const Color.fromARGB(
+                                                      255, 3, 21, 37)
+                                                  : ThemeClass()
+                                                      .lightPrimaryColor,
                                               title: Text(entry.key),
                                               value: entry.value,
                                               onChanged: (bool? value) {
@@ -278,10 +281,24 @@ class ForumPageState extends State<ForumPage> {
                                                 backgroundColor:
                                                     const Color.fromARGB(
                                                         255, 3, 21, 37),
-                                                title: const Text(
-                                                    'Choose an action'),
-                                                content: const Text(
-                                                    'Pick an image from the gallery or take a new photo?'),
+                                                title: Text(
+                                                  'Choose an action',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
+                                                ),
+                                                content: Text(
+                                                  'Pick an image from the gallery or take a new photo?',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
+                                                ),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () =>

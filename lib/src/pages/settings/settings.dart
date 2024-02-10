@@ -214,8 +214,10 @@ class SettingsPageState extends State<SettingsPage> {
                           final action = await showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 22, 44, 70),
+                              backgroundColor: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? const Color.fromARGB(255, 22, 44, 70)
+                                  : Colors.white,
                               title: const Text('Choose an action'),
                               content: const Text(
                                   'Pick an image from the gallery or take a new photo?'),
@@ -223,17 +225,25 @@ class SettingsPageState extends State<SettingsPage> {
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Gallery'),
-                                  child: const Text(
+                                  child: Text(
                                     'Gallery',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Camera'),
-                                  child: const Text(
+                                  child: Text(
                                     'Camera',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                               ],
