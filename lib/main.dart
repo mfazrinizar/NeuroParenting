@@ -9,6 +9,7 @@ import 'package:neuroparenting/src/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'src/pages/onboarding/onboarding_screen.dart';
 import 'src/localization/app_localizations_delegate.dart';
@@ -17,8 +18,9 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Gemini.init(apiKey: 'AIzaSyDDgqJGmvuFC81Uzx2zuphJusDmlpsvsQk');
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(options: await currentPlatform);
+  Gemini.init(apiKey: dotenv.env['GEMINI_API_KEY'] ?? "");
   runApp(const MyApp());
 }
 
