@@ -405,7 +405,7 @@ Widget _buildListTile(
                 : Colors.white),
         title: Text(title,
             style: TextStyle(
-                color: SettingsPageState().isDarkMode
+                color: isDarkMode
                     ? const Color.fromARGB(255, 211, 227, 253)
                     : Colors.white)),
         onTap: onTap,
@@ -444,21 +444,31 @@ class TagSelectionDialogState extends State<TagSelectionDialog> {
       content: Wrap(
         spacing: 8.0,
         runSpacing: 4.0,
-        children: widget.availableTags.map((tag) {
-          return FilterChip(
-            label: Text(tag),
-            selected: selectedTags.contains(tag),
-            onSelected: (isSelected) {
-              setState(() {
-                if (isSelected) {
-                  selectedTags.add(tag);
-                } else {
-                  selectedTags.remove(tag);
-                }
-              });
-            },
-          );
-        }).toList(),
+        children: widget.availableTags.map(
+          (tag) {
+            return FilterChip(
+              label: Text(
+                tag,
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 211, 227, 253)
+                        : Theme.of(context).primaryColorLight),
+              ),
+              selected: selectedTags.contains(tag),
+              onSelected: (isSelected) {
+                setState(
+                  () {
+                    if (isSelected) {
+                      selectedTags.add(tag);
+                    } else {
+                      selectedTags.remove(tag);
+                    }
+                  },
+                );
+              },
+            );
+          },
+        ).toList(),
       ),
       actions: [
         TextButton(
