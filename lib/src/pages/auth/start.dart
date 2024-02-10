@@ -31,7 +31,7 @@ class StartPageState extends State<StartPage> {
       () => Scaffold(
         // Replace with your primary color
         backgroundColor: isDarkMode.value
-            ? ThemeClass.darkTheme.colorScheme.background
+            ? ThemeClass.darkTheme.scaffoldBackgroundColor
             : ThemeClass().lightPrimaryColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -63,12 +63,16 @@ class StartPageState extends State<StartPage> {
                     : Colors
                         .white, // Change this to your desired background color
               ),
-              child: ThemeSwitcher(onPressed: () {
-                setState(() {
-                  themeChange();
-                  isDarkMode.value = !isDarkMode.value;
-                });
-              }),
+              child: ThemeSwitcher(
+                  color: isDarkMode.value
+                      ? const Color.fromARGB(255, 211, 227, 253)
+                      : Colors.black,
+                  onPressed: () {
+                    setState(() {
+                      themeChange();
+                      isDarkMode.value = !isDarkMode.value;
+                    });
+                  }),
             ),
           ],
         ),
