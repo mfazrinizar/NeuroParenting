@@ -29,6 +29,7 @@ class ThemeClass {
   );
 
   static ThemeData darkTheme = ThemeData(
+    cardColor: _themeClass.darkLight,
     appBarTheme: AppBarTheme(backgroundColor: _themeClass.darkRounded),
     scaffoldBackgroundColor: _themeClass.darkLight,
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,

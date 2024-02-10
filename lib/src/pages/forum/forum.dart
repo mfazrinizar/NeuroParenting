@@ -419,241 +419,275 @@ class ForumPageState extends State<ForumPage> {
             child: ListView.builder(
               itemCount: filteredDiscussions.length,
               itemBuilder: (context, index) {
-                return Card(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? themeClass.darkRounded
-                      : const Color.fromARGB(255, 243, 243, 243),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            ClipOval(
-                              child: FadeInImage.assetNetwork(
-                                image: filteredDiscussions[index].userAvatarUrl,
-                                placeholder:
-                                    'assets/images/placeholder_loading.gif',
-                                width: 50, // 2x radius
-                                height: 50, // 2x radius
-                                fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Get.offAll(
+                      () => DiscussionPage(
+                        hasLiked: hasLikedFiltered[index],
+                        discussionId: filteredDiscussions[index].discussionId,
+                        userAvatarUrl: filteredDiscussions[index].userAvatarUrl,
+                        userName: filteredDiscussions[index].userName,
+                        userType: filteredDiscussions[index].userType,
+                        title: filteredDiscussions[index].title,
+                        descriptionPost:
+                            filteredDiscussions[index].descriptionPost,
+                        discussionImage:
+                            filteredDiscussions[index].discussionImage,
+                        tags: filteredDiscussions[index].tags,
+                        datePosted: filteredDiscussions[index].datePosted,
+                        likes: filteredDiscussions[index].likes,
+                        likesTotal: filteredDiscussions[index].likesTotal,
+                        comments: filteredDiscussions[index].comments,
+                        commentsList: filteredDiscussions[index].commentsList,
+                        discussionPostUserId:
+                            filteredDiscussions[index].discussionPostUserId,
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? themeClass.darkRounded
+                        : const Color.fromARGB(255, 243, 243, 243),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              ClipOval(
+                                child: FadeInImage.assetNetwork(
+                                  image:
+                                      filteredDiscussions[index].userAvatarUrl,
+                                  placeholder:
+                                      'assets/images/placeholder_loading.gif',
+                                  width: 50, // 2x radius
+                                  height: 50, // 2x radius
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: widget.width * 0.025),
-                            Text(
-                              filteredDiscussions[index].userName,
+                              SizedBox(width: widget.width * 0.025),
+                              Text(
+                                filteredDiscussions[index].userName,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Spacer(),
+                              Chip(
+                                label:
+                                    Text(filteredDiscussions[index].userType),
+                                backgroundColor: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? const Color.fromARGB(255, 3, 21, 37)
+                                    : Colors.white,
+                              ),
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              filteredDiscussions[index].title,
+                              textAlign: TextAlign.center,
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const Spacer(),
-                            Chip(
-                              label: Text(filteredDiscussions[index].userType),
-                              backgroundColor: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? const Color.fromARGB(255, 3, 21, 37)
-                                  : Colors.white,
-                            ),
-                          ],
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            filteredDiscussions[index].title,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Wrap(
-                            spacing: 10,
-                            children: filteredDiscussions[index]
-                                .tags
-                                .map((tag) => Text('#$tag '))
-                                .toList(),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Wrap(
+                              spacing: 10,
+                              children: filteredDiscussions[index]
+                                  .tags
+                                  .map((tag) => Text('#$tag '))
+                                  .toList(),
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            TextButton.icon(
-                              label: Text(
-                                filteredDiscussions[index]
-                                    .likesTotal
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color.fromARGB(
-                                            255, 211, 227, 253)
-                                        : Colors.black),
-                              ),
-                              icon: Icon(
-                                  hasLikedFiltered[index]
-                                      ? Icons.thumb_up
-                                      : Icons.thumb_up_outlined,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color.fromARGB(255, 211, 227, 253)
-                                      : themeClass.lightPrimaryColor),
-                              onPressed: () async {
-                                if (isLikingOrDisliking) {
-                                  // If a like/dislike operation is already in progress, do nothing
-                                  AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.warning,
-                                    animType: AnimType.bottomSlide,
-                                    title: 'Please wait...',
-                                    desc:
-                                        'Slow down folk, the like/dislike operation is on progress.',
-                                    dismissOnTouchOutside: false,
-                                    dismissOnBackKeyPress: false,
-                                    btnOkOnPress: () {},
-                                  ).show();
-                                  return;
-                                }
-
-                                isLikingOrDisliking = true;
-
-                                if (hasLikedFiltered[index]) {
-                                  await ForumApi.likeOrDislikeDiscussion(
-                                      discussionId: filteredDiscussions[index]
-                                          .discussionId);
-                                  setState(
-                                    () {
-                                      --filteredDiscussions[index].likesTotal;
-                                      hasLikedFiltered[index] = false;
-                                    },
-                                  );
-                                } else {
-                                  await ForumApi.likeOrDislikeDiscussion(
-                                      discussionId: filteredDiscussions[index]
-                                          .discussionId);
-                                  setState(
-                                    () {
-                                      ++filteredDiscussions[index].likesTotal;
-                                      hasLikedFiltered[index] = true;
-                                    },
-                                  );
-                                }
-
-                                likeChanged = true;
-                                isLikingOrDisliking = false;
-                              },
-                            ),
-                            TextButton.icon(
-                              label: Text(
-                                filteredDiscussions[index]
-                                    .commentsList
-                                    .length
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color.fromARGB(
-                                            255, 211, 227, 253)
-                                        : Colors.black),
-                              ),
-                              icon: Icon(Icons.comment,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color.fromARGB(255, 211, 227, 253)
-                                      : themeClass.lightPrimaryColor),
-                              onPressed: () {
-                                Get.offAll(
-                                  () => DiscussionPage(
-                                    hasLiked: hasLikedFiltered[index],
-                                    discussionId:
-                                        filteredDiscussions[index].discussionId,
-                                    userAvatarUrl: filteredDiscussions[index]
-                                        .userAvatarUrl,
-                                    userName:
-                                        filteredDiscussions[index].userName,
-                                    userType:
-                                        filteredDiscussions[index].userType,
-                                    title: filteredDiscussions[index].title,
-                                    descriptionPost: filteredDiscussions[index]
-                                        .descriptionPost,
-                                    discussionImage: filteredDiscussions[index]
-                                        .discussionImage,
-                                    tags: filteredDiscussions[index].tags,
-                                    datePosted:
-                                        filteredDiscussions[index].datePosted,
-                                    likes: filteredDiscussions[index].likes,
-                                    likesTotal:
-                                        filteredDiscussions[index].likesTotal,
-                                    comments:
-                                        filteredDiscussions[index].comments,
-                                    commentsList:
-                                        filteredDiscussions[index].commentsList,
-                                    discussionPostUserId:
-                                        filteredDiscussions[index]
-                                            .discussionPostUserId,
-                                  ),
-                                );
-                                // Handle comment button press
-                              },
-                            ),
-                            if (user != null &&
-                                user!.uid ==
-                                    filteredDiscussions[index]
-                                        .discussionPostUserId)
+                          Row(
+                            children: [
                               TextButton.icon(
-                                label: const Text(""),
-                                icon: Icon(Icons.delete,
+                                label: Text(
+                                  filteredDiscussions[index]
+                                      .likesTotal
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.black),
+                                ),
+                                icon: Icon(
+                                    hasLikedFiltered[index]
+                                        ? Icons.thumb_up
+                                        : Icons.thumb_up_outlined,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? const Color.fromARGB(
                                             255, 211, 227, 253)
                                         : themeClass.lightPrimaryColor),
                                 onPressed: () async {
-                                  AwesomeDialog(
-                                    dismissOnTouchOutside: false,
-                                    context: context,
-                                    keyboardAware: true,
-                                    dismissOnBackKeyPress: false,
-                                    dialogType: DialogType.question,
-                                    animType: AnimType.scale,
-                                    transitionAnimationDuration:
-                                        const Duration(milliseconds: 200),
-                                    btnOkText: "Delete",
-                                    btnCancelText: "Cancel",
-                                    title: 'Delete Discussion',
-                                    desc:
-                                        "Are you sure you want to delete this discussion?",
-                                    btnCancelOnPress: () {},
-                                    btnOkOnPress: () async {
-                                      String result =
-                                          await ForumApi.deleteDiscussion(
+                                  if (isLikingOrDisliking) {
+                                    // If a like/dislike operation is already in progress, do nothing
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.warning,
+                                      animType: AnimType.bottomSlide,
+                                      title: 'Please wait...',
+                                      desc:
+                                          'Slow down folk, the like/dislike operation is on progress.',
+                                      dismissOnTouchOutside: false,
+                                      dismissOnBackKeyPress: false,
+                                      btnOkOnPress: () {},
+                                    ).show();
+                                    return;
+                                  }
+
+                                  isLikingOrDisliking = true;
+
+                                  if (hasLikedFiltered[index]) {
+                                    await ForumApi.likeOrDislikeDiscussion(
                                         discussionId: filteredDiscussions[index]
-                                            .discussionId,
-                                      );
-                                      if (result == "SUCCESS") {
-                                        setState(() {
-                                          filteredDiscussions.removeAt(index);
-                                        });
-                                        Get.snackbar('Success',
-                                            'Discussion deleted successfully.');
-                                      } else if (result == "NOT-OWNER") {
-                                        Get.snackbar('Error',
-                                            'You are not the owner of this discussion.');
-                                      } else {
-                                        Get.snackbar('Error',
-                                            'Failed to delete discussion.');
-                                      }
-                                    },
-                                  ).show();
+                                            .discussionId);
+                                    setState(
+                                      () {
+                                        --filteredDiscussions[index].likesTotal;
+                                        hasLikedFiltered[index] = false;
+                                      },
+                                    );
+                                  } else {
+                                    await ForumApi.likeOrDislikeDiscussion(
+                                        discussionId: filteredDiscussions[index]
+                                            .discussionId);
+                                    setState(
+                                      () {
+                                        ++filteredDiscussions[index].likesTotal;
+                                        hasLikedFiltered[index] = true;
+                                      },
+                                    );
+                                  }
+
+                                  likeChanged = true;
+                                  isLikingOrDisliking = false;
                                 },
                               ),
-                            const Spacer(),
-                            Text(
-                              DateFormat('dd-MM-yyyy').format(
-                                filteredDiscussions[index].datePosted,
+                              TextButton.icon(
+                                label: Text(
+                                  filteredDiscussions[index]
+                                      .commentsList
+                                      .length
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.black),
+                                ),
+                                icon: Icon(Icons.comment,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : themeClass.lightPrimaryColor),
+                                onPressed: () {
+                                  Get.offAll(
+                                    () => DiscussionPage(
+                                      hasLiked: hasLikedFiltered[index],
+                                      discussionId: filteredDiscussions[index]
+                                          .discussionId,
+                                      userAvatarUrl: filteredDiscussions[index]
+                                          .userAvatarUrl,
+                                      userName:
+                                          filteredDiscussions[index].userName,
+                                      userType:
+                                          filteredDiscussions[index].userType,
+                                      title: filteredDiscussions[index].title,
+                                      descriptionPost:
+                                          filteredDiscussions[index]
+                                              .descriptionPost,
+                                      discussionImage:
+                                          filteredDiscussions[index]
+                                              .discussionImage,
+                                      tags: filteredDiscussions[index].tags,
+                                      datePosted:
+                                          filteredDiscussions[index].datePosted,
+                                      likes: filteredDiscussions[index].likes,
+                                      likesTotal:
+                                          filteredDiscussions[index].likesTotal,
+                                      comments:
+                                          filteredDiscussions[index].comments,
+                                      commentsList: filteredDiscussions[index]
+                                          .commentsList,
+                                      discussionPostUserId:
+                                          filteredDiscussions[index]
+                                              .discussionPostUserId,
+                                    ),
+                                  );
+                                  // Handle comment button press
+                                },
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              if (user != null &&
+                                  user!.uid ==
+                                      filteredDiscussions[index]
+                                          .discussionPostUserId)
+                                TextButton.icon(
+                                  label: const Text(""),
+                                  icon: Icon(Icons.delete,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : themeClass.lightPrimaryColor),
+                                  onPressed: () async {
+                                    AwesomeDialog(
+                                      dismissOnTouchOutside: false,
+                                      context: context,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.question,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Delete",
+                                      btnCancelText: "Cancel",
+                                      title: 'Delete Discussion',
+                                      desc:
+                                          "Are you sure you want to delete this discussion?",
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () async {
+                                        String result =
+                                            await ForumApi.deleteDiscussion(
+                                          discussionId:
+                                              filteredDiscussions[index]
+                                                  .discussionId,
+                                        );
+                                        if (result == "SUCCESS") {
+                                          setState(() {
+                                            filteredDiscussions.removeAt(index);
+                                          });
+                                          Get.snackbar('Success',
+                                              'Discussion deleted successfully.');
+                                        } else if (result == "NOT-OWNER") {
+                                          Get.snackbar('Error',
+                                              'You are not the owner of this discussion.');
+                                        } else {
+                                          Get.snackbar('Error',
+                                              'Failed to delete discussion.');
+                                        }
+                                      },
+                                    ).show();
+                                  },
+                                ),
+                              const Spacer(),
+                              Text(
+                                DateFormat('dd-MM-yyyy').format(
+                                  filteredDiscussions[index].datePosted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
