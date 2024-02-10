@@ -74,6 +74,7 @@ dependencies:
   photo_view: ^0.14.0
   uuid: ^4.3.3
   flutter_dotenv: ^5.1.0
+  midtrans_sdk: ^0.4.0
 
 flutter_launcher_icons:
   image_path: "assets/icons/logo.png"
