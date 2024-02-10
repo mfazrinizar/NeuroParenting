@@ -29,7 +29,7 @@ class ChangeEmailState extends State<ChangeEmailPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -62,6 +62,9 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                       .white, // Change this to your desired background color
             ),
             child: ThemeSwitcher(
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
               onPressed: () {
                 setState(() {
                   themeChange();
@@ -112,23 +115,34 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                               SizedBox(
                                 height: height * 0.05,
                               ),
-                              const Text('Please enter your new email below:',
+                              Text('Please enter your new email below:',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black,
                                   )),
                               TextFormField(
                                 controller: nameController,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   labelStyle: TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors
+                                            .black, // Change this to your desired color
                                   ),
                                   hintText: 'email@email.com',
                                   labelText: 'New Email',
-                                  prefixIcon:
-                                      Icon(Icons.email, color: Colors.black),
+                                  prefixIcon: Icon(
+                                    Icons.email,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black,
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -213,8 +227,14 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                                     }
                                   }
                                 },
-                                child: const Text('   Change   ',
-                                    style: TextStyle(fontSize: 20)),
+                                child: Text('   Change   ',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.white,
+                                    )),
                               ),
                             ],
                           ),

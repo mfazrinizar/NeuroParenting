@@ -200,6 +200,9 @@ class DiscussionState extends State<DiscussionPage> {
                   color: isDarkMode ? Colors.transparent : Colors.white,
                 ),
                 child: ThemeSwitcher(
+                  color: isDarkMode
+                      ? const Color.fromARGB(255, 211, 227, 253)
+                      : Colors.black,
                   onPressed: () {
                     setState(
                       () {
@@ -497,6 +500,10 @@ class DiscussionState extends State<DiscussionPage> {
                                             ...tagCheckboxes.entries.map(
                                               (entry) {
                                                 return CheckboxListTile(
+                                                  checkColor: Colors.white,
+                                                  activeColor:
+                                                      const Color.fromARGB(
+                                                          255, 3, 21, 37),
                                                   title: Text(entry.key),
                                                   value: entry.value,
                                                   onChanged: (bool? value) {

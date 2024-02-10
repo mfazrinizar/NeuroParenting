@@ -142,6 +142,14 @@ class HomePageBodyState extends State<HomePageBody> {
 Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
   bool isDarkMode = HomePageBodyState().isDarkMode;
   double deviceWidth = MediaQuery.of(context).size.width;
+  double deviceHeight = MediaQuery.of(context).size.height;
+  double iconSize = deviceHeight * 0.1;
+  double maxIconHeight = deviceHeight * 0.1;
+  double maxIconWidth = deviceWidth * 0.1;
+
+  while (iconSize > maxIconHeight || iconSize > maxIconWidth) {
+    iconSize -= deviceHeight * 0.01;
+  }
   return SingleChildScrollView(
     child: Column(
       children: [
@@ -180,7 +188,7 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
               padding: const EdgeInsets.all(8.0),
               child: Icon(
                 icon,
-                size: deviceWidth * 0.1,
+                size: iconSize,
                 color: isDarkMode
                     ? const Color.fromARGB(255, 211, 227, 253)
                     : Colors.white,

@@ -23,6 +23,7 @@ class ThemeClass {
     colorScheme: const ColorScheme.light().copyWith(
         primary: _themeClass.lightPrimaryColor,
         secondary: _themeClass.secondaryColor),
+    dialogBackgroundColor: Colors.white,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -50,6 +51,7 @@ class ThemeClass {
         color: HexColor('#C30101'),
       ),
     ),
+    dialogBackgroundColor: const Color.fromARGB(255, 3, 21, 37),
   );
 }
 

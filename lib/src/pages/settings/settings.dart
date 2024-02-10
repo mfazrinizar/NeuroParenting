@@ -337,7 +337,7 @@ class SettingsPageState extends State<SettingsPage> {
                           size: 24,
                           color: Theme.of(context).brightness == Brightness.dark
                               ? const Color.fromARGB(255, 211, 227, 253)
-                              : Colors.white,
+                              : Colors.black,
                         ),
                         label: Text(
                           'Edit Needs',
@@ -388,11 +388,14 @@ Widget _buildListTile(
           borderRadius:
               BorderRadius.circular(16)), // Adjust color and width as needed
       child: ListTile(
-        leading: Icon(icon, color: isDarkMode ? Colors.black : Colors.white),
+        leading: Icon(icon,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white),
         title: Text(title,
             style: TextStyle(
                 color: SettingsPageState().isDarkMode
-                    ? Colors.black
+                    ? const Color.fromARGB(255, 211, 227, 253)
                     : Colors.white)),
         onTap: onTap,
       ),

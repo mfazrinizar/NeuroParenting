@@ -29,7 +29,7 @@ class ChangeNameState extends State<ChangeNamePage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -62,12 +62,16 @@ class ChangeNameState extends State<ChangeNamePage> {
                   : Colors
                       .white, // Change this to your desired background color
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.black,
+                onPressed: () {
+                  setState(() {
+                    themeChange();
+                    isDarkMode = !isDarkMode;
+                  });
+                }),
           ),
         ],
       ),
@@ -109,23 +113,31 @@ class ChangeNameState extends State<ChangeNamePage> {
                             SizedBox(
                               height: height * 0.05,
                             ),
-                            const Text('Please enter your new name below:',
+                            Text('Please enter your new name below:',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors.black,
                                 )),
                             TextFormField(
                               controller: nameController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelStyle: TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors
+                                          .black, // Change this to your desired color
                                 ),
                                 hintText: 'Sucipto Hiu',
                                 labelText: 'New Name',
-                                prefixIcon:
-                                    Icon(Icons.email, color: Colors.black),
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors.black,
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -190,8 +202,15 @@ class ChangeNameState extends State<ChangeNamePage> {
                                   }
                                 }
                               },
-                              child: const Text('   Change   ',
-                                  style: TextStyle(fontSize: 20)),
+                              child: Text(
+                                '   Change   ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors.white,
+                                ),
+                              ),
                             ),
                           ],
                         ),

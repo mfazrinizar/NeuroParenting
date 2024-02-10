@@ -212,7 +212,7 @@ class ForumPageState extends State<ForumPage> {
                         barrierDismissible: false,
                         builder: (context) {
                           return AlertDialog(
-                            backgroundColor: themeClass.darkRounded,
+                            // backgroundColor: themeClass.darkRounded, set from theme.dart
                             scrollable: true,
                             title: const Text('Post Discussion'),
                             content: StatefulBuilder(
