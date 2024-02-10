@@ -26,7 +26,7 @@ class UnderConstructionState extends State<UnderConstructionPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -49,12 +49,16 @@ class UnderConstructionState extends State<UnderConstructionPage> {
             decoration: BoxDecoration(
               color: isDarkMode ? Colors.transparent : Colors.white,
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.black,
+                onPressed: () {
+                  setState(() {
+                    themeChange();
+                    isDarkMode = !isDarkMode;
+                  });
+                }),
           ),
         ],
       ),
@@ -94,22 +98,26 @@ class UnderConstructionState extends State<UnderConstructionPage> {
                           SizedBox(
                             height: height * 0.05,
                           ),
-                          const Text(
+                          Text(
                             'Due to time limitation...',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.black,
+                              color: isDarkMode
+                                  ? const Color.fromARGB(255, 211, 227, 253)
+                                  : Colors.black,
                             ),
                           ),
                           SizedBox(
                             height: height * 0.05,
                           ),
-                          const Text(
+                          Text(
                             'The Feature is Under Construction',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: isDarkMode
+                                  ? const Color.fromARGB(255, 211, 227, 253)
+                                  : Colors.black,
                             ),
                           ),
                         ],
