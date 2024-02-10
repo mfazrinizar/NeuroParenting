@@ -1,6 +1,7 @@
 // homebody.dart
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -44,6 +45,7 @@ class HomePageBody extends StatefulWidget {
 class HomePageBodyState extends State<HomePageBody> {
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
+  String displayName = FirebaseAuth.instance.currentUser?.displayName ?? 'User';
 
   @override
   void initState() {
@@ -60,6 +62,36 @@ class HomePageBodyState extends State<HomePageBody> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    const TextSpan(
+                      text: 'Hello ',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextSpan(
+                      text: displayName,
+                      style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    const TextSpan(
+                      text: '! How could I be of assistance?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
             child: SizedBox(
               width: widget.width,
               child: GridView.count(

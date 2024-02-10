@@ -174,7 +174,8 @@ class SettingsPageState extends State<SettingsPage> {
           final userData = userDoc.data() as Map<String, dynamic>?;
           if (userData != null &&
               userData.containsKey('adminAccess') &&
-              userData['adminAccess'] == true) {
+              userData['adminAccess'] == true &&
+              tilesData.length < 6) {
             tilesData.add({
               'icon': Icons.upload,
               'title': 'Upload Article',
@@ -461,13 +462,25 @@ class TagSelectionDialogState extends State<TagSelectionDialog> {
       ),
       actions: [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Theme.of(context).primaryColorLight),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: const Text('OK'),
+          child: Text(
+            'OK',
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Theme.of(context).primaryColorLight),
+          ),
           onPressed: () {
             Navigator.of(context).pop(selectedTags);
           },

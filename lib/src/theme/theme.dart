@@ -27,6 +27,7 @@ class ThemeClass {
   );
 
   static ThemeData darkTheme = ThemeData(
+    appBarTheme: AppBarTheme(backgroundColor: _themeClass.darkRounded),
     scaffoldBackgroundColor: const Color.fromARGB(255, 3, 21, 37),
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     elevatedButtonTheme: ElevatedButtonThemeData(
