@@ -63,27 +63,30 @@ class HomePageBodyState extends State<HomePageBody> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.topCenter,
               child: RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
-                    const TextSpan(
+                    TextSpan(
                       text: 'Hello ',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: widget.width * 0.05,
                       ),
                     ),
                     TextSpan(
                       text: displayName,
-                      style: const TextStyle(
-                          color: Colors.blue,
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? const Color.fromARGB(255, 211, 227, 253)
+                              : ThemeClass().lightPrimaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                          fontSize: widget.width * 0.05),
                     ),
-                    const TextSpan(
-                      text: '! How could I be of assistance?',
-                      style: TextStyle(fontSize: 16),
+                    TextSpan(
+                      text: '!\nHow could I be of assistance?',
+                      style: TextStyle(fontSize: widget.width * 0.05),
                     ),
                   ],
                 ),

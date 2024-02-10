@@ -7,6 +7,8 @@ class ThemeClass {
   Color secondaryColor = HexColor('#FF8B6A');
   Color accentColor = HexColor('#FFD2BB');
   Color darkRounded = HexColor('#162c46');
+  Color darkErrorStyle = HexColor('#C30101');
+  Color darkLight = const Color.fromARGB(255, 3, 21, 37);
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
@@ -28,7 +30,7 @@ class ThemeClass {
 
   static ThemeData darkTheme = ThemeData(
     appBarTheme: AppBarTheme(backgroundColor: _themeClass.darkRounded),
-    scaffoldBackgroundColor: const Color.fromARGB(255, 3, 21, 37),
+    scaffoldBackgroundColor: _themeClass.darkLight,
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -45,14 +47,14 @@ class ThemeClass {
     inputDecorationTheme: InputDecorationTheme(
       errorBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: HexColor('#C30101'),
+          color: _themeClass.darkErrorStyle,
         ),
       ),
       errorStyle: TextStyle(
-        color: HexColor('#C30101'),
+        color: _themeClass.darkErrorStyle,
       ),
     ),
-    dialogBackgroundColor: const Color.fromARGB(255, 3, 21, 37),
+    dialogBackgroundColor: _themeClass.darkLight,
   );
 }
 
