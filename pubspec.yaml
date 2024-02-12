@@ -144,7 +144,6 @@ flutter:
     - assets/nst/
     - assets/phonetic/
     - assets/sound/
-    - .env
     
   #   - images/a_dot_ham.jpeg
 

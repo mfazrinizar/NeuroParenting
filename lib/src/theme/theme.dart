@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'hex_color.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class ThemeClass {
   Color lightPrimaryColor = HexColor('#4173CA');
@@ -9,8 +10,12 @@ class ThemeClass {
   Color darkRounded = HexColor('#162c46');
   Color darkErrorStyle = HexColor('#C30101');
   Color darkLight = const Color.fromARGB(255, 3, 21, 37);
+  Color lightDiscussion = const Color.fromARGB(255, 243, 243, 243);
 
   static ThemeData lightTheme = ThemeData(
+    // textTheme: GoogleFonts.nunitoTextTheme(),
+
+    cardColor: _themeClass.lightDiscussion,
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
     primaryColorLight: _themeClass.lightPrimaryColor,
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -29,7 +34,9 @@ class ThemeClass {
   );
 
   static ThemeData darkTheme = ThemeData(
-    cardColor: _themeClass.darkLight,
+    // textTheme: GoogleFonts.nunitoTextTheme(),
+
+    cardColor: _themeClass.darkRounded,
     appBarTheme: AppBarTheme(backgroundColor: _themeClass.darkRounded),
     scaffoldBackgroundColor: _themeClass.darkLight,
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,

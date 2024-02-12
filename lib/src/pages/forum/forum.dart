@@ -156,6 +156,9 @@ class ForumPageState extends State<ForumPage> {
   Widget build(context) {
     return RefreshIndicator(
       onRefresh: fetchDiscussions,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? const Color.fromARGB(255, 211, 227, 253)
+          : ThemeClass.lightTheme.primaryColor,
       child: Column(
         children: [
           Container(
