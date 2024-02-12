@@ -73,8 +73,9 @@ dependencies:
   flutter_markdown: ^0.6.18+3
   photo_view: ^0.14.0
   uuid: ^4.3.3
-  flutter_dotenv: ^5.1.0
   midtrans_sdk: ^0.4.0
+  http: ^1.2.0
+  secure_dotenv: ^1.0.0
 
 flutter_launcher_icons:
   image_path: "assets/icons/logo.png"
@@ -111,6 +112,8 @@ flutter_native_splash:
   web: true
 
 dev_dependencies:
+  secure_dotenv_generator: ^1.0.1
+  build_runner: ^2.4.8
   flutter_launcher_icons: "^0.13.1"
   flutter_test:
     sdk: flutter
@@ -143,6 +146,7 @@ flutter:
     - assets/phonetic/
     - assets/sound/
     - .env
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

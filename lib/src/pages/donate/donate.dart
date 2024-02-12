@@ -1,10 +1,12 @@
 // under_construction.dart
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/payment/midtrans_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/form_validator.dart';
@@ -29,12 +31,18 @@ class DonateState extends State<DonatePage> {
   bool isDarkMode = Get.isDarkMode;
 
   @override
+  void initState() {
+    super.initState();
+    MidtransAPI.initSDK(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -56,12 +64,19 @@ class DonateState extends State<DonatePage> {
             decoration: BoxDecoration(
               color: isDarkMode ? Colors.transparent : Colors.white,
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: () {
+                setState(
+                  () {
+                    themeChange();
+                    isDarkMode = !isDarkMode;
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -103,17 +118,23 @@ class DonateState extends State<DonatePage> {
                             SizedBox(
                               height: height * 0.05,
                             ),
-                            const Text('Please Fill the Form',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                )),
-                            const Text(
+                            Text(
+                              'Please Fill the Form',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode
+                                    ? const Color.fromARGB(255, 211, 227, 253)
+                                    : Colors.black,
+                              ),
+                            ),
+                            Text(
                               'Your donation means so much for our kids in need',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black,
+                                color: isDarkMode
+                                    ? const Color.fromARGB(255, 211, 227, 253)
+                                    : Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -121,30 +142,43 @@ class DonateState extends State<DonatePage> {
                               controller: donationAmountController,
                               keyboardType: TextInputType.number,
                               validator: FormValidator.validateText,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelStyle: TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors
+                                          .black, // Change this to your desired color
                                 ),
                                 hintText: '10000 (in IDR)',
                                 labelText: 'Donation Amount',
-                                prefixIcon:
-                                    Icon(Icons.favorite, color: Colors.black),
+                                prefixIcon: Icon(Icons.favorite,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black),
                               ),
                             ),
                             TextFormField(
                               controller: donationMessageController,
                               validator: FormValidator.validateText,
-                              style: const TextStyle(color: Colors.black),
-                              decoration: const InputDecoration(
+                              style: TextStyle(
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors.black),
+                              decoration: InputDecoration(
                                 labelStyle: TextStyle(
-                                  color: Colors
-                                      .black, // Change this to your desired color
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors
+                                          .black, // Change this to your desired color
                                 ),
                                 hintText: 'I want to donate...',
                                 labelText: 'Donation Message',
-                                prefixIcon:
-                                    Icon(Icons.message, color: Colors.black),
+                                prefixIcon: Icon(Icons.message,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black),
                               ),
                             ),
                             SizedBox(
@@ -157,31 +191,65 @@ class DonateState extends State<DonatePage> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // TODO: Payment Implementation with Midtrans SDK (awaiting API)
-                                  EasyLoading.show(
-                                      status: 'Processing Payment...');
+                                  final user =
+                                      FirebaseAuth.instance.currentUser;
 
-                                  await Future.delayed(
-                                      const Duration(seconds: 2));
-                                  if (!context.mounted) return;
-                                  AwesomeDialog(
-                                    dismissOnTouchOutside: false,
-                                    context: context,
-                                    keyboardAware: true,
-                                    dismissOnBackKeyPress: false,
-                                    dialogType: DialogType.success,
-                                    animType: AnimType.scale,
-                                    transitionAnimationDuration:
-                                        const Duration(milliseconds: 200),
-                                    btnOkText: "Ok",
-                                    title: 'Thank You',
-                                    desc:
-                                        'Your donation and your message has been received.',
-                                    btnOkOnPress: () {
-                                      DismissType.btnOk;
-                                    },
-                                  ).show();
-                                  EasyLoading.dismiss();
+                                  if (user != null) {
+                                    String displayName = user.displayName ?? "";
+                                    int spaceAtIndex = displayName.indexOf(' ');
+
+                                    final token =
+                                        await MidtransAPI.generatePaymentToken(
+                                            itemName:
+                                                "Donation for NeuroDivergent Kids",
+                                            itemDescription:
+                                                donationMessageController.text,
+                                            priceTotal:
+                                                int.parse(
+                                                    donationAmountController
+                                                        .text),
+                                            firstName:
+                                                displayName
+                                                    .substring(0, spaceAtIndex),
+                                            lastName: displayName
+                                                .substring(spaceAtIndex + 1),
+                                            email:
+                                                user.email ?? "null@email.com",
+                                            itemId: "donate",
+                                            category: "donation");
+
+                                    final status =
+                                        await MidtransAPI.startPaymentUiFlow(
+                                            token);
+
+                                    print(status);
+
+                                    EasyLoading.show(
+                                        status: 'Processing Payment...');
+
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+                                    if (!context.mounted) return;
+                                    AwesomeDialog(
+                                      dismissOnTouchOutside: false,
+                                      context: context,
+                                      keyboardAware: true,
+                                      dismissOnBackKeyPress: false,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.scale,
+                                      transitionAnimationDuration:
+                                          const Duration(milliseconds: 200),
+                                      btnOkText: "Ok",
+                                      title: 'Thank You',
+                                      desc:
+                                          'Your donation and your message has been received.',
+                                      btnOkOnPress: () {
+                                        DismissType.btnOk;
+                                      },
+                                    ).show();
+                                    EasyLoading.dismiss();
+                                  }
+                                  // TODO: Payment Implementation with Midtrans SDK (awaiting API)
 
                                   // Check the result
                                   // if (result['status'] == 'success') {

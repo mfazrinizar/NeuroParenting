@@ -37,13 +37,16 @@ class GamePageState extends State<GamePage> {
           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
         ),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            color: const Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              Get.offAll(const HomePage(
+          icon: const Icon(Icons.arrow_back),
+          color: const Color.fromARGB(255, 255, 255, 255),
+          onPressed: () {
+            Get.offAll(
+              () => const HomePage(
                 indexFromPrevious: 0,
-              ));
-            }),
+              ),
+            );
+          },
+        ),
         actions: [
           LanguageSwitcher(
             onPressed: localizationChange,

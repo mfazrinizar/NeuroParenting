@@ -29,6 +29,8 @@ README.md
 *.js.deps
 *.js.map
 
+encryption_key.json
+encryption.json
 .flutter-plugins
 .flutter-plugins-dependencies
 =======
