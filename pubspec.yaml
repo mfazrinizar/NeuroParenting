@@ -47,7 +47,6 @@ dependencies:
   intl: ^0.18.1
   flutter_localizations:
     sdk: flutter
-  hexcolor: ^3.0.1
   shared_preferences: ^2.2.2
   awesome_dialog: ^3.2.0
   flutter_easyloading: ^3.0.5
