@@ -269,10 +269,10 @@ class ForumPageState extends State<ForumPage> {
                                           },
                                         ).toList(),
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 3, 21, 37)),
+                                          // style: ElevatedButton.styleFrom(
+                                          //     backgroundColor:
+                                          //         const Color.fromARGB(
+                                          //             255, 3, 21, 37)),
                                           onPressed: () async {
                                             final filePicking = FilePicking();
 
@@ -307,15 +307,31 @@ class ForumPageState extends State<ForumPage> {
                                                     onPressed: () =>
                                                         Navigator.pop(
                                                             context, 'Gallery'),
-                                                    child: const Text(
+                                                    child: Text(
                                                       'Gallery',
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
                                                     ),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>
                                                         Navigator.pop(
                                                             context, 'Camera'),
-                                                    child: const Text('Camera'),
+                                                    child: Text(
+                                                      'Camera',
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -351,10 +367,10 @@ class ForumPageState extends State<ForumPage> {
                                         else
                                           const Text('No image selected'),
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 3, 21, 37)),
+                                          // style: ElevatedButton.styleFrom(
+                                          //     backgroundColor:
+                                          //         const Color.fromARGB(
+                                          //             255, 3, 21, 37)),
                                           onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {
@@ -391,10 +407,10 @@ class ForumPageState extends State<ForumPage> {
                                           ),
                                         ),
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 3, 21, 37)),
+                                          // style: ElevatedButton.styleFrom(
+                                          //     backgroundColor:
+                                          //         const Color.fromARGB(
+                                          //             255, 3, 21, 37)),
                                           onPressed: () async {
                                             setState(() {
                                               newPostImage == null;

@@ -527,24 +527,50 @@ class DiscussionState extends State<DiscussionPage> {
                                                           AlertDialog(
                                                     title: const Text(
                                                         'Choose an action'),
-                                                    content: const Text(
-                                                        'Pick an image from the gallery or take a new photo?'),
+                                                    content: Text(
+                                                      'Pick an image from the gallery or take a new photo?',
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    ),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context,
                                                                 'Gallery'),
-                                                        child: const Text(
-                                                            'Gallery'),
+                                                        child: Text(
+                                                          'Gallery',
+                                                          style: TextStyle(
+                                                              color: Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
                                                       ),
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context,
                                                                 'Camera'),
-                                                        child: const Text(
-                                                            'Camera'),
+                                                        child: Text(
+                                                          'Camera',
+                                                          style: TextStyle(
+                                                              color: Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),

@@ -59,6 +59,10 @@ class ThemeClass {
       primary: _themeClass.darkPrimaryColor,
     ),
     inputDecorationTheme: InputDecorationTheme(
+      floatingLabelStyle: const TextStyle(color: Colors.blueGrey),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blueGrey),
+      ),
       errorBorder: UnderlineInputBorder(
         borderSide: BorderSide(
           color: _themeClass.darkErrorStyle,
