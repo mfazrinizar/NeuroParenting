@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:midtrans_sdk/midtrans_sdk.dart';
@@ -12,6 +14,7 @@ class MidtransAPI {
   static final env = Env.create();
   static MidtransSDK? _midtrans;
   static Map<String, dynamic>? responseBody;
+  static TransactionResult? transactionCallbackResult;
 
   static Future<String> generatePaymentToken({
     required String itemDescription,
@@ -77,7 +80,7 @@ class MidtransAPI {
       }),
     );
 
-    print(jsonDecode(response.body));
+    // print(jsonDecode(response.body));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to cancel transaction');
@@ -95,40 +98,32 @@ class MidtransAPI {
             : env.midtransClientKeyProduction,
         merchantBaseUrl: env.midtransMerchantBaseUrl,
         language: languageCode,
-        // colorTheme: ColorTheme(
-        //     colorPrimary: Theme.of(context).scaffoldBackgroundColor,
-        //     colorPrimaryDark: Theme.of(context).scaffoldBackgroundColor,
-        //     colorSecondary: Theme.of(context).cardColor
-        //     // colorSecondary: Theme.of(context)
-        //     //     .elevatedButtonTheme
-        //     //     .style
-        //     //     ?.backgroundColor as Color,
-        //     ),
       ),
     );
     _midtrans?.setUIKitCustomSetting(
       skipCustomerDetailsPages: true,
     );
-    _midtrans!.setTransactionFinishedCallback((result) {
-      responseBody = result.toJson();
-      print(result.toJson());
-    });
   }
 
   static void removeTransactionFinishedCallback() {
     _midtrans?.removeTransactionFinishedCallback();
   }
 
-  static Future<Map<String, dynamic>> startPaymentUiFlow(String token) async {
-    _midtrans?.startPaymentUiFlow(
-      token: token,
-    );
+  static Future<TransactionResult> returnTransactionCallbackResult() {
+    final completer = Completer<TransactionResult>();
 
-    if (responseBody != null) {
-      return responseBody!;
-    } else {
-      return {'error': 'true'};
-    }
+    _midtrans!.setTransactionFinishedCallback((result) {
+      transactionCallbackResult = result;
+      if (!completer.isCompleted) {
+        completer.complete(transactionCallbackResult);
+      }
+    });
+
+    return completer.future;
+  }
+
+  static Future<void> startPaymentUiFlow(String token) async {
+    await _midtrans?.startPaymentUiFlow(token: token);
   }
 }
 

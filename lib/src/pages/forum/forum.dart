@@ -710,6 +710,7 @@ class ForumPageState extends State<ForumPage> {
                                     : "Edited at ${DateFormat('dd-MM-yyyy').format(
                                         filteredDiscussions[index].postEditedAt,
                                       )}",
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ],
                           ),

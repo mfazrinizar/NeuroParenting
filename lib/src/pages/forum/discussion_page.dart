@@ -257,6 +257,7 @@ class DiscussionState extends State<DiscussionPage> {
                         ? DateFormat('yyyy-MM-dd – kk:mm').format(
                             updatedDiscussion?.datePosted ?? widget.datePosted)
                         : "Edited at ${DateFormat('yyyy-MM-dd – kk:mm').format(updatedDiscussion?.postEditedAt ?? widget.postEditedAt)}",
+                    style: const TextStyle(fontSize: 12),
                   ),
                   trailing: Chip(
                       label: SelectableText(

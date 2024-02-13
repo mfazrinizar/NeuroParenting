@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:midtrans_sdk/midtrans_sdk.dart';
 import 'package:neuroparenting/src/db/payment/midtrans_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
@@ -29,6 +30,7 @@ class DonateState extends State<DonatePage> {
   final TextEditingController donationMessageController =
       TextEditingController();
   bool isDarkMode = Get.isDarkMode;
+  late TransactionResult transactionCallbackResult;
 
   @override
   void initState() {
@@ -195,6 +197,9 @@ class DonateState extends State<DonatePage> {
                                       FirebaseAuth.instance.currentUser;
 
                                   if (user != null) {
+                                    EasyLoading.show(
+                                        status: 'Processing Payment...');
+
                                     String displayName = user.displayName ?? "";
                                     int spaceAtIndex = displayName.indexOf(' ');
 
@@ -218,38 +223,63 @@ class DonateState extends State<DonatePage> {
                                             itemId: "donate",
                                             category: "donation");
 
-                                    final status =
-                                        await MidtransAPI.startPaymentUiFlow(
-                                            token);
+                                    await MidtransAPI.startPaymentUiFlow(token);
 
-                                    print(status);
+                                    final result = await MidtransAPI
+                                        .returnTransactionCallbackResult();
 
-                                    EasyLoading.show(
-                                        status: 'Processing Payment...');
+                                    final responseBody = result.toJson();
 
-                                    await Future.delayed(
-                                        const Duration(seconds: 2));
                                     if (!context.mounted) return;
-                                    AwesomeDialog(
-                                      dismissOnTouchOutside: false,
-                                      context: context,
-                                      keyboardAware: true,
-                                      dismissOnBackKeyPress: false,
-                                      dialogType: DialogType.success,
-                                      animType: AnimType.scale,
-                                      transitionAnimationDuration:
-                                          const Duration(milliseconds: 200),
-                                      btnOkText: "Ok",
-                                      title: 'Thank You',
-                                      desc:
-                                          'Your donation and your message has been received.',
-                                      btnOkOnPress: () {
-                                        DismissType.btnOk;
-                                      },
-                                    ).show();
+                                    if (!responseBody[
+                                        'isTransactionCanceled']) {
+                                      AwesomeDialog(
+                                        dismissOnTouchOutside: false,
+                                        context: context,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.success,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Ok",
+                                        title: 'Donation Success',
+                                        desc:
+                                            'Thank you for your donation. Your donation and your message has been received.',
+                                        btnOkOnPress: () {
+                                          DismissType.btnOk;
+                                        },
+                                      ).show();
+                                    } else {
+                                      AwesomeDialog(
+                                        dismissOnTouchOutside: false,
+                                        context: context,
+                                        keyboardAware: true,
+                                        dismissOnBackKeyPress: false,
+                                        dialogType: DialogType.info,
+                                        animType: AnimType.scale,
+                                        transitionAnimationDuration:
+                                            const Duration(milliseconds: 200),
+                                        btnOkText: "Ok",
+                                        title: 'Donation Canceled',
+                                        desc:
+                                            'You have canceled your donation or error occured.',
+                                        btnOkOnPress: () {
+                                          DismissType.btnOk;
+                                        },
+                                      ).show();
+                                    }
+
+                                    // await Future.delayed(
+                                    //     const Duration(seconds: 2));
+                                    MidtransAPI
+                                        .removeTransactionFinishedCallback();
+                                    responseBody.clear();
+
                                     EasyLoading.dismiss();
                                   }
-                                  // TODO: Payment Implementation with Midtrans SDK (awaiting API)
+
+                                  // TODO: Save payment to Firebase
 
                                   // Check the result
                                   // if (result['status'] == 'success') {

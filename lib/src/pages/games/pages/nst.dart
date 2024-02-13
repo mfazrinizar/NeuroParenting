@@ -133,7 +133,7 @@ class NSTState extends State<NST> {
             icon: const Icon(Icons.arrow_back),
             color: const Color.fromARGB(255, 255, 255, 255),
             onPressed: () {
-              Get.offAll(const GamePage());
+              Get.offAll(() => const GamePage());
             }),
         actions: [
           LanguageSwitcher(
