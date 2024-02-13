@@ -27,7 +27,8 @@ class MidtransAPI {
     required String itemName,
   }) async {
     const uniqueId = Uuid();
-    String orderId = "neuropay-$category-${uniqueId.v4().substring(0, 8)}";
+    String orderId =
+        "neuropay-${category.toLowerCase()}-${uniqueId.v4().substring(0, 8)}";
 
     final response = await http.post(
       Uri.parse(env.midtransMerchantBaseUrl),

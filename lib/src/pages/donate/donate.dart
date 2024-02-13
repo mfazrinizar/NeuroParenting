@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:midtrans_sdk/midtrans_sdk.dart';
 import 'package:neuroparenting/src/db/payment/midtrans_api.dart';
+import 'package:neuroparenting/src/db/payment/payment_db_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/form_validator.dart';
@@ -227,7 +228,7 @@ class DonateState extends State<DonatePage> {
                                             email:
                                                 user.email ?? "null@email.com",
                                             itemId: "donate",
-                                            category: "donation");
+                                            category: "Donation");
 
                                     await MidtransAPI.startPaymentUiFlow(token);
 
@@ -236,9 +237,36 @@ class DonateState extends State<DonatePage> {
 
                                     final responseBody = result.toJson();
 
-                                    if (!context.mounted) return;
                                     if (!responseBody[
-                                        'isTransactionCanceled']) {
+                                            'isTransactionCanceled'] &&
+                                        responseBody['transactionStatus'] ==
+                                            'settlement') {
+                                      await PaymentDbAPI.postPayment(
+                                        isProduction: false,
+                                        orderId: responseBody['orderId'],
+                                        priceTotal: int.parse(
+                                            donationAmountController.text),
+                                        paymentType:
+                                            responseBody['paymentType'],
+                                        transactionStatus:
+                                            responseBody['transactionStatus'],
+                                        transactionId:
+                                            responseBody['transactionId'],
+                                        itemId: "donate",
+                                        category: "Donation",
+                                        itemName:
+                                            "Donation for NeuroDivergent Kids",
+                                        itemDescription:
+                                            donationMessageController.text,
+                                        email: user.email ?? "null@email.com",
+                                        firstName: displayName.substring(
+                                            0, spaceAtIndex),
+                                        lastName: displayName
+                                            .substring(spaceAtIndex + 1),
+                                        userId: user.uid,
+                                        name: displayName,
+                                      );
+                                      if (!context.mounted) return;
                                       AwesomeDialog(
                                         dismissOnTouchOutside: false,
                                         context: context,
@@ -257,6 +285,7 @@ class DonateState extends State<DonatePage> {
                                         },
                                       ).show();
                                     } else {
+                                      if (!context.mounted) return;
                                       AwesomeDialog(
                                         dismissOnTouchOutside: false,
                                         context: context,
