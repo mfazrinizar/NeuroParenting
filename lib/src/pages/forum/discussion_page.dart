@@ -28,6 +28,7 @@ class DiscussionPage extends StatefulWidget {
   final String title;
   final List<String> tags;
   final DateTime datePosted;
+  final DateTime postEditedAt;
   final List<String> likes;
   final int likesTotal;
   final int comments;
@@ -47,6 +48,7 @@ class DiscussionPage extends StatefulWidget {
       required this.descriptionPost,
       required this.tags,
       required this.datePosted,
+      required this.postEditedAt,
       required this.likes,
       required this.likesTotal,
       required this.comments,
@@ -249,8 +251,12 @@ class DiscussionState extends State<DiscussionPage> {
                     ),
                   ),
                   subtitle: SelectableText(
-                    DateFormat('yyyy-MM-dd – kk:mm').format(
-                        updatedDiscussion?.datePosted ?? widget.datePosted),
+                    (updatedDiscussion?.datePosted ?? widget.datePosted) ==
+                            (updatedDiscussion?.postEditedAt ??
+                                widget.postEditedAt)
+                        ? DateFormat('yyyy-MM-dd – kk:mm').format(
+                            updatedDiscussion?.datePosted ?? widget.datePosted)
+                        : "Edited at ${DateFormat('yyyy-MM-dd – kk:mm').format(updatedDiscussion?.postEditedAt ?? widget.postEditedAt)}",
                   ),
                   trailing: Chip(
                       label: SelectableText(

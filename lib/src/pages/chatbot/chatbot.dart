@@ -316,7 +316,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 data: content.parts?.lastOrNull?.text ??
-                    'Unable to generate data.'),
+                    'Unable to generate data. Ask with more details.'),
             TextButton.icon(
               onPressed: () {
                 Clipboard.setData(

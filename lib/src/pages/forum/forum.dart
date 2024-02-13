@@ -438,6 +438,7 @@ class ForumPageState extends State<ForumPage> {
                             filteredDiscussions[index].discussionImage,
                         tags: filteredDiscussions[index].tags,
                         datePosted: filteredDiscussions[index].datePosted,
+                        postEditedAt: filteredDiscussions[index].postEditedAt,
                         likes: filteredDiscussions[index].likes,
                         likesTotal: filteredDiscussions[index].likesTotal,
                         comments: filteredDiscussions[index].comments,
@@ -614,6 +615,8 @@ class ForumPageState extends State<ForumPage> {
                                       tags: filteredDiscussions[index].tags,
                                       datePosted:
                                           filteredDiscussions[index].datePosted,
+                                      postEditedAt: filteredDiscussions[index]
+                                          .postEditedAt,
                                       likes: filteredDiscussions[index].likes,
                                       likesTotal:
                                           filteredDiscussions[index].likesTotal,
@@ -683,9 +686,14 @@ class ForumPageState extends State<ForumPage> {
                                 ),
                               const Spacer(),
                               Text(
-                                DateFormat('dd-MM-yyyy').format(
-                                  filteredDiscussions[index].datePosted,
-                                ),
+                                filteredDiscussions[index].datePosted ==
+                                        filteredDiscussions[index].postEditedAt
+                                    ? DateFormat('dd-MM-yyyy').format(
+                                        filteredDiscussions[index].datePosted,
+                                      )
+                                    : "Edited at ${DateFormat('dd-MM-yyyy').format(
+                                        filteredDiscussions[index].postEditedAt,
+                                      )}",
                               ),
                             ],
                           ),

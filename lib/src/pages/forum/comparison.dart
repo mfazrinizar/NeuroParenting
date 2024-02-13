@@ -515,6 +515,8 @@ class ForumPageState extends State<ForumPage> {
                                     tags: filteredDiscussions[index].tags,
                                     datePosted:
                                         filteredDiscussions[index].datePosted,
+                                    postEditedAt:
+                                        filteredDiscussions[index].postEditedAt,
                                     likes: filteredDiscussions[index].likes,
                                     likesTotal:
                                         filteredDiscussions[index].likesTotal,

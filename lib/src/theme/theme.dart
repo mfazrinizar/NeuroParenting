@@ -36,6 +36,12 @@ class ThemeClass {
   static ThemeData darkTheme = ThemeData(
     // textTheme: GoogleFonts.nunitoTextTheme(),
 
+    textSelectionTheme: const TextSelectionThemeData(
+      selectionColor: Colors.blueGrey,
+      selectionHandleColor: Colors.blueGrey,
+      cursorColor: Colors.lightBlue,
+    ),
+
     cardColor: _themeClass.darkRounded,
     appBarTheme: AppBarTheme(backgroundColor: _themeClass.darkRounded),
     scaffoldBackgroundColor: _themeClass.darkLight,
