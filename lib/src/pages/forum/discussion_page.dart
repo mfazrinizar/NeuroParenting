@@ -161,6 +161,9 @@ class DiscussionState extends State<DiscussionPage> {
     // double height = MediaQuery.of(context).size.height;
     return RefreshIndicator(
       onRefresh: refreshDiscussion,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? const Color.fromARGB(255, 211, 227, 253)
+          : ThemeClass.lightTheme.primaryColor,
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -211,7 +214,7 @@ class DiscussionState extends State<DiscussionPage> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(
+                    child: SelectableText(
                       updatedDiscussion?.title ?? widget.title,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 24),
@@ -229,8 +232,8 @@ class DiscussionState extends State<DiscussionPage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  title: RichText(
-                    text: TextSpan(
+                  title: SelectableText.rich(
+                    TextSpan(
                       children: [
                         TextSpan(
                           text: 'Posted by ',
@@ -245,20 +248,20 @@ class DiscussionState extends State<DiscussionPage> {
                       ],
                     ),
                   ),
-                  subtitle: Text(
+                  subtitle: SelectableText(
                     DateFormat('yyyy-MM-dd – kk:mm').format(
                         updatedDiscussion?.datePosted ?? widget.datePosted),
                   ),
                   trailing: Chip(
-                      label:
-                          Text(updatedDiscussion?.userType ?? widget.userType)),
+                      label: SelectableText(
+                          updatedDiscussion?.userType ?? widget.userType)),
                 ),
                 Align(
                   alignment: Alignment.topRight,
                   child: Wrap(
                     spacing: 6,
                     children: (updatedDiscussion?.tags ?? widget.tags)
-                        .map((tag) => Text(
+                        .map((tag) => SelectableText(
                               '#$tag  ',
                             ))
                         .toList(),
@@ -285,7 +288,7 @@ class DiscussionState extends State<DiscussionPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
+                  child: SelectableText(
                     updatedDiscussion?.descriptionPost ??
                         widget.descriptionPost,
                     textAlign: TextAlign.justify,
@@ -696,12 +699,12 @@ class DiscussionState extends State<DiscussionPage> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              Text(
+                              SelectableText(
                                 '${comment.commenterName} | ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
+                              SelectableText(
                                 DateFormat('yyyy-MM-dd – kk:mm  ')
                                     .format(comment.commentDate),
                                 style: const TextStyle(
@@ -771,7 +774,7 @@ class DiscussionState extends State<DiscussionPage> {
                             ],
                           ),
                         ),
-                        subtitle: Text(
+                        subtitle: SelectableText(
                           comment.text,
                           textAlign: TextAlign.justify,
                         ),

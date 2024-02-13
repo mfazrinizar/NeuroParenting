@@ -313,6 +313,7 @@ class SettingsPageState extends State<SettingsPage> {
                     children: [
                       TextButton.icon(
                         onPressed: () async {
+                          // List<String>? initialTagsTemp = userTags;
                           final result = await showDialog<List<String>>(
                             context: context,
                             builder: (context) => TagSelectionDialog(
@@ -342,6 +343,13 @@ class SettingsPageState extends State<SettingsPage> {
                                   .update({'userTags': userTags});
                             }
                           }
+                          // else {
+                          //   setState(
+                          //     () {
+                          //       userTags = initialTagsTemp;
+                          //     },
+                          //   );
+                          // }
                         },
                         icon: Icon(
                           Icons.edit,

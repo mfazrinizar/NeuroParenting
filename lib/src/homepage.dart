@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   bool isDarkMode = Get.isDarkMode;
   final int _current = 0;
-  int _currentTabIndex = 0;
+  final ValueNotifier<int> _currentTabIndex = ValueNotifier<int>(0);
   final CarouselController _controller = CarouselController();
   String? userType;
 
@@ -35,7 +35,7 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isDarkMode = Get.isDarkMode;
-    _currentTabIndex = widget.indexFromPrevious ?? 0;
+    _currentTabIndex.value = widget.indexFromPrevious ?? 0;
     fetchUserType();
   }
 
@@ -91,7 +91,7 @@ class HomePageState extends State<HomePage> {
 
   void onTabTapped(int index) {
     setState(() {
-      _currentTabIndex = index;
+      _currentTabIndex.value = index;
     });
   }
 
@@ -144,16 +144,16 @@ class HomePageState extends State<HomePage> {
               : ThemeClass().lightPrimaryColor,
           elevation: 0,
           title: Text(
-              _currentTabIndex == 0
+              _currentTabIndex.value == 0
                   ? 'Home'
-                  : _currentTabIndex == 1
+                  : _currentTabIndex.value == 1
                       ? 'Forum'
                       : 'Settings',
               style: const TextStyle(color: Colors.white)),
           leading: IconButton(
               icon: Image.asset('assets/icons/logo.png'),
               onPressed: () {
-                // Get.offAll(() => const OnboardingScreen());
+                setState(() => _currentTabIndex.value = 0);
               }),
           actions: [
             LanguageSwitcher(
@@ -162,13 +162,15 @@ class HomePageState extends State<HomePage> {
                   ? const Color.fromARGB(255, 211, 227, 253)
                   : Colors.white,
             ),
-            ThemeSwitcher(onPressed: () async {
-              themeChange();
-              
-              setState(() {
-                isDarkMode = !isDarkMode;
-              });
-            },),
+            ThemeSwitcher(
+              onPressed: () async {
+                themeChange();
+
+                setState(() {
+                  isDarkMode = !isDarkMode;
+                });
+              },
+            ),
             PopupMenuButton<String>(
               icon: Icon(Icons.notifications,
                   color: isDarkMode
@@ -189,13 +191,16 @@ class HomePageState extends State<HomePage> {
               builder: (BuildContext context) {
                 final user = FirebaseAuth.instance.currentUser;
                 if (user != null && user.photoURL != null) {
-                  return ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      image: user.photoURL!,
-                      placeholder: 'assets/images/placeholder_loading.gif',
-                      fit: BoxFit.cover,
-                      width: 45,
-                      height: 45,
+                  return InkWell(
+                    onTap: () => setState(() => _currentTabIndex.value = 2),
+                    child: ClipOval(
+                      child: FadeInImage.assetNetwork(
+                        image: user.photoURL!,
+                        placeholder: 'assets/images/placeholder_loading.gif',
+                        fit: BoxFit.cover,
+                        width: 45,
+                        height: 45,
+                      ),
                     ),
                   ); // display the user's profile picture
                 } else {
@@ -209,25 +214,36 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        bottomNavigationBar: ConvexAppBar(
-          color: isDarkMode
-              ? const Color.fromARGB(255, 211, 227, 253)
-              : Colors.white,
-          backgroundColor: isDarkMode
-              ? ThemeClass().darkRounded
-              : ThemeClass().lightPrimaryColor,
-          style: TabStyle.reactCircle,
-          activeColor: isDarkMode
-              ? const Color.fromARGB(255, 211, 227, 253)
-              : Colors.white,
-          items: const [
-            TabItem(icon: Icons.home, title: 'Home'),
-            TabItem(icon: Icons.forum, title: 'Forum'),
-            TabItem(icon: Icons.settings, title: 'Settings'),
-          ],
-          initialActiveIndex: _currentTabIndex, //Choose initial selection here
-          onTap: onTabTapped,
+        bottomNavigationBar: ValueListenableBuilder<int>(
+          valueListenable: _currentTabIndex,
+          builder: (context, value, child) {
+            return ConvexAppBar(
+              key: ValueKey(value),
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.white,
+              backgroundColor: isDarkMode
+                  ? ThemeClass().darkRounded
+                  : ThemeClass().lightPrimaryColor,
+              style: TabStyle.reactCircle,
+              activeColor: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.white,
+              items: const [
+                TabItem(icon: Icons.home, title: 'Home'),
+                TabItem(icon: Icons.forum, title: 'Forum'),
+                TabItem(icon: Icons.settings, title: 'Settings'),
+              ],
+              initialActiveIndex:
+                  value, // Use the current tab index from the ValueNotifier
+              onTap: (index) {
+                setState(() {
+                  _currentTabIndex.value = index;
+                });
+              }, // Update the current tab index when a tab is tapped
+            );
+          },
         ),
-        body: children[_currentTabIndex]);
+        body: children[_currentTabIndex.value]);
   }
 }
