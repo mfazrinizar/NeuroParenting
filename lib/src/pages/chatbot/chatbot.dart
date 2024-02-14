@@ -66,9 +66,11 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   ? const Color.fromARGB(255, 211, 227, 253)
                   : Colors.black,
               onPressed: () {
-                setState(() {
-                  themeChange();
-                });
+                setState(
+                  () {
+                    themeChange();
+                  },
+                );
               }),
         ],
       ),

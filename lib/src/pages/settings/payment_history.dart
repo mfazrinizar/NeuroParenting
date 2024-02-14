@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/pages/settings/custom_expansion_tile.dart';
@@ -84,8 +85,32 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
                 final paymentDocs = snapshot.data!.docs;
 
                 if (paymentDocs.isEmpty) {
-                  return const Center(
-                      child: Text('You don\'t have any payment history.'));
+                  return Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            Theme.of(context).brightness == Brightness.dark
+                                ? 'assets/images/payment1_dark.svg'
+                                : 'assets/images/payment1_light.svg',
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.scaleDown,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'You have no payment history in NeuroParenting app.',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 }
 
 //        {
@@ -125,8 +150,31 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
                 );
               },
             )
-          : const Center(
-              child: Text('Please sign in to view your payment history.'),
+          : Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      Theme.of(context).brightness == Brightness.dark
+                          ? 'assets/images/payment1_dark.svg'
+                          : 'assets/images/payment1_light.svg',
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.scaleDown,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No user is signed in.\n\nPlease logout and sign in...',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
     );
   }
