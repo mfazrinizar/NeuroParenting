@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
+import 'package:neuroparenting/src/pages/campaign/campaign.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
@@ -109,7 +110,7 @@ class HomePageBodyState extends State<HomePageBody> {
                 crossAxisCount: 4,
                 children: List.generate(widget.buttonTitles.length, (index) {
                   return _buildFeatureButton(widget.buttonIcons[index],
-                      widget.buttonTitles[index], context);
+                      widget.buttonTitles[index], context, widget.campaigns);
                 }),
               ),
             ),
@@ -127,16 +128,21 @@ class HomePageBodyState extends State<HomePageBody> {
                 itemCount: campaignsToShow.length,
                 carouselController: widget.controller,
                 itemBuilder:
-                    (BuildContext context, int itemIndex, int pageViewIndex) =>
-                        GestureDetector(
-                  onTap: () async => await widget.launchUrl(
-                      Uri.parse(campaignsToShow[itemIndex].campaignUrl)),
-                  child: FadeInImage.assetNetwork(
-                    image: campaignsToShow[itemIndex].campaignImage,
-                    fit: BoxFit.cover,
-                    placeholder: 'assets/images/placeholder_loading.gif',
-                  ),
-                ),
+                    (BuildContext context, int itemIndex, int pageViewIndex) {
+                  if (campaignsToShow.isNotEmpty) {
+                    return GestureDetector(
+                      onTap: () async => await widget.launchUrl(
+                          Uri.parse(campaignsToShow[itemIndex].campaignUrl)),
+                      child: FadeInImage.assetNetwork(
+                        image: campaignsToShow[itemIndex].campaignImage,
+                        fit: BoxFit.cover,
+                        placeholder: 'assets/images/placeholder_loading.gif',
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
                 options: CarouselOptions(
                   autoPlay: true,
                   enlargeCenterPage: true,
@@ -180,7 +186,8 @@ class HomePageBodyState extends State<HomePageBody> {
   }
 }
 
-Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
+Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
+    List<Campaign> campaigns) {
   bool isDarkMode = HomePageBodyState().isDarkMode;
   double deviceWidth = MediaQuery.of(context).size.width;
   double deviceHeight = MediaQuery.of(context).size.height;
@@ -221,6 +228,12 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context) {
                 Get.to(() => const DonatePage());
               } else if (title == 'Games') {
                 Get.to(() => const GamePage());
+              } else if (title == 'Campaign') {
+                Get.to(
+                  () => CampaignPage(
+                    campaigns: campaigns,
+                  ),
+                );
               } else {
                 Get.to(() => const UnderConstructionPage());
               }

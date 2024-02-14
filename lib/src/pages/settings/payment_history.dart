@@ -44,20 +44,14 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        title: Text(
+        title: const Text(
           'Payment History',
-          style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color.fromARGB(255, 211, 227, 253)
-                : Colors.white,
-          ),
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color.fromARGB(255, 211, 227, 253)
-                : Colors.white,
+            color: Colors.white,
           ),
           onPressed: () => Get.offAll(
             () => const HomePage(indexFromPrevious: 2),
