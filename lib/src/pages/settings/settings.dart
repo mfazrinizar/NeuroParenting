@@ -15,6 +15,7 @@ import 'package:neuroparenting/src/db/auth/logout_api.dart';
 import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
+import 'package:neuroparenting/src/pages/settings/payment_history.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 
@@ -91,6 +92,13 @@ class SettingsPageState extends State<SettingsPage> {
       //     Get.offAll(() => const UploadArticlePage());
       //   }
       // },
+      {
+        'icon': Icons.payment,
+        'title': 'Payment History',
+        'onTap': () {
+          Get.offAll(() => const PaymentHistoryPage());
+        }
+      },
       {
         'icon': Icons.person,
         'title': 'Change Name',
