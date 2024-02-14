@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/homepage.dart';
+import 'package:neuroparenting/src/pages/settings/custom_expansion_tile.dart';
+import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
+import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
+import 'package:neuroparenting/src/reusable_func/localization_change.dart';
+import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({Key? key}) : super(key: key);
@@ -11,9 +16,27 @@ class PaymentHistoryPage extends StatefulWidget {
   PaymentHistoryPageState createState() => PaymentHistoryPageState();
 }
 
-class PaymentHistoryPageState extends State<PaymentHistoryPage> {
+class PaymentHistoryPageState extends State<PaymentHistoryPage>
+    with SingleTickerProviderStateMixin {
   final _firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser;
+  late final AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+      upperBound: 0.5,
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +49,21 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage> {
             () => const HomePage(indexFromPrevious: 2),
           ),
         ),
+        actions: [
+          const LanguageSwitcher(onPressed: localizationChange),
+          ThemeSwitcher(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.black,
+            onPressed: () {
+              setState(
+                () {
+                  themeChange();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: user != null
           ? FutureBuilder<QuerySnapshot>(
@@ -82,13 +120,7 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage> {
                   itemBuilder: (context, index) {
                     final payment = paymentDocs[index];
 
-                    return ListTile(
-                      title: Text(payment['itemDetails']['name']),
-                      subtitle: Text(
-                          'Name: ${payment['customerDetails']['name']}\nEmail: ${payment['customerDetails']['email']}\nCategory: ${payment['itemDetails']['category']}\nTotal: IDR ${payment['itemDetails']['price']}\nDate & Time: ${payment['transactionDetails']['dateAndTime'].toDate()}\nVia: ${payment['transactionDetails']['paymentType']}\nOrder ID: ${payment['transactionDetails']['orderId']}\nTransaction ID: ${payment['transactionDetails']['transactionId']}\nDescription: ${payment['itemDetails']['itemDescription']}'),
-                      // trailing: Text(
-                      //     'Transaction Date: ${payment['transactionDetails']['dateAndTime'].toDate()}'),
-                    );
+                    return CustomExpansionTile(payment: payment);
                   },
                 );
               },

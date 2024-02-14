@@ -26,6 +26,7 @@ class DonatePage extends StatefulWidget {
 }
 
 class DonateState extends State<DonatePage> {
+  bool isProcessing = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController donationAmountController =
       TextEditingController();
@@ -203,151 +204,175 @@ class DonateState extends State<DonatePage> {
                                   shadowColor: Colors.grey,
                                   elevation: 5,
                                 ),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    final user =
-                                        FirebaseAuth.instance.currentUser;
+                                onPressed: isProcessing
+                                    ? null
+                                    : () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          setState(
+                                            () {
+                                              isProcessing = true;
+                                            },
+                                          );
+                                          final user =
+                                              FirebaseAuth.instance.currentUser;
 
-                                    if (user != null) {
-                                      EasyLoading.show(
-                                          status: 'Processing Payment...');
+                                          if (user != null) {
+                                            EasyLoading.show(
+                                                status:
+                                                    'Processing Payment...');
 
-                                      String displayName =
-                                          user.displayName ?? "";
-                                      int spaceAtIndex =
-                                          displayName.indexOf(' ');
+                                            String displayName =
+                                                user.displayName ?? "";
+                                            int spaceAtIndex =
+                                                displayName.indexOf(' ');
 
-                                      final token = await MidtransAPI
-                                          .generatePaymentToken(
-                                              itemName:
-                                                  "Donation for NeuroDivergent Kids",
-                                              itemDescription:
-                                                  donationMessageController
-                                                      .text,
-                                              priceTotal: int.parse(
-                                                  donationAmountController
-                                                      .text),
-                                              firstName: displayName.substring(
-                                                  0, spaceAtIndex),
-                                              lastName: displayName
-                                                  .substring(spaceAtIndex + 1),
-                                              email: user.email ??
-                                                  "null@email.com",
-                                              itemId: "donate",
-                                              category: "Donation");
+                                            final token = await MidtransAPI
+                                                .generatePaymentToken(
+                                                    itemName:
+                                                        "Donation for NeuroDivergent Kids",
+                                                    itemDescription:
+                                                        donationMessageController
+                                                            .text,
+                                                    priceTotal: int
+                                                        .parse(
+                                                            donationAmountController
+                                                                .text),
+                                                    firstName: displayName.substring(
+                                                        0, spaceAtIndex),
+                                                    lastName:
+                                                        displayName.substring(
+                                                            spaceAtIndex + 1),
+                                                    email: user.email ??
+                                                        "null@email.com",
+                                                    itemId: "donate",
+                                                    category: "Donation");
 
-                                      await MidtransAPI.startPaymentUiFlow(
-                                          token);
+                                            await MidtransAPI
+                                                .startPaymentUiFlow(token);
 
-                                      final result = await MidtransAPI
-                                          .returnTransactionCallbackResult();
+                                            final result = await MidtransAPI
+                                                .returnTransactionCallbackResult();
 
-                                      final responseBody = result.toJson();
+                                            final responseBody =
+                                                result.toJson();
 
-                                      if (!responseBody[
-                                              'isTransactionCanceled'] &&
-                                          responseBody['transactionStatus'] ==
-                                              'settlement') {
-                                        await PaymentDbAPI.postPayment(
-                                          isProduction: false,
-                                          orderId: responseBody['orderId'],
-                                          priceTotal: int.parse(
-                                              donationAmountController.text),
-                                          paymentType:
-                                              responseBody['paymentType'],
-                                          transactionStatus:
-                                              responseBody['transactionStatus'],
-                                          transactionId:
-                                              responseBody['transactionId'],
-                                          itemId: "donate",
-                                          category: "Donation",
-                                          itemName:
-                                              "Donation for NeuroDivergent Kids",
-                                          itemDescription:
-                                              donationMessageController.text,
-                                          email: user.email ?? "null@email.com",
-                                          firstName: displayName.substring(
-                                              0, spaceAtIndex),
-                                          lastName: displayName
-                                              .substring(spaceAtIndex + 1),
-                                          userId: user.uid,
-                                          name: displayName,
-                                        );
-                                        if (!context.mounted) return;
-                                        AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          keyboardAware: true,
-                                          dismissOnBackKeyPress: false,
-                                          dialogType: DialogType.success,
-                                          animType: AnimType.scale,
-                                          transitionAnimationDuration:
-                                              const Duration(milliseconds: 200),
-                                          btnOkText: "Ok",
-                                          title: 'Donation Success',
-                                          desc:
-                                              'Thank you for your donation. Your donation and your message has been received.',
-                                          btnOkOnPress: () {
-                                            DismissType.btnOk;
-                                          },
-                                        ).show();
-                                      } else {
-                                        if (!context.mounted) return;
-                                        AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          keyboardAware: true,
-                                          dismissOnBackKeyPress: false,
-                                          dialogType: DialogType.info,
-                                          animType: AnimType.scale,
-                                          transitionAnimationDuration:
-                                              const Duration(milliseconds: 200),
-                                          btnOkText: "Ok",
-                                          title: 'Donation Canceled',
-                                          desc:
-                                              'You have canceled your donation or error occured.',
-                                          btnOkOnPress: () {
-                                            DismissType.btnOk;
-                                          },
-                                        ).show();
-                                      }
+                                            if (!responseBody[
+                                                    'isTransactionCanceled'] &&
+                                                responseBody[
+                                                        'transactionStatus'] ==
+                                                    'settlement') {
+                                              await PaymentDbAPI.postPayment(
+                                                isProduction: false,
+                                                orderId:
+                                                    responseBody['orderId'],
+                                                priceTotal: int.parse(
+                                                    donationAmountController
+                                                        .text),
+                                                paymentType:
+                                                    responseBody['paymentType'],
+                                                transactionStatus: responseBody[
+                                                    'transactionStatus'],
+                                                transactionId: responseBody[
+                                                    'transactionId'],
+                                                itemId: "donate",
+                                                category: "Donation",
+                                                itemName:
+                                                    "Donation for NeuroDivergent Kids",
+                                                itemDescription:
+                                                    donationMessageController
+                                                        .text,
+                                                email: user.email ??
+                                                    "null@email.com",
+                                                firstName: displayName
+                                                    .substring(0, spaceAtIndex),
+                                                lastName: displayName.substring(
+                                                    spaceAtIndex + 1),
+                                                userId: user.uid,
+                                                name: displayName,
+                                              );
+                                              if (!context.mounted) return;
+                                              AwesomeDialog(
+                                                dismissOnTouchOutside: false,
+                                                context: context,
+                                                keyboardAware: true,
+                                                dismissOnBackKeyPress: false,
+                                                dialogType: DialogType.success,
+                                                animType: AnimType.scale,
+                                                transitionAnimationDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                btnOkText: "Ok",
+                                                title: 'Donation Success',
+                                                desc:
+                                                    'Thank you for your donation. Your donation and your message has been received.',
+                                                btnOkOnPress: () {
+                                                  DismissType.btnOk;
+                                                },
+                                              ).show();
+                                            } else {
+                                              if (!context.mounted) return;
+                                              AwesomeDialog(
+                                                dismissOnTouchOutside: false,
+                                                context: context,
+                                                keyboardAware: true,
+                                                dismissOnBackKeyPress: false,
+                                                dialogType: DialogType.info,
+                                                animType: AnimType.scale,
+                                                transitionAnimationDuration:
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                btnOkText: "Ok",
+                                                title: 'Donation Canceled',
+                                                desc:
+                                                    'You have canceled your donation or error occured.',
+                                                btnOkOnPress: () {
+                                                  DismissType.btnOk;
+                                                },
+                                              ).show();
+                                            }
 
-                                      // await Future.delayed(
-                                      //     const Duration(seconds: 2));
-                                      MidtransAPI
-                                          .removeTransactionFinishedCallback();
-                                      responseBody.clear();
+                                            // await Future.delayed(
+                                            //     const Duration(seconds: 2));
+                                            MidtransAPI
+                                                .removeTransactionFinishedCallback();
+                                            responseBody.clear();
 
-                                      EasyLoading.dismiss();
-                                    }
+                                            setState(
+                                              () {
+                                                isProcessing = false;
+                                              },
+                                            );
 
-                                    // Check the result
-                                    // if (result['status'] == 'success') {
-                                    //   // If the login was successful, navigate to HomePage
-                                    //   Get.offAll(() => const HomePage());
-                                    // } else {
-                                    //   // If there was an error, show a message to the user
-                                    //   if (!context.mounted) return;
-                                    //   AwesomeDialog(
-                                    //     dismissOnTouchOutside: false,
-                                    //     context: context,
-                                    //     keyboardAware: true,
-                                    //     dismissOnBackKeyPress: false,
-                                    //     dialogType: DialogType.error,
-                                    //     animType: AnimType.scale,
-                                    //     transitionAnimationDuration:
-                                    //         const Duration(milliseconds: 200),
-                                    //     btnOkText: "Ok",
-                                    //     title: 'Error Occured',
-                                    //     desc: result['message'],
-                                    //     btnOkOnPress: () {
-                                    //       DismissType.btnOk;
-                                    //     },
-                                    //   ).show();
-                                    //   // Get.snackbar('Error: ', result['message']);
-                                    // }
-                                  }
-                                },
+                                            EasyLoading.dismiss();
+                                          }
+
+                                          // Check the result
+                                          // if (result['status'] == 'success') {
+                                          //   // If the login was successful, navigate to HomePage
+                                          //   Get.offAll(() => const HomePage());
+                                          // } else {
+                                          //   // If there was an error, show a message to the user
+                                          //   if (!context.mounted) return;
+                                          //   AwesomeDialog(
+                                          //     dismissOnTouchOutside: false,
+                                          //     context: context,
+                                          //     keyboardAware: true,
+                                          //     dismissOnBackKeyPress: false,
+                                          //     dialogType: DialogType.error,
+                                          //     animType: AnimType.scale,
+                                          //     transitionAnimationDuration:
+                                          //         const Duration(milliseconds: 200),
+                                          //     btnOkText: "Ok",
+                                          //     title: 'Error Occured',
+                                          //     desc: result['message'],
+                                          //     btnOkOnPress: () {
+                                          //       DismissType.btnOk;
+                                          //     },
+                                          //   ).show();
+                                          //   // Get.snackbar('Error: ', result['message']);
+                                          // }
+                                        }
+                                      },
                                 child: const Text('  Donate  ',
                                     style: TextStyle(fontSize: 20)),
                               ),
