@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout_api.dart';
 import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
+import 'package:neuroparenting/src/pages/campaign/campaign_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
 import 'package:neuroparenting/src/pages/settings/payment_history.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
@@ -183,13 +184,23 @@ class SettingsPageState extends State<SettingsPage> {
           if (userData != null &&
               userData.containsKey('adminAccess') &&
               userData['adminAccess'] == true &&
-              tilesData.length < 7) {
+              tilesData.length < 8) {
             tilesData.add(
               {
-                'icon': Icons.upload,
+                'icon': Icons.article,
                 'title': 'Upload Article',
                 'onTap': () {
-                  Get.offAll(() => const UploadArticlePage());
+                  Get.offAll(() => const ArticleUploadPage());
+                }
+              },
+            );
+
+            tilesData.add(
+              {
+                'icon': Icons.campaign,
+                'title': 'Upload Campaign',
+                'onTap': () {
+                  Get.offAll(() => const CampaignUploadPage());
                 }
               },
             );

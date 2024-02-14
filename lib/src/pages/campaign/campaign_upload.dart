@@ -1,25 +1,24 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:neuroparenting/src/db/article/article_api.dart';
+import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 
-class ArticleUploadPage extends StatefulWidget {
-  const ArticleUploadPage({super.key});
+class CampaignUploadPage extends StatefulWidget {
+  const CampaignUploadPage({Key? key}) : super(key: key);
 
   @override
-  ArticleUploadPageState createState() => ArticleUploadPageState();
+  CampaignUploadPageState createState() => CampaignUploadPageState();
 }
 
-class ArticleUploadPageState extends State<ArticleUploadPage> {
+class CampaignUploadPageState extends State<CampaignUploadPage> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _bodyController = TextEditingController();
+  final _urlController = TextEditingController();
+  final _descriptionController = TextEditingController();
   File? _image;
   final _filePicking = FilePicking();
 
@@ -28,7 +27,7 @@ class ArticleUploadPageState extends State<ArticleUploadPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Upload Article',
+          'Upload Campaign',
           style: TextStyle(color: Colors.white),
         ),
         leading: BackButton(
@@ -46,11 +45,11 @@ class ArticleUploadPageState extends State<ArticleUploadPage> {
           padding: const EdgeInsets.all(16.0),
           children: [
             TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              controller: _urlController,
+              decoration: const InputDecoration(labelText: 'Campaign URL'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a title';
+                  return 'Please enter a campaign URL';
                 }
                 return null;
               },
@@ -58,11 +57,12 @@ class ArticleUploadPageState extends State<ArticleUploadPage> {
             TextFormField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              controller: _bodyController,
-              decoration: const InputDecoration(labelText: 'Body'),
+              controller: _descriptionController,
+              decoration:
+                  const InputDecoration(labelText: 'Campaign Description'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a body';
+                  return 'Please enter a campaign description';
                 }
                 return null;
               },
@@ -86,19 +86,17 @@ class ArticleUploadPageState extends State<ArticleUploadPage> {
               onPressed: () async {
                 EasyLoading.show(status: 'Uploading...');
                 if (_formKey.currentState!.validate() && _image != null) {
-                  final uploadingProcess = await ArticleApi.postArticle(
-                    title: _titleController.text,
-                    body: _bodyController.text,
-                    image: _image!,
+                  final uploadingProcess = await CampaignApi.postCampaign(
+                    campaignUrl: _urlController.text,
+                    campaignDescription: _descriptionController.text,
+                    campaignImage: _image!,
                   );
 
                   if (uploadingProcess == 'SUCCESS') {
-                    Get.snackbar('Success', 'Articles posted successfully.');
+                    Get.snackbar('Success', 'Campaign posted successfully.');
                   } else if (uploadingProcess == 'NOT-ADMIN') {
                     Get.snackbar(
-                        'Error', 'You are not authorized to post articles.');
-                    // if (!context.mounted) return;
-                    // Navigator.pop(context); // Mungkin tidak perlu? Supaya user tetap bisa upload article lagi.
+                        'Error', 'You are not authorized to post campaigns.');
                   } else {
                     Get.snackbar('Error', 'Something went wrong, check logs.');
                   }

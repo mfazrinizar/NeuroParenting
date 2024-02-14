@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
@@ -18,8 +19,7 @@ class HomePageBody extends StatefulWidget {
   final bool isDarkMode;
   final List<String> buttonTitles;
   final List<IconData> buttonIcons;
-  final List<String> imgList;
-  final List<String> urlList;
+  final List<Campaign> campaigns;
   final CarouselController controller;
   final Function launchUrl;
   final int current;
@@ -31,8 +31,7 @@ class HomePageBody extends StatefulWidget {
     required this.isDarkMode,
     required this.buttonTitles,
     required this.buttonIcons,
-    required this.imgList,
-    required this.urlList,
+    required this.campaigns,
     required this.controller,
     required this.launchUrl,
     required this.current,
@@ -46,6 +45,7 @@ class HomePageBodyState extends State<HomePageBody> {
   int current = 0;
   bool isDarkMode = Get.isDarkMode;
   String displayName = FirebaseAuth.instance.currentUser?.displayName ?? 'User';
+  List<Campaign> campaignsToShow = [];
 
   @override
   void initState() {
@@ -57,6 +57,10 @@ class HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(context) {
+    widget.campaigns.sort((a, b) => b.campaignDate.compareTo(a.campaignDate));
+    // if (widget.campaigns.length > 5)
+    campaignsToShow = widget.campaigns.take(5).toList();
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -120,15 +124,15 @@ class HomePageBodyState extends State<HomePageBody> {
           Column(
             children: [
               CarouselSlider.builder(
-                itemCount: widget.imgList.length,
+                itemCount: campaignsToShow.length,
                 carouselController: widget.controller,
                 itemBuilder:
                     (BuildContext context, int itemIndex, int pageViewIndex) =>
                         GestureDetector(
-                  onTap: () async => await widget
-                      .launchUrl(Uri.parse(widget.urlList[itemIndex])),
+                  onTap: () async => await widget.launchUrl(
+                      Uri.parse(campaignsToShow[itemIndex].campaignUrl)),
                   child: FadeInImage.assetNetwork(
-                    image: widget.imgList[itemIndex],
+                    image: campaignsToShow[itemIndex].campaignImage,
                     fit: BoxFit.cover,
                     placeholder: 'assets/images/placeholder_loading.gif',
                   ),
@@ -138,15 +142,17 @@ class HomePageBodyState extends State<HomePageBody> {
                   enlargeCenterPage: true,
                   aspectRatio: 2.0,
                   onPageChanged: (index, reason) {
-                    setState(() {
-                      current = index;
-                    });
+                    setState(
+                      () {
+                        current = index;
+                      },
+                    );
                   },
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: widget.imgList.asMap().entries.map((entry) {
+                children: campaignsToShow.asMap().entries.map((entry) {
                   return GestureDetector(
                     onTap: () => widget.controller.animateToPage(entry.key),
                     child: Container(

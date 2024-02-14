@@ -10,6 +10,7 @@ import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
+import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'homebody.dart';
@@ -30,6 +31,7 @@ class HomePageState extends State<HomePage> {
   final ValueNotifier<int> _currentTabIndex = ValueNotifier<int>(0);
   final CarouselController _controller = CarouselController();
   String? userType;
+  List<Campaign> campaigns = [];
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class HomePageState extends State<HomePage> {
     isDarkMode = Get.isDarkMode;
     _currentTabIndex.value = widget.indexFromPrevious ?? 0;
     fetchUserType();
+    fetchCampaigns();
   }
 
   void fetchUserType() async {
@@ -53,6 +56,11 @@ class HomePageState extends State<HomePage> {
         });
       }
     }
+  }
+
+  void fetchCampaigns() async {
+    campaigns = await CampaignApi.fetchCampaigns();
+    setState(() {});
   }
 
   final buttonTitles = [
@@ -77,17 +85,17 @@ class HomePageState extends State<HomePage> {
     Icons.more
   ];
 
-  final List<String> imgList = [
-    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg', // Replace with your image urls
-    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
-    'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
-  ];
+  // final List<String> imgList = [
+  //   'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg', // Replace with your image urls
+  //   'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
+  //   'https://potomacpediatrics.com/wp-content/uploads/2022/04/bigstock-Wolrd-Autism-Awareness-Day-A-450281063-670x446.jpg',
+  // ];
 
-  final List<String> urlList = [
-    'https://google.com', // Replace with your urls
-    'https://google.com',
-    'https://google.com',
-  ];
+  // final List<String> urlList = [
+  //   'https://google.com', // Replace with your urls
+  //   'https://google.com',
+  //   'https://google.com',
+  // ];
 
   void onTabTapped(int index) {
     setState(() {
@@ -106,8 +114,7 @@ class HomePageState extends State<HomePage> {
         isDarkMode: isDarkMode,
         buttonTitles: buttonTitles,
         buttonIcons: buttonIcons,
-        imgList: imgList,
-        urlList: urlList,
+        campaigns: campaigns,
         controller: _controller,
         launchUrl: launchUrl,
         current: _current,
@@ -118,8 +125,8 @@ class HomePageState extends State<HomePage> {
         isDarkMode: isDarkMode,
         buttonTitles: buttonTitles,
         buttonIcons: buttonIcons,
-        imgList: imgList,
-        urlList: urlList,
+        imgList: campaigns.map((c) => c.campaignImage).toList(),
+        urlList: campaigns.map((c) => c.campaignUrl).toList(),
         controller: _controller,
         launchUrl: launchUrl,
         current: _current,
@@ -130,8 +137,8 @@ class HomePageState extends State<HomePage> {
         isDarkMode: isDarkMode,
         buttonTitles: buttonTitles,
         buttonIcons: buttonIcons,
-        imgList: imgList,
-        urlList: urlList,
+        imgList: campaigns.map((c) => c.campaignImage).toList(),
+        urlList: campaigns.map((c) => c.campaignUrl).toList(),
         controller: _controller,
         launchUrl: launchUrl,
         current: _current,
