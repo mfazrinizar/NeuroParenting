@@ -84,8 +84,8 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                   right: 0,
                   child: SvgPicture.asset(
                     isDarkMode
-                        ? 'assets/images/forgot1_dark.svg'
-                        : 'assets/images/forgot1_light.svg',
+                        ? 'assets/images/changeemail1_dark.svg'
+                        : 'assets/images/changeemail1_light.svg',
                     width: width,
                     fit: BoxFit.fill,
                   ),
@@ -115,15 +115,16 @@ class ChangeEmailState extends State<ChangeEmailPage> {
                               SizedBox(
                                 height: height * 0.05,
                               ),
-                              Text('Please enter your new email below:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: isDarkMode
-                                        ? const Color.fromARGB(
-                                            255, 211, 227, 253)
-                                        : Colors.black,
-                                  )),
+                              Text(
+                                'Please enter your new email below:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode
+                                      ? const Color.fromARGB(255, 211, 227, 253)
+                                      : Colors.black,
+                                ),
+                              ),
                               TextFormField(
                                 controller: nameController,
                                 decoration: InputDecoration(

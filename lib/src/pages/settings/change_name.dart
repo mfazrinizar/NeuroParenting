@@ -83,8 +83,8 @@ class ChangeNameState extends State<ChangeNamePage> {
                 right: 0,
                 child: SvgPicture.asset(
                   isDarkMode
-                      ? 'assets/images/forgot1_dark.svg'
-                      : 'assets/images/forgot1_light.svg',
+                      ? 'assets/images/changename1_dark.svg'
+                      : 'assets/images/changename1_light.svg',
                   width: width,
                   fit: BoxFit.fill,
                 ),

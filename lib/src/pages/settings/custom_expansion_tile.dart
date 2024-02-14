@@ -52,14 +52,20 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
           animationController.reverse();
         }
       },
-      title: Text(widget.payment['itemDetails']['name']),
+      title: Text(widget.payment['itemDetails']['name'],
+          style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(
           'Total: IDR ${widget.payment['itemDetails']['price']}\nVia: ${widget.payment['transactionDetails']['paymentType']}'),
       children: <Widget>[
         ListTile(
           title: Text(
             'Name: ${widget.payment['customerDetails']['name']}\nEmail: ${widget.payment['customerDetails']['email']}\nCategory: ${widget.payment['itemDetails']['category']}\nDate: ${DateFormat('yyyy-MM-dd').format(widget.payment['transactionDetails']['dateAndTime'].toDate())}\nTime: ${DateFormat('HH:mm:ss').format(widget.payment['transactionDetails']['dateAndTime'].toDate())}\nOrder ID: ${widget.payment['transactionDetails']['orderId']}\nTransaction ID: ${widget.payment['transactionDetails']['transactionId']}\nDescription: ${widget.payment['itemDetails']['itemDescription']}',
-            style: const TextStyle(fontSize: 14),
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+            ),
           ),
           trailing: IconButton(
             icon: const Icon(Icons.copy),

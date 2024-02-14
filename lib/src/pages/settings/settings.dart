@@ -183,14 +183,16 @@ class SettingsPageState extends State<SettingsPage> {
           if (userData != null &&
               userData.containsKey('adminAccess') &&
               userData['adminAccess'] == true &&
-              tilesData.length < 6) {
-            tilesData.add({
-              'icon': Icons.upload,
-              'title': 'Upload Article',
-              'onTap': () {
-                Get.offAll(() => const UploadArticlePage());
-              }
-            });
+              tilesData.length < 7) {
+            tilesData.add(
+              {
+                'icon': Icons.upload,
+                'title': 'Upload Article',
+                'onTap': () {
+                  Get.offAll(() => const UploadArticlePage());
+                }
+              },
+            );
           }
 
           return SingleChildScrollView(

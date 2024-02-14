@@ -43,19 +43,37 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Payment History'),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: Text(
+          'Payment History',
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
+          ),
           onPressed: () => Get.offAll(
             () => const HomePage(indexFromPrevious: 2),
           ),
         ),
         actions: [
-          const LanguageSwitcher(onPressed: localizationChange),
+          LanguageSwitcher(
+            onPressed: localizationChange,
+            textColor: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
+          ),
           ThemeSwitcher(
             color: Theme.of(context).brightness == Brightness.dark
                 ? const Color.fromARGB(255, 211, 227, 253)
-                : Colors.black,
+                : Colors.white,
             onPressed: () {
               setState(
                 () {
@@ -78,8 +96,9 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                      child: Text('An error occurred: ${snapshot.error}'));
+                  return const Center(
+                    child: Text('An error occurred, contact developer.'),
+                  );
                 }
 
                 final paymentDocs = snapshot.data!.docs;

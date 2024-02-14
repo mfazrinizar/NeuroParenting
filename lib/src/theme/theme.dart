@@ -14,7 +14,7 @@ class ThemeClass {
 
   static ThemeData lightTheme = ThemeData(
     // textTheme: GoogleFonts.nunitoTextTheme(),
-
+    appBarTheme: AppBarTheme(backgroundColor: _themeClass.lightPrimaryColor),
     cardColor: _themeClass.lightDiscussion,
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
     primaryColorLight: _themeClass.lightPrimaryColor,

@@ -72,15 +72,18 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                       .white, // Change this to your desired background color
             ),
             child: ThemeSwitcher(
-                color: isDarkMode
-                    ? const Color.fromARGB(255, 211, 227, 253)
-                    : Colors.black,
-                onPressed: () {
-                  setState(() {
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: () {
+                setState(
+                  () {
                     themeChange();
                     isDarkMode = !isDarkMode;
-                  });
-                }),
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
