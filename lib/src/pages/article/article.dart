@@ -11,6 +11,7 @@ import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ArticleOverview {
   final String id;
@@ -291,143 +292,45 @@ class _ArticleContentPageState extends State<ArticleContentPage>
   }
 }
 
-class ArticleDictionaryPage extends StatefulWidget {
+class ArticleDictionaryPage extends StatelessWidget {
   const ArticleDictionaryPage({Key? key}) : super(key: key);
 
   @override
-  State<ArticleDictionaryPage> createState() => _ArticleDictionaryPageState();
-}
-
-class _ArticleDictionaryPageState extends State<ArticleDictionaryPage> {
-  List<ArticleOverview>? articleOverviews;
-
-  @override
-  void initState() {
-    super.initState();
-    loadArticleOverviews();
-  }
-
-  void loadArticleOverviews() async {
-    List<ArticleOverview> data = await ArticleOverview.getAllFromFirestore();
-    setState(() {
-      articleOverviews = data;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (bool didPop) {
-        showExitPopup();
-      },
-      child: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            toolbarHeight: 100,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Artikel',
-                  style: GoogleFonts.nunito(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(60),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-                child: Material(
-                  borderRadius: BorderRadius.circular(50),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  child: InkWell(
-                    onTap: () {
-                      if (articleOverviews != null) {
-                        showSearch(
-                          context: context,
-                          delegate: CustomSearchDelegate(articleOverviews!),
-                        );
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Cari Artikel',
-                              style: GoogleFonts.nunito(fontSize: 15)),
-                          const Icon(Icons.search),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: articleOverviews == null
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ListView.builder(
-                      itemCount: articleOverviews!.length,
-                      itemBuilder: (context, index) {
-                        var articleOverview = articleOverviews![index];
-                        return ArticleListItem(articleOverview);
-                      },
-                    ),
-            )
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Article Dictionary'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('articles').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error fetching data'),
+            );
+          }
+          final List<ArticleOverview> articleOverviews = snapshot.data!.docs
+              .map((doc) => ArticleOverview(
+                    id: doc.id,
+                    title: doc['title'],
+                    description: doc['body'],
+                    imageURL: doc['imageUrl'],
+                  ))
+              .toList();
+          return ListView.builder(
+            itemCount: articleOverviews.length,
+            itemBuilder: (context, index) {
+              return ArticleListItem(articleOverviews[index]);
+            },
+          );
+        },
       ),
     );
-  }
-
-  Future<bool> showExitPopup() async {
-    return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Keluar Aplikasi'),
-            content: const Text('Kamu ingin keluar aplikasi?'),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  textStyle: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Tidak'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  textStyle: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                child: const Text('Ya'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
   }
 }
 
@@ -495,54 +398,38 @@ class ArticleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.network(
-        articleOverview.imageURL,
-        fit: BoxFit.cover,
-        height: 50,
-        width: 80,
-        alignment: Alignment.topCenter,
-      ),
-      title: Text(
-        articleOverview.title,
-        style: GoogleFonts.nunito(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        articleOverview.description,
-        style: GoogleFonts.nunito(fontSize: 15),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-      ),
-      trailing: const Icon(Icons.arrow_right),
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          PageRouteBuilder(
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation) {
-              return ArticleContentPage(articleOverview);
-            },
-            transitionsBuilder: (BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child) {
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeInOut,
-                )),
-                child: child,
-              );
-            },
+          MaterialPageRoute(
+            builder: (context) => ArticleContentPage(articleOverview),
           ),
         );
       },
+      child: ListTile(
+        leading: Image.network(
+          articleOverview.imageURL,
+          fit: BoxFit.cover,
+          height: 50,
+          width: 80,
+          alignment: Alignment.topCenter,
+        ),
+        title: Text(
+          articleOverview.title,
+          style: GoogleFonts.nunito(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          articleOverview.description,
+          style: GoogleFonts.nunito(fontSize: 15),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        ),
+        trailing: const Icon(Icons.arrow_right),
+      ),
     );
   }
 }
