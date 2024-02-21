@@ -1,5 +1,3 @@
-// Dummy, not yet implemented
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,21 +39,26 @@ class ArticleOverview {
 }
 
 class ArticleContent {
-  final String overview;
-  final String howToAddress;
+  final String body;
 
   ArticleContent({
-    required this.overview,
-    required this.howToAddress,
+    required this.body,
   });
 
   static Future<ArticleContent> getDataFromFirestore(String id) async {
-    // Dummy data, replace this with your actual data fetching logic
-    return ArticleContent(
-      overview: 'Autisme pada Anak Bisa Terjadi karena Faktor Lingkungan?',
-      howToAddress:
-          'Gangguan perkembangan autisme dapat membuat anak sulit berinteraksi, berkomunikasi, dan berperilaku seperti anak pada umumnya. Gejala autisme umumnya dapat didiagnosis pertama kali pada tahun pertama, atau mungkin lebih awal pada usia bayi. Lalu, apa penyebab terjadinya autisme pada anak? ',
-    );
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('articles').doc(id).get();
+      if (snapshot.exists) {
+        final Map<String, dynamic> data = snapshot.data()!;
+        final String body = data['body'] ?? '';
+        return ArticleContent(body: body);
+      } else {
+        throw Exception('Document with ID $id does not exist');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch data from Firestore: $e');
+    }
   }
 }
 
@@ -71,31 +74,28 @@ class ArticleContentPage extends StatefulWidget {
   State<ArticleContentPage> createState() => _ArticleContentPageState();
 }
 
-class _ArticleContentPageState extends State<ArticleContentPage>
-    with SingleTickerProviderStateMixin {
-  late TabController tabController;
+class _ArticleContentPageState extends State<ArticleContentPage> {
   ArticleContent? articleContent;
   bool isDarkMode = Get.isDarkMode;
+
   @override
   void initState() {
     super.initState();
     isDarkMode = Get.isDarkMode;
-    tabController = TabController(length: 2, vsync: this);
     loadArticleContent();
   }
 
   void loadArticleContent() async {
-    ArticleContent data =
-        await ArticleContent.getDataFromFirestore(widget.articleOverview.id);
-    setState(() {
-      articleContent = data;
-    });
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
+    try {
+      ArticleContent data =
+          await ArticleContent.getDataFromFirestore(widget.articleOverview.id);
+      setState(() {
+        articleContent = data;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error: $e');
+    }
   }
 
   @override
@@ -122,171 +122,58 @@ class _ArticleContentPageState extends State<ArticleContentPage>
             onPressed: () {
               Get.offAll(() => const HomePage());
             }),
-        actions: [
-          LanguageSwitcher(
-            onPressed: localizationChange,
-            textColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white,
-          ),
-          ThemeSwitcher(onPressed: () async {
-            themeChange();
-            setState(() {
-              isDarkMode = !isDarkMode;
-            });
-          }),
-          PopupMenuButton<String>(
-            icon: Icon(Icons.notifications,
-                color: isDarkMode ? Colors.black : Colors.white),
-            onSelected: (String result) {
-              // Handle the selection
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'Notification 1',
-                child: Text('No notifications'),
-              ),
-              // Add more PopupMenuItems for more notifications
-            ],
-          ),
-          Builder(
-            builder: (BuildContext context) {
-              final user = FirebaseAuth.instance.currentUser;
-              if (user != null && user.photoURL != null) {
-                return ClipOval(
-                  child: FadeInImage.assetNetwork(
-                    image: user.photoURL!,
-                    placeholder: 'assets/images/placeholder_loading.gif',
-                    fit: BoxFit.cover,
-                    width: 45,
-                    height: 45,
-                  ),
-                ); // display the user's profile picture
-              } else {
-                return Icon(Icons.account_circle,
-                    color: isDarkMode
-                        ? Colors.black
-                        : Colors
-                            .white); // show a default icon if the user is not logged in or doesn't have a profile picture
-              }
-            },
-          ),
-        ],
+        // Other app bar actions...
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            expandedHeight: 300,
-            stretch: true,
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    widget.articleOverview.imageURL,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0.8),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          widget.articleOverview.title,
-                          style: GoogleFonts.nunito(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 130,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Image.network(
+                widget.articleOverview.imageURL,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
               ),
-            ),
-          ),
-        ],
-        body: Column(
-          children: [
-            TabBar(
-              labelColor: Colors.blue,
-              indicatorColor: Colors.blue,
-              unselectedLabelColor: const Color.fromARGB(255, 184, 171, 171),
-              tabs: [
-                Tab(
-                  child: Text(
-                    "Overview",
-                    style: GoogleFonts.nunito(fontWeight: FontWeight.w500),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 20,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.8),
+                    ],
                   ),
                 ),
-                Tab(
-                  child: Text(
-                    "Details",
-                    style: GoogleFonts.nunito(fontWeight: FontWeight.w500),
+                child: Text(
+                  widget.articleOverview.title,
+                  style: GoogleFonts.nunito(
+                    fontSize: 30,
+                    color: Colors.white,
                   ),
-                )
-              ],
-              controller: tabController,
-              indicatorSize: TabBarIndicatorSize.tab,
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: tabController,
-                children: [
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
-                      child: articleContent == null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : MarkdownViewer(articleContent!.overview),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
-                      child: articleContent == null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : MarkdownViewer(articleContent!.howToAddress),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: articleContent == null
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Text(
+                    articleContent!.body,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+          ),
+        ],
       ),
     );
   }
