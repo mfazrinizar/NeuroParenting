@@ -9,6 +9,8 @@ import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/pages/campaign/campaign.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
+import 'package:neuroparenting/src/pages/course/course.dart';
+import 'package:neuroparenting/src/pages/course/course_upload.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
 import 'package:neuroparenting/src/pages/games/pages/game_page.dart';
 import 'package:neuroparenting/src/pages/under_construction/under_construction.dart';
@@ -228,6 +230,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
                     campaigns: campaigns,
                   ),
                 );
+              } else if (title == 'Course') {
+                Get.to(() => CourseListScreen());
               } else {
                 Get.to(() => const UnderConstructionPage());
               }
