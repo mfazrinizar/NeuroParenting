@@ -28,10 +28,23 @@ class AnimalTestState extends State<AnimalTest> {
         onTap: () async {
           player.play(AssetSource('sound/animal-$letter.mp3'));
         },
-        child: Card(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Image.asset('assets/animal/animal-$letter.png'),
+        child: Container(
+          padding: const EdgeInsets.all(2),
+          child: Card(
+            child: Container(
+              constraints: const BoxConstraints(
+                  minWidth: 100, maxWidth: 100, minHeight: 180, maxHeight: 180),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(15),
+                ),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? ThemeClass().darkRounded
+                    : const Color.fromARGB(255, 240, 240, 255),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Image.asset('assets/animal/animal-$letter.png'),
+            ),
           ),
         ),
       ),
@@ -50,12 +63,16 @@ class AnimalTestState extends State<AnimalTest> {
           // 'Tebak hewan untuk Autisme',
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
           ),
         ),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
             onPressed: () {
               Get.offAll(const GamePage());
             }),
@@ -63,7 +80,7 @@ class AnimalTestState extends State<AnimalTest> {
           LanguageSwitcher(
             onPressed: localizationChange,
             textColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
+                ? const Color.fromARGB(255, 211, 227, 253)
                 : Colors.white,
           ),
           ThemeSwitcher(onPressed: () async {
@@ -75,6 +92,7 @@ class AnimalTestState extends State<AnimalTest> {
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(2),
         child: Column(
           children: List.generate(
             5, // Number of rows (from 'a' to 'z' is 26 letters, 2 letters per row)
