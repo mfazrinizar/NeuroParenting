@@ -238,18 +238,20 @@ class _ChatBotPageState extends State<ChatBotPage> {
                     await gemini
                         .chat(chatsTextOnly)
                         .timeout(const Duration(seconds: 20))
-                        .then((value) {
-                      chats.add(
-                        ChatItem(
-                          content: Content(
-                            role: 'model',
-                            parts: [
-                              Parts(text: value?.output),
-                            ],
+                        .then(
+                      (value) {
+                        chats.add(
+                          ChatItem(
+                            content: Content(
+                              role: 'model',
+                              parts: [
+                                Parts(text: value?.output),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }); // Set a timeout
+                        );
+                      },
+                    ); // Set a timeout
                   }
                 } on TimeoutException catch (_) {
                   Get.snackbar('Error', 'Timeout occurred. Please try again.');

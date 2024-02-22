@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:neuroparenting/src/db/auth/login_api.dart';
+import 'package:neuroparenting/src/db/push_notification/push_notification_api.dart';
 import 'package:neuroparenting/src/pages/auth/start.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
@@ -204,7 +205,7 @@ class LoginState extends State<LoginPage> {
                                 if (_formKey.currentState!.validate()) {
                                   // Call loginUser from LoginApi
                                   EasyLoading.show(status: 'Processing...');
-                                  LoginApi loginApi = LoginApi();
+                                  final LoginApi loginApi = LoginApi();
                                   Map<String, dynamic> result =
                                       await loginApi.loginUser(
                                     userEmail: emailController.text,
@@ -214,6 +215,10 @@ class LoginState extends State<LoginPage> {
 
                                   // Check the result
                                   if (result['status'] == 'success') {
+                                    final pushNotificationApi =
+                                        PushNotificationAPI();
+                                    await pushNotificationApi
+                                        .storeDeviceToken();
                                     // If the login was successful, navigate to HomePage
                                     Get.offAll(() => const HomePage());
                                   } else {

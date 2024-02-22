@@ -42,7 +42,7 @@ class ChangePasswordState extends State<ChangePasswordPage> {
         leading: BackButton(
           color: Colors.white,
           onPressed: () => Get.offAll(
-            const HomePage(
+            () => const HomePage(
               indexFromPrevious: 2,
             ),
           ),

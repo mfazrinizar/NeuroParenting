@@ -12,6 +12,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout_api.dart';
+import 'package:neuroparenting/src/db/push_notification/push_notification_api.dart';
+
 import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
 import 'package:neuroparenting/src/pages/campaign/campaign_upload.dart';
@@ -56,9 +58,11 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   final user = FirebaseAuth.instance.currentUser;
+  final pushNotificationApi = PushNotificationAPI();
 
   Future<DocumentSnapshot> getUserData() async {
     try {
+      pushNotificationApi.storeDeviceToken();
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
@@ -160,6 +164,40 @@ class SettingsPageState extends State<SettingsPage> {
           ).show();
         }
       },
+      // {
+      //   'icon': Icons.notifications,
+      //   'title': 'Push Notification',
+      //   'onTap': () async {
+      //     final pushNotificationApi = PushNotificationAPI();
+
+      //     final fetchedToken =
+      //         await pushNotificationApi.fetchDeviceToken(user?.uid ?? "");
+
+      //     Map<String, dynamic> data = {
+      //       'poster': {
+      //         'tokens': fetchedToken ?? [],
+      //         'title': 'title of the post owner',
+      //         'body': 'body post',
+      //         'imageUrl': 'nothing',
+      //         'screen': 'screen',
+      //         'dataId': 'id',
+      //       },
+      //       'commenter': {
+      //         'tokens': fetchedToken ?? [],
+      //         'title': 'title of the post commenter',
+      //         'body': 'body comment',
+      //         'imageUrl': 'nothing',
+      //         'screen': 'screen',
+      //         'dataId': 'id',
+      //       },
+      //     };
+
+      //     await pushNotificationApi.multiUserTypeSendNotification(data: data);
+      //     // await pushNotificationApi.sendNotification([
+      //     //   "fniV8JHCSWC8UPIc3QDP2n:APA91bHoc3sF8flF6_SsA8IBfBzuMPqhoTu7mprsbXe_UldPr0lHmjUIFCmT-4MdtU3HMH3k1tlHJFzUor1L1yFP17wwkVlxcxHAf7XbH-zQINEpiJRkdqAS758glvfZYkuAEQ239OxZ"
+      //     // ], "title", "body", "nothing");
+      //   },
+      // }
     ];
     return FutureBuilder<DocumentSnapshot>(
       future: getUserData(),
@@ -184,7 +222,7 @@ class SettingsPageState extends State<SettingsPage> {
           if (userData != null &&
               userData.containsKey('adminAccess') &&
               userData['adminAccess'] == true &&
-              tilesData.length < 8) {
+              tilesData.length < 7) {
             tilesData.add(
               {
                 'icon': Icons.article,

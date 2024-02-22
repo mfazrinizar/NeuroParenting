@@ -4,6 +4,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neuroparenting/src/db/push_notification/push_notification_api.dart';
 import 'package:neuroparenting/src/pages/forum/forum.dart';
 import 'package:neuroparenting/src/pages/settings/settings.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
@@ -44,7 +45,10 @@ class HomePageState extends State<HomePage> {
 
   void fetchUserType() async {
     final user = FirebaseAuth.instance.currentUser;
+    final pushNotificationApi = PushNotificationAPI();
+
     if (user != null) {
+      await pushNotificationApi.storeDeviceToken();
       final docSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)

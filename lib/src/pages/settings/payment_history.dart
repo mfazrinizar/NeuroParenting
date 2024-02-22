@@ -97,7 +97,28 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
 
                 final paymentDocs = snapshot.data!.docs;
 
-                if (paymentDocs.isEmpty) {
+                // Filter out documents where 'transactionDetails.dateAndTime' is null
+                final filteredPaymentDocs = paymentDocs.where((doc) {
+                  final transactionDetails = (doc.data()
+                      as Map<String, dynamic>)['transactionDetails'];
+                  return transactionDetails != null &&
+                      transactionDetails['dateAndTime'] != null;
+                }).toList();
+
+                // Sort the documents by 'transactionDetails.dateAndTime' in descending order
+                filteredPaymentDocs.sort((a, b) {
+                  final aDate =
+                      (a.data() as Map<String, dynamic>)['transactionDetails']
+                              ['dateAndTime']
+                          .toDate();
+                  final bDate =
+                      (b.data() as Map<String, dynamic>)['transactionDetails']
+                              ['dateAndTime']
+                          .toDate();
+                  return bDate.compareTo(aDate);
+                });
+
+                if (filteredPaymentDocs.isEmpty) {
                   return Center(
                     child: SingleChildScrollView(
                       child: Column(
@@ -154,9 +175,9 @@ class PaymentHistoryPageState extends State<PaymentHistoryPage>
 //       },
 
                 return ListView.builder(
-                  itemCount: paymentDocs.length,
+                  itemCount: filteredPaymentDocs.length,
                   itemBuilder: (context, index) {
-                    final payment = paymentDocs[index];
+                    final payment = filteredPaymentDocs[index];
 
                     return CustomExpansionTile(payment: payment);
                   },

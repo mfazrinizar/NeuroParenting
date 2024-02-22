@@ -260,10 +260,12 @@ class ForumPageState extends State<ForumPage> {
                                               title: Text(entry.key),
                                               value: entry.value,
                                               onChanged: (bool? value) {
-                                                setState(() {
-                                                  tagCheckboxes[entry.key] =
-                                                      value!;
-                                                });
+                                                setState(
+                                                  () {
+                                                    tagCheckboxes[entry.key] =
+                                                        value!;
+                                                  },
+                                                );
                                               },
                                             );
                                           },
