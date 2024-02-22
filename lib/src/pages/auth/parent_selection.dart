@@ -46,12 +46,16 @@ class ParentSelectionState extends State<ParentSelectionPage> {
         backgroundColor: Colors.transparent,
         actions: [
           const LanguageSwitcher(onPressed: localizationChange),
-          ThemeSwitcher(onPressed: () {
-            setState(() {
-              themeChange();
-              isDarkMode = !isDarkMode;
-            });
-          }),
+          ThemeSwitcher(
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: () {
+                setState(() {
+                  themeChange();
+                  isDarkMode = !isDarkMode;
+                });
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -66,8 +70,11 @@ class ParentSelectionState extends State<ParentSelectionPage> {
                 fit: BoxFit.fill,
               ),
               SizedBox(height: height * 0.04),
-              const Text('Please select your child\'s special need(s):',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                'Please select your child\'s special need(s):',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
               SizedBox(height: height * 0.02),
               Container(
                 padding: const EdgeInsets.all(8.0),

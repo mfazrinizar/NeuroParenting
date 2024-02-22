@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
@@ -61,11 +61,17 @@ class _ChatBotPageState extends State<ChatBotPage> {
         ),
         actions: [
           const LanguageSwitcher(onPressed: localizationChange),
-          ThemeSwitcher(onPressed: () {
-            setState(() {
-              themeChange();
-            });
-          }),
+          ThemeSwitcher(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: () {
+                setState(
+                  () {
+                    themeChange();
+                  },
+                );
+              }),
         ],
       ),
       body: Column(
@@ -112,7 +118,12 @@ class _ChatBotPageState extends State<ChatBotPage> {
                     ),
                   ),
           ),
-          if (loading) const CircularProgressIndicator(),
+          if (loading)
+            CircularProgressIndicator(
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.blueAccent,
+            ),
           // if (selectedImage != null)
           //   ClipRRect(
           //     borderRadius: BorderRadius.circular(16),
@@ -139,11 +150,25 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Gallery'),
-                      child: const Text('Gallery'),
+                      child: Text(
+                        'Gallery',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                      ),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Camera'),
-                      child: const Text('Camera'),
+                      child: Text(
+                        'Camera',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                      ),
                     ),
                   ],
                 ),
@@ -173,6 +198,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
             },
             onSend: () async {
               if (controller.text.isNotEmpty) {
+                loading = true;
                 final searchedText = controller.text;
                 chats.add(
                   ChatItem(
@@ -185,14 +211,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
                       image: selectedImage),
                 );
                 controller.clear();
-                loading = true;
 
                 try {
                   if (selectedImage != null) {
                     await gemini
                         .textAndImage(
                             text: searchedText, images: [selectedImage!])
-                        .timeout(const Duration(seconds: 10))
+                        .timeout(const Duration(seconds: 20))
                         .then((value) {
                           chats.add(
                             ChatItem(
@@ -212,7 +237,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
                     await gemini
                         .chat(chatsTextOnly)
-                        .timeout(const Duration(seconds: 10))
+                        .timeout(const Duration(seconds: 20))
                         .then((value) {
                       chats.add(
                         ChatItem(
@@ -231,6 +256,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   loading = false; // Stop the Gemini instance
                 } catch (e) {
                   Get.snackbar('Error', 'An error occurred. Please try again.');
+                  loading = false;
                   // print(e.toString());
                 } finally {
                   loading = false;
@@ -252,8 +278,11 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
     return Card(
       elevation: 0,
-      color:
-          content.role == 'model' ? Colors.blue.shade800 : Colors.transparent,
+      color: content.role == 'model'
+          ? Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).appBarTheme.backgroundColor
+              : Theme.of(context).primaryColorLight
+          : Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -275,15 +304,35 @@ class _ChatBotPageState extends State<ChatBotPage> {
             Markdown(
                 styleSheet: content.role == 'model'
                     ? MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                        p: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.white))
-                    : MarkdownStyleSheet(),
+                        p: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.white))
+                    : MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                        p: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.black)),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 data: content.parts?.lastOrNull?.text ??
-                    'Unable to generate data.'),
+                    'Unable to generate data. Ask with more details.'),
+            TextButton.icon(
+              onPressed: () {
+                Clipboard.setData(
+                    ClipboardData(text: content.parts?.lastOrNull?.text ?? ''));
+                Get.snackbar('Copied', 'Content copied successfully.');
+              },
+              icon: Icon(Icons.copy,
+                  color: content.role == 'model'
+                      ? Colors.white
+                      : Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black),
+              label: const Text(''),
+            ),
           ],
         ),
       ),

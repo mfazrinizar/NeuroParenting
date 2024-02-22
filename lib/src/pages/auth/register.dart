@@ -77,12 +77,16 @@ class RegisterState extends State<RegisterPage> {
                   : Colors
                       .white, // Change this to your desired background color
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.black,
+                onPressed: () {
+                  setState(() {
+                    themeChange();
+                    isDarkMode = !isDarkMode;
+                  });
+                }),
           ),
         ],
       ),
@@ -134,12 +138,28 @@ class RegisterState extends State<RegisterPage> {
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(context, 'Gallery'),
-                                      child: const Text('Gallery'),
+                                      child: Text(
+                                        'Gallery',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(context, 'Camera'),
-                                      child: const Text('Camera'),
+                                      child: Text(
+                                        'Camera',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -199,13 +219,17 @@ class RegisterState extends State<RegisterPage> {
                           ToggleButtons(
                             isSelected: isSelected,
                             onPressed: (int index) {
-                              setState(() {
-                                for (int i = 0; i < isSelected.length; i++) {
-                                  isSelected[i] = i == index;
-                                }
-                              });
+                              setState(
+                                () {
+                                  for (int i = 0; i < isSelected.length; i++) {
+                                    isSelected[i] = i == index;
+                                  }
+                                },
+                              );
                             },
-                            color: Colors.black, // Text color when not selected
+                            color: isDarkMode
+                                ? const Color.fromARGB(255, 211, 227, 253)
+                                : Colors.black, // Text color when not selected
                             selectedColor:
                                 Colors.white, // Text color when selected
                             fillColor: isDarkMode
@@ -242,29 +266,41 @@ class RegisterState extends State<RegisterPage> {
                                 TextFormField(
                                   controller: nameController,
                                   validator: FormValidator.validateName,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelStyle: TextStyle(
-                                      color: Colors
-                                          .black, // Change this to your desired color
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors
+                                              .black, // Change this to your desired color
                                     ),
                                     hintText: 'Raihan Wangsaff',
                                     labelText: 'Name',
-                                    prefixIcon:
-                                        Icon(Icons.people, color: Colors.black),
+                                    prefixIcon: Icon(Icons.people,
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black),
                                   ),
                                 ),
                                 TextFormField(
                                   controller: emailController,
                                   validator: FormValidator.validateEmail,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelStyle: TextStyle(
-                                      color: Colors
-                                          .black, // Change this to your desired color
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors
+                                              .black, // Change this to your desired color
                                     ),
                                     hintText: 'email@name.domain',
                                     labelText: 'Email',
-                                    prefixIcon:
-                                        Icon(Icons.email, color: Colors.black),
+                                    prefixIcon: Icon(Icons.email,
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black),
                                   ),
                                 ),
                                 StatefulBuilder(
@@ -273,24 +309,36 @@ class RegisterState extends State<RegisterPage> {
                                     return TextFormField(
                                       controller: passwordController,
                                       validator: FormValidator.validatePassword,
-                                      style:
-                                          const TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors.black),
                                       decoration: InputDecoration(
-                                        labelStyle: const TextStyle(
-                                          color: Colors
-                                              .black, // Change this to your desired color
+                                        labelStyle: TextStyle(
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors
+                                                  .black, // Change this to your desired color
                                         ),
                                         hintText: '********',
                                         labelText: 'Password',
-                                        prefixIcon: const Icon(Icons.lock,
-                                            color: Colors.black),
+                                        prefixIcon: Icon(Icons.lock,
+                                            color: isDarkMode
+                                                ? const Color.fromARGB(
+                                                    255, 211, 227, 253)
+                                                : Colors.black),
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               // Based on passwordVisible state choose the icon
                                               passwordVisible
                                                   ? Icons.visibility
                                                   : Icons.visibility_off,
-                                              color: Colors.black),
+                                              color: isDarkMode
+                                                  ? const Color.fromARGB(
+                                                      255, 211, 227, 253)
+                                                  : Colors.black),
                                           onPressed: () {
                                             // Update the state i.e. toggle the state of passwordVisible variable
                                             setState(() {
@@ -313,24 +361,36 @@ class RegisterState extends State<RegisterPage> {
                                           FormValidator.validateRePassword(
                                               passwordController.text,
                                               rePasswordController.text),
-                                      style:
-                                          const TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors.black),
                                       decoration: InputDecoration(
-                                        labelStyle: const TextStyle(
-                                          color: Colors
-                                              .black, // Change this to your desired color
+                                        labelStyle: TextStyle(
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors
+                                                  .black, // Change this to your desired color
                                         ),
                                         hintText: '********',
                                         labelText: 'Re-enter Password',
-                                        prefixIcon: const Icon(Icons.password,
-                                            color: Colors.black),
+                                        prefixIcon: Icon(Icons.password,
+                                            color: isDarkMode
+                                                ? const Color.fromARGB(
+                                                    255, 211, 227, 253)
+                                                : Colors.black),
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               // Based on passwordVisible state choose the icon
                                               rePasswordVisible
                                                   ? Icons.visibility
                                                   : Icons.visibility_off,
-                                              color: Colors.black),
+                                              color: isDarkMode
+                                                  ? const Color.fromARGB(
+                                                      255, 211, 227, 253)
+                                                  : Colors.black),
                                           onPressed: () {
                                             // Update the state i.e. toggle the state of passwordVisible variable
                                             setState(() {
@@ -457,8 +517,10 @@ class RegisterState extends State<RegisterPage> {
                                       ).show();
                                     }
                                   },
-                                  child: const Text('  Register  ',
-                                      style: TextStyle(fontSize: 20)),
+                                  child: const Text(
+                                    '  Register  ',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
                                 ),
                                 SizedBox(
                                   height: height * 0.01,

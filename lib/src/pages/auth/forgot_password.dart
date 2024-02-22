@@ -31,7 +31,7 @@ class ForgotState extends State<ForgotPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -109,24 +109,33 @@ class ForgotState extends State<ForgotPage> {
                               SizedBox(
                                 height: height * 0.05,
                               ),
-                              const Text('Please enter your email below:',
+                              Text('Please enter your email below:',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black,
                                   )),
                               TextFormField(
                                 controller: emailController,
                                 validator: FormValidator.validateEmail,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   labelStyle: TextStyle(
-                                    color: Colors
-                                        .black, // Change this to your desired color
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors
+                                            .black, // Change this to your desired color
                                   ),
                                   hintText: 'email@name.domain',
                                   labelText: 'Email',
-                                  prefixIcon:
-                                      Icon(Icons.email, color: Colors.black),
+                                  prefixIcon: Icon(Icons.email,
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.black),
                                 ),
                               ),
                               SizedBox(

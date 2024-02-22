@@ -13,9 +13,13 @@ key.properties
 gradle.properties
 .VSCodeCounter/
 .VSCodeCounter
+/android/app/google-services.json
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
 doc/api/
+.firebaserc
+.firebase/
+
 
 # dotenv environment variables file
 .env*
@@ -29,6 +33,8 @@ README.md
 *.js.deps
 *.js.map
 
+encryption_key.json
+encryption.json
 .flutter-plugins
 .flutter-plugins-dependencies
 =======

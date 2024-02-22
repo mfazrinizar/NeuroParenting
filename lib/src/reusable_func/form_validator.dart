@@ -1,18 +1,18 @@
 class FormValidator {
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email';
+      return 'Please enter your email.';
     } else if (!RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return 'Please enter a valid email address.';
     }
     return null;
   }
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your password';
+      return 'Please enter your password.';
     } else if (RegExp(r'^[0-9]+$').hasMatch(value)) {
       return 'Password must contains non-numerical character(s).';
     } else if (value.length < 8) {
@@ -49,6 +49,17 @@ class FormValidator {
   static String? validateText(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter something.';
+    }
+    return null;
+  }
+
+  static String? validatePayment(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter something.';
+    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
+      return 'Please don\'t enter non-digit character(s).';
+    } else if (int.tryParse(value) == null || int.parse(value) <= 1000) {
+      return 'Please enter value at least 1000.';
     }
     return null;
   }

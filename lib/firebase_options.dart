@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:neuroparenting/src/encrypted/env.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -14,72 +15,73 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
-class DefaultFirebaseOptions {
-  static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
-        return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      default:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
-        );
-    }
+
+final env = Env.create();
+
+Future<FirebaseOptions> get currentPlatform async {
+  if (kIsWeb) {
+    return web;
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD_1Ob9E-GnFax5tFDn10Zsra1Pa7LQMCM',
-    appId: '1:704712888802:web:9124641e805398d8a169bb',
-    messagingSenderId: '704712888802',
-    projectId: 'neuroparenting-30469',
-    authDomain: 'neuroparenting-30469.firebaseapp.com',
-    databaseURL: 'https://neuroparenting-30469-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'neuroparenting-30469.appspot.com',
-    measurementId: 'G-0R5QNQMWFL',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBg7PtmNEp-zDS7tKxMaVkJkSLjmhAid8I',
-    appId: '1:704712888802:android:7663d045e2ce4653a169bb',
-    messagingSenderId: '704712888802',
-    projectId: 'neuroparenting-30469',
-    databaseURL: 'https://neuroparenting-30469-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'neuroparenting-30469.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB0UCV5mpp9ErddpxnJuXt4TSX0pR75bU4',
-    appId: '1:704712888802:ios:29b30123bf7e831ba169bb',
-    messagingSenderId: '704712888802',
-    projectId: 'neuroparenting-30469',
-    databaseURL: 'https://neuroparenting-30469-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'neuroparenting-30469.appspot.com',
-    iosBundleId: 'com.mogger.neuroparenting',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB0UCV5mpp9ErddpxnJuXt4TSX0pR75bU4',
-    appId: '1:704712888802:ios:5fb97470fda46915a169bb',
-    messagingSenderId: '704712888802',
-    projectId: 'neuroparenting-30469',
-    databaseURL: 'https://neuroparenting-30469-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'neuroparenting-30469.appspot.com',
-    iosBundleId: 'com.mogger.neuroparenting.RunnerTests',
-  );
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return android;
+    case TargetPlatform.iOS:
+      return ios;
+    case TargetPlatform.macOS:
+      return macos;
+    case TargetPlatform.windows:
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for windows - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
+    case TargetPlatform.linux:
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for linux - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
+    default:
+      throw UnsupportedError(
+        'DefaultFirebaseOptions are not supported for this platform.',
+      );
+  }
 }
+
+FirebaseOptions web = FirebaseOptions(
+  apiKey: env.firebaseWebApiKey,
+  appId: env.firebaseWebAppId,
+  messagingSenderId: env.firebaseWebMessagingSenderId,
+  projectId: env.firebaseWebProjectId,
+  authDomain: env.firebaseWebAuthDomain,
+  databaseURL: env.firebaseWebDatabaseUrl,
+  storageBucket: env.firebaseWebStorageBucket,
+  measurementId: env.firebaseWebAppMeasurementId,
+);
+
+FirebaseOptions android = FirebaseOptions(
+  apiKey: env.firebaseAndroidApiKey,
+  appId: env.firebaseAndroidAppId,
+  messagingSenderId: env.firebaseAndroidMessagingSenderId,
+  projectId: env.firebaseAndroidProjectId,
+  databaseURL: env.firebaseAndroidDatabaseUrl,
+  storageBucket: env.firebaseAndroidStorageBucket,
+);
+
+FirebaseOptions ios = FirebaseOptions(
+  apiKey: env.firebaseIosApiKey,
+  appId: env.firebaseIosAppId,
+  messagingSenderId: env.firebaseIosMessagingSenderId,
+  projectId: env.firebaseIosProjectId,
+  databaseURL: env.firebaseIosDatabaseUrl,
+  storageBucket: env.firebaseIosStorageBucket,
+  iosBundleId: env.firebaseIosBundleId,
+);
+
+FirebaseOptions macos = FirebaseOptions(
+  apiKey: env.firebaseMacosApiKey,
+  appId: env.firebaseMacosAppId,
+  messagingSenderId: env.firebaseMacosMessagingSenderId,
+  projectId: env.firebaseMacosProjectId,
+  databaseURL: env.firebaseMacosDatabaseUrl,
+  storageBucket: env.firebaseMacosStorageBucket,
+  iosBundleId: env.firebaseMacosIosBundleId,
+);

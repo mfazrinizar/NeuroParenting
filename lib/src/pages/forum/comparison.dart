@@ -265,8 +265,15 @@ class ForumPageState extends State<ForumPage> {
                                                   AlertDialog(
                                                 title: const Text(
                                                     'Choose an action'),
-                                                content: const Text(
-                                                    'Pick an image from the gallery or take a new photo?'),
+                                                content: Text(
+                                                  'Pick an image from the gallery or take a new photo?',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
+                                                ),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () =>
@@ -278,8 +285,19 @@ class ForumPageState extends State<ForumPage> {
                                                   TextButton(
                                                     onPressed: () =>
                                                         Navigator.pop(
-                                                            context, 'Camera'),
-                                                    child: const Text('Camera'),
+                                                      context,
+                                                      'Camera',
+                                                    ),
+                                                    child: Text(
+                                                      'Camera',
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -515,6 +533,8 @@ class ForumPageState extends State<ForumPage> {
                                     tags: filteredDiscussions[index].tags,
                                     datePosted:
                                         filteredDiscussions[index].datePosted,
+                                    postEditedAt:
+                                        filteredDiscussions[index].postEditedAt,
                                     likes: filteredDiscussions[index].likes,
                                     likesTotal:
                                         filteredDiscussions[index].likesTotal,

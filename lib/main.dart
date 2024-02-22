@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:neuroparenting/src/encrypted/env.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,9 +17,11 @@ import 'package:neuroparenting/src/theme/theme.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  final env = Env.create();
+
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Gemini.init(apiKey: 'AIzaSyDDgqJGmvuFC81Uzx2zuphJusDmlpsvsQk');
+  await Firebase.initializeApp(options: await currentPlatform);
+  Gemini.init(apiKey: env.geminiApiKey);
   runApp(const MyApp());
 }
 
@@ -55,6 +58,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'NeuroParenting',
       theme: ThemeClass.lightTheme,
       darkTheme: ThemeClass.darkTheme,

@@ -35,7 +35,7 @@ class ChangePasswordState extends State<ChangePasswordPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode
-          ? ThemeClass.darkTheme.colorScheme.background
+          ? ThemeClass.darkTheme.scaffoldBackgroundColor
           : ThemeClass().lightPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -47,8 +47,10 @@ class ChangePasswordState extends State<ChangePasswordPage> {
             ),
           ),
         ),
-        title: const Text('Change Password',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Change Password',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           Container(
             decoration: BoxDecoration(
@@ -69,12 +71,19 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                   : Colors
                       .white, // Change this to your desired background color
             ),
-            child: ThemeSwitcher(onPressed: () {
-              setState(() {
-                themeChange();
-                isDarkMode = !isDarkMode;
-              });
-            }),
+            child: ThemeSwitcher(
+              color: isDarkMode
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: () {
+                setState(
+                  () {
+                    themeChange();
+                    isDarkMode = !isDarkMode;
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -118,11 +127,14 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                               SizedBox(
                                 height: height * 0.05,
                               ),
-                              const Text('Please Fill the Form',
+                              Text('Please Fill the Form',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: isDarkMode
+                                        ? const Color.fromARGB(
+                                            255, 211, 227, 253)
+                                        : Colors.black,
                                   )),
                               StatefulBuilder(
                                 builder: (BuildContext context,
@@ -132,21 +144,32 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                     validator: FormValidator.validatePassword,
                                     style: const TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
-                                      labelStyle: const TextStyle(
-                                        color: Colors
-                                            .black, // Change this to your desired color
+                                      labelStyle: TextStyle(
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black,
                                       ),
                                       hintText: '********',
                                       labelText: 'Current Password',
-                                      prefixIcon: const Icon(Icons.lock,
-                                          color: Colors.black),
+                                      prefixIcon: Icon(
+                                        Icons.lock,
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            oldPasswordVisible
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                            color: Colors.black),
+                                          // Based on passwordVisible state choose the icon
+                                          oldPasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors.black,
+                                        ),
                                         onPressed: () {
                                           // Update the state i.e. toggle the state of passwordVisible variable
                                           setState(() {
@@ -166,23 +189,40 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                   return TextFormField(
                                     controller: newPasswordController,
                                     validator: FormValidator.validatePassword,
-                                    style: const TextStyle(color: Colors.black),
+                                    style: TextStyle(
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.black,
+                                    ),
                                     decoration: InputDecoration(
-                                      labelStyle: const TextStyle(
-                                        color: Colors
-                                            .black, // Change this to your desired color
+                                      labelStyle: TextStyle(
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors
+                                                .black, // Change this to your desired color
                                       ),
                                       hintText: '********',
                                       labelText: 'New Password',
-                                      prefixIcon: const Icon(Icons.password,
-                                          color: Colors.black),
+                                      prefixIcon: Icon(
+                                        Icons.password,
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            newPasswordVisible
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                            color: Colors.black),
+                                          // Based on passwordVisible state choose the icon
+                                          newPasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors.black,
+                                        ),
                                         onPressed: () {
                                           // Update the state i.e. toggle the state of passwordVisible variable
                                           setState(() {
@@ -207,21 +247,33 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                             newRePasswordController.text),
                                     style: const TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
-                                      labelStyle: const TextStyle(
-                                        color: Colors
-                                            .black, // Change this to your desired color
+                                      labelStyle: TextStyle(
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors
+                                                .black, // Change this to your desired color
                                       ),
                                       hintText: '********',
                                       labelText: 'Re-enter New Password',
-                                      prefixIcon: const Icon(Icons.restart_alt,
-                                          color: Colors.black),
+                                      prefixIcon: Icon(
+                                        Icons.restart_alt,
+                                        color: isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 211, 227, 253)
+                                            : Colors.black,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                            // Based on passwordVisible state choose the icon
-                                            newRePasswordVisible
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                            color: Colors.black),
+                                          // Based on passwordVisible state choose the icon
+                                          newRePasswordVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: isDarkMode
+                                              ? const Color.fromARGB(
+                                                  255, 211, 227, 253)
+                                              : Colors.black,
+                                        ),
                                         onPressed: () {
                                           // Update the state i.e. toggle the state of passwordVisible variable
                                           setState(() {
@@ -334,8 +386,14 @@ class ChangePasswordState extends State<ChangePasswordPage> {
                                     }
                                   }
                                 },
-                                child: const Text('  Change Password  ',
-                                    style: TextStyle(fontSize: 20)),
+                                child: Text('  Change Password  ',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 211, 227, 253)
+                                          : Colors.white,
+                                    )),
                               ),
                             ],
                           ),

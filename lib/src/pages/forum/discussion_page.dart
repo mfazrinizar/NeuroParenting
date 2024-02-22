@@ -18,6 +18,7 @@ import 'package:neuroparenting/src/reusable_func/localization_change.dart';
 import 'package:neuroparenting/src/reusable_func/theme_change.dart';
 import 'package:neuroparenting/src/homepage.dart';
 import 'package:neuroparenting/src/db/forum/forum_api.dart';
+import 'package:neuroparenting/src/theme/theme.dart';
 import 'package:photo_view/photo_view.dart';
 
 class DiscussionPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class DiscussionPage extends StatefulWidget {
   final String title;
   final List<String> tags;
   final DateTime datePosted;
+  final DateTime postEditedAt;
   final List<String> likes;
   final int likesTotal;
   final int comments;
@@ -46,6 +48,7 @@ class DiscussionPage extends StatefulWidget {
       required this.descriptionPost,
       required this.tags,
       required this.datePosted,
+      required this.postEditedAt,
       required this.likes,
       required this.likesTotal,
       required this.comments,
@@ -160,6 +163,9 @@ class DiscussionState extends State<DiscussionPage> {
     // double height = MediaQuery.of(context).size.height;
     return RefreshIndicator(
       onRefresh: refreshDiscussion,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? const Color.fromARGB(255, 211, 227, 253)
+          : ThemeClass.lightTheme.primaryColor,
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -186,29 +192,19 @@ class DiscussionState extends State<DiscussionPage> {
               'Discussion',
             ),
             actions: [
-              Container(
-                decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.transparent : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                  ),
-                ),
-                child: const LanguageSwitcher(onPressed: localizationChange),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.transparent : Colors.white,
-                ),
-                child: ThemeSwitcher(
-                  onPressed: () {
-                    setState(
-                      () {
-                        themeChange();
-                        isDarkMode = !isDarkMode;
-                      },
-                    );
-                  },
-                ),
+              const LanguageSwitcher(onPressed: localizationChange),
+              ThemeSwitcher(
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Colors.black,
+                onPressed: () {
+                  setState(
+                    () {
+                      themeChange();
+                      isDarkMode = !isDarkMode;
+                    },
+                  );
+                },
               ),
             ],
           ),
@@ -220,7 +216,7 @@ class DiscussionState extends State<DiscussionPage> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(
+                    child: SelectableText(
                       updatedDiscussion?.title ?? widget.title,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 24),
@@ -238,8 +234,8 @@ class DiscussionState extends State<DiscussionPage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  title: RichText(
-                    text: TextSpan(
+                  title: SelectableText.rich(
+                    TextSpan(
                       children: [
                         TextSpan(
                           text: 'Posted by ',
@@ -254,20 +250,25 @@ class DiscussionState extends State<DiscussionPage> {
                       ],
                     ),
                   ),
-                  subtitle: Text(
-                    DateFormat('yyyy-MM-dd – kk:mm').format(
-                        updatedDiscussion?.datePosted ?? widget.datePosted),
+                  subtitle: SelectableText(
+                    (updatedDiscussion?.datePosted ?? widget.datePosted) ==
+                            (updatedDiscussion?.postEditedAt ??
+                                widget.postEditedAt)
+                        ? DateFormat('yyyy-MM-dd – kk:mm').format(
+                            updatedDiscussion?.datePosted ?? widget.datePosted)
+                        : "Edited at ${DateFormat('yyyy-MM-dd – kk:mm').format(updatedDiscussion?.postEditedAt ?? widget.postEditedAt)}",
+                    style: const TextStyle(fontSize: 12),
                   ),
                   trailing: Chip(
-                      label:
-                          Text(updatedDiscussion?.userType ?? widget.userType)),
+                      label: SelectableText(
+                          updatedDiscussion?.userType ?? widget.userType)),
                 ),
                 Align(
                   alignment: Alignment.topRight,
                   child: Wrap(
                     spacing: 6,
                     children: (updatedDiscussion?.tags ?? widget.tags)
-                        .map((tag) => Text(
+                        .map((tag) => SelectableText(
                               '#$tag  ',
                             ))
                         .toList(),
@@ -294,7 +295,7 @@ class DiscussionState extends State<DiscussionPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
+                  child: SelectableText(
                     updatedDiscussion?.descriptionPost ??
                         widget.descriptionPost,
                     textAlign: TextAlign.justify,
@@ -497,6 +498,12 @@ class DiscussionState extends State<DiscussionPage> {
                                             ...tagCheckboxes.entries.map(
                                               (entry) {
                                                 return CheckboxListTile(
+                                                  checkColor: Colors.white,
+                                                  activeColor: isDarkMode
+                                                      ? const Color.fromARGB(
+                                                          255, 3, 21, 37)
+                                                      : ThemeClass()
+                                                          .lightPrimaryColor,
                                                   title: Text(entry.key),
                                                   value: entry.value,
                                                   onChanged: (bool? value) {
@@ -521,24 +528,50 @@ class DiscussionState extends State<DiscussionPage> {
                                                           AlertDialog(
                                                     title: const Text(
                                                         'Choose an action'),
-                                                    content: const Text(
-                                                        'Pick an image from the gallery or take a new photo?'),
+                                                    content: Text(
+                                                      'Pick an image from the gallery or take a new photo?',
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    ),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context,
                                                                 'Gallery'),
-                                                        child: const Text(
-                                                            'Gallery'),
+                                                        child: Text(
+                                                          'Gallery',
+                                                          style: TextStyle(
+                                                              color: Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
                                                       ),
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context,
                                                                 'Camera'),
-                                                        child: const Text(
-                                                            'Camera'),
+                                                        child: Text(
+                                                          'Camera',
+                                                          style: TextStyle(
+                                                              color: Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -699,12 +732,12 @@ class DiscussionState extends State<DiscussionPage> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              Text(
+                              SelectableText(
                                 '${comment.commenterName} | ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
+                              SelectableText(
                                 DateFormat('yyyy-MM-dd – kk:mm  ')
                                     .format(comment.commentDate),
                                 style: const TextStyle(
@@ -774,7 +807,7 @@ class DiscussionState extends State<DiscussionPage> {
                             ],
                           ),
                         ),
-                        subtitle: Text(
+                        subtitle: SelectableText(
                           comment.text,
                           textAlign: TextAlign.justify,
                         ),

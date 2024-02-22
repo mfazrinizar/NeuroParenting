@@ -53,10 +53,15 @@ class OnboardingScreenState extends State<OnboardingScreen> {
     ];
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('NeuroParenting'),
-        actions: const <Widget>[
-          LanguageSwitcher(onPressed: localizationChange),
-          ThemeSwitcher(onPressed: themeChange),
+        actions: <Widget>[
+          const LanguageSwitcher(onPressed: localizationChange),
+          ThemeSwitcher(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color.fromARGB(255, 211, 227, 253)
+                  : Colors.black,
+              onPressed: themeChange),
         ],
       ),
       body: SingleChildScrollView(

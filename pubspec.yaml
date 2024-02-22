@@ -47,7 +47,6 @@ dependencies:
   intl: ^0.18.1
   flutter_localizations:
     sdk: flutter
-  hexcolor: ^3.0.1
   shared_preferences: ^2.2.2
   awesome_dialog: ^3.2.0
   flutter_easyloading: ^3.0.5
@@ -73,6 +72,14 @@ dependencies:
   flutter_markdown: ^0.6.18+3
   photo_view: ^0.14.0
   uuid: ^4.3.3
+  midtrans_sdk: ^0.4.0
+  http: ^1.2.0
+  secure_dotenv: ^1.0.0
+  firebase_messaging: ^14.7.15
+  youtube_player_flutter: ^9.0.0
+  flutter_inappwebview: ^6.0.0
+  video_player: ^2.8.2
+  chewie: ^1.7.5
 
 flutter_launcher_icons:
   image_path: "assets/icons/logo.png"
@@ -109,6 +116,8 @@ flutter_native_splash:
   web: true
 
 dev_dependencies:
+  secure_dotenv_generator: ^1.0.1
+  build_runner: ^2.4.8
   flutter_launcher_icons: "^0.13.1"
   flutter_test:
     sdk: flutter
@@ -140,6 +149,7 @@ flutter:
     - assets/nst/
     - assets/phonetic/
     - assets/sound/
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

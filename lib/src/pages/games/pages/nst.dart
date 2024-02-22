@@ -138,7 +138,7 @@ class NSTState extends State<NST> {
                 : Colors.white,
             onPressed: () {
               audioPlayer.stop();
-              Get.offAll(const GamePage());
+              Get.offAll(() => const GamePage());
             }),
         actions: [
           LanguageSwitcher(

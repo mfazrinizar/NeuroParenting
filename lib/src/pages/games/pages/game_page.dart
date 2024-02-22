@@ -210,15 +210,18 @@ class GamePageState extends State<GamePage> {
                   : Colors.white),
         ),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color.fromARGB(255, 211, 227, 253)
-                : Colors.white,
-            onPressed: () {
-              Get.offAll(const HomePage(
+          icon: const Icon(Icons.arrow_back),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color.fromARGB(255, 211, 227, 253)
+              : Colors.white,
+          onPressed: () {
+            Get.offAll(
+              () => const HomePage(
                 indexFromPrevious: 0,
-              ));
-            }),
+              ),
+            );
+          },
+        ),
         actions: [
           LanguageSwitcher(
             onPressed: localizationChange,

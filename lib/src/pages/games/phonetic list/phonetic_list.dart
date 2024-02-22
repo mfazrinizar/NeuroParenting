@@ -83,7 +83,7 @@ this and base files have different roots: D:\VSCode\Flutter\clone\NeuroParenting
                 ? const Color.fromARGB(255, 211, 227, 253)
                 : Colors.white,
             onPressed: () {
-              Get.offAll(const GamePage());
+              Get.offAll(() => const GamePage());
             }),
         actions: [
           LanguageSwitcher(

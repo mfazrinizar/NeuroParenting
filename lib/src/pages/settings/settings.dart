@@ -14,7 +14,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:neuroparenting/src/db/auth/logout_api.dart';
 import 'package:neuroparenting/src/db/settings/change_profile_picture_api.dart';
 import 'package:neuroparenting/src/pages/article/article_upload.dart';
+import 'package:neuroparenting/src/pages/campaign/campaign_upload.dart';
 import 'package:neuroparenting/src/pages/settings/change_name.dart';
+import 'package:neuroparenting/src/pages/settings/payment_history.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
 import 'package:neuroparenting/src/theme/theme.dart';
 
@@ -91,6 +93,13 @@ class SettingsPageState extends State<SettingsPage> {
       //     Get.offAll(() => const UploadArticlePage());
       //   }
       // },
+      {
+        'icon': Icons.payment,
+        'title': 'Payment History',
+        'onTap': () {
+          Get.offAll(() => const PaymentHistoryPage());
+        }
+      },
       {
         'icon': Icons.person,
         'title': 'Change Name',
@@ -174,14 +183,27 @@ class SettingsPageState extends State<SettingsPage> {
           final userData = userDoc.data() as Map<String, dynamic>?;
           if (userData != null &&
               userData.containsKey('adminAccess') &&
-              userData['adminAccess'] == true) {
-            tilesData.add({
-              'icon': Icons.upload,
-              'title': 'Upload Article',
-              'onTap': () {
-                Get.offAll(() => const UploadArticlePage());
-              }
-            });
+              userData['adminAccess'] == true &&
+              tilesData.length < 8) {
+            tilesData.add(
+              {
+                'icon': Icons.article,
+                'title': 'Upload Article',
+                'onTap': () {
+                  Get.offAll(() => const ArticleUploadPage());
+                }
+              },
+            );
+
+            tilesData.add(
+              {
+                'icon': Icons.campaign,
+                'title': 'Upload Campaign',
+                'onTap': () {
+                  Get.offAll(() => const CampaignUploadPage());
+                }
+              },
+            );
           }
 
           return SingleChildScrollView(
@@ -214,8 +236,10 @@ class SettingsPageState extends State<SettingsPage> {
                           final action = await showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 22, 44, 70),
+                              backgroundColor: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? const Color.fromARGB(255, 22, 44, 70)
+                                  : Colors.white,
                               title: const Text('Choose an action'),
                               content: const Text(
                                   'Pick an image from the gallery or take a new photo?'),
@@ -223,17 +247,25 @@ class SettingsPageState extends State<SettingsPage> {
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Gallery'),
-                                  child: const Text(
+                                  child: Text(
                                     'Gallery',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Camera'),
-                                  child: const Text(
+                                  child: Text(
                                     'Camera',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black),
                                   ),
                                 ),
                               ],
@@ -302,6 +334,7 @@ class SettingsPageState extends State<SettingsPage> {
                     children: [
                       TextButton.icon(
                         onPressed: () async {
+                          // List<String>? initialTagsTemp = userTags;
                           final result = await showDialog<List<String>>(
                             context: context,
                             builder: (context) => TagSelectionDialog(
@@ -331,13 +364,20 @@ class SettingsPageState extends State<SettingsPage> {
                                   .update({'userTags': userTags});
                             }
                           }
+                          // else {
+                          //   setState(
+                          //     () {
+                          //       userTags = initialTagsTemp;
+                          //     },
+                          //   );
+                          // }
                         },
                         icon: Icon(
                           Icons.edit,
                           size: 24,
                           color: Theme.of(context).brightness == Brightness.dark
                               ? const Color.fromARGB(255, 211, 227, 253)
-                              : Colors.white,
+                              : Colors.black,
                         ),
                         label: Text(
                           'Edit Needs',
@@ -388,11 +428,14 @@ Widget _buildListTile(
           borderRadius:
               BorderRadius.circular(16)), // Adjust color and width as needed
       child: ListTile(
-        leading: Icon(icon, color: isDarkMode ? Colors.black : Colors.white),
+        leading: Icon(icon,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white),
         title: Text(title,
             style: TextStyle(
-                color: SettingsPageState().isDarkMode
-                    ? Colors.black
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 211, 227, 253)
                     : Colors.white)),
         onTap: onTap,
       ),
@@ -430,31 +473,53 @@ class TagSelectionDialogState extends State<TagSelectionDialog> {
       content: Wrap(
         spacing: 8.0,
         runSpacing: 4.0,
-        children: widget.availableTags.map((tag) {
-          return FilterChip(
-            label: Text(tag),
-            selected: selectedTags.contains(tag),
-            onSelected: (isSelected) {
-              setState(() {
-                if (isSelected) {
-                  selectedTags.add(tag);
-                } else {
-                  selectedTags.remove(tag);
-                }
-              });
-            },
-          );
-        }).toList(),
+        children: widget.availableTags.map(
+          (tag) {
+            return FilterChip(
+              label: Text(
+                tag,
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 211, 227, 253)
+                        : Theme.of(context).primaryColorLight),
+              ),
+              selected: selectedTags.contains(tag),
+              onSelected: (isSelected) {
+                setState(
+                  () {
+                    if (isSelected) {
+                      selectedTags.add(tag);
+                    } else {
+                      selectedTags.remove(tag);
+                    }
+                  },
+                );
+              },
+            );
+          },
+        ).toList(),
       ),
       actions: [
         TextButton(
-          child: const Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Theme.of(context).primaryColorLight),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: const Text('OK'),
+          child: Text(
+            'OK',
+            style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 211, 227, 253)
+                    : Theme.of(context).primaryColorLight),
+          ),
           onPressed: () {
             Navigator.of(context).pop(selectedTags);
           },

@@ -34,6 +34,7 @@ class Discussion {
   final String title;
   final List<String> tags;
   final DateTime datePosted;
+  final DateTime postEditedAt;
   final List<String> likes;
   int likesTotal;
   final int comments;
@@ -52,6 +53,7 @@ class Discussion {
     required this.title,
     required this.tags,
     required this.datePosted,
+    required this.postEditedAt,
     required this.likes,
     required this.likesTotal,
     required this.comments,
@@ -88,6 +90,7 @@ class ForumApi {
           discussionImage: data['discussionImage'],
           tags: List<String>.from(data['discussionTags']),
           datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
+          postEditedAt: (data['postEditedAt'] as Timestamp).toDate(),
           likes: List<String>.from(data['likes']),
           likesTotal: List<String>.from(data['likes']).length,
           comments: data['commentTotal'],
@@ -126,6 +129,7 @@ class ForumApi {
         discussionImage: data['discussionImage'],
         tags: List<String>.from(data['discussionTags']),
         datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
+        postEditedAt: (data['postEditedAt'] as Timestamp).toDate(),
         likes: List<String>.from(data['likes']),
         likesTotal: List<String>.from(data['likes']).length,
         comments: data['commentTotal'],
@@ -194,6 +198,7 @@ class ForumApi {
       discussionImage: data['discussionImage'],
       tags: List<String>.from(data['discussionTags']),
       datePosted: (data['postDateAndTime'] as Timestamp).toDate(),
+      postEditedAt: (data['postEditedAt'] as Timestamp).toDate(),
       likes: List<String>.from(data['likes']),
       likesTotal: List<String>.from(data['likes']).length,
       comments: data['commentTotal'],
@@ -366,6 +371,7 @@ class ForumApi {
           .toList(),
       'commentsList': commentsList, // Only true tags
       'postDateAndTime': postDateAndTime,
+      'postEditedAt': postDateAndTime,
       'commentTotal': initialComment,
       'likes': likes,
     };
@@ -405,7 +411,9 @@ class ForumApi {
     // Check if the discussion was posted by the current user
     if (data != null && data['discussionPostUserId'] == user.uid) {
       // Prepare the updated discussion details
-      final updatedDiscussion = <String, dynamic>{};
+      final updatedDiscussion = <String, dynamic>{
+        'postEditedAt': DateTime.now(),
+      };
 
       if (titlePost != null && titlePost != data['discussionTitle']) {
         updatedDiscussion['discussionTitle'] = titlePost;
