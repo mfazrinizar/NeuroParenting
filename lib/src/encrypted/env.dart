@@ -61,6 +61,9 @@ abstract class Env {
   @FieldKey(defaultValue: "")
   String get firebaseWebAppMeasurementId;
 
+  @FieldKey(defaultValue: "")
+  String get firebaseWebAppVapidKey;
+
   // Firebase Android
   @FieldKey(defaultValue: "")
   String get firebaseAndroidApiKey;

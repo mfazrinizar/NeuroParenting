@@ -80,6 +80,9 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   video_player: ^2.8.2
   chewie: ^1.7.5
+  flutter_local_notifications: ^16.3.2
+  cloud_functions: ^4.6.5
+  rxdart: ^0.27.7
 
 flutter_launcher_icons:
   image_path: "assets/icons/logo.png"

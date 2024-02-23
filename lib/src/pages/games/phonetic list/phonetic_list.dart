@@ -25,16 +25,33 @@ class PhonetikListState extends State<PhonetikList> {
   Widget generateCard(String letter) {
     return Expanded(
       child: GestureDetector(
-        onTap: () async {
-          player.play(AssetSource('sound/$letter.mp3'));
-        },
-        child: Card(
+          onTap: () async {
+            player.play(AssetSource('sound/$letter.mp3'));
+          },
           child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Image.asset('assets/phonetic/icons8-$letter-100.png'),
-          ),
-        ),
-      ),
+            padding: const EdgeInsets.all(2),
+            child: Card(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? ThemeClass().darkRounded
+                  : const Color.fromARGB(255, 240, 240, 255),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                // child: Image.asset('assets/phonetic/icons8-$letter-100.png'),
+                child: Text(
+                  letter.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 115,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 240, 240, 255)
+                        : Colors.redAccent,
+                    // : ThemeClass().darkRounded,
+                  ),
+                ),
+              ),
+            ),
+          )),
     );
   }
 
@@ -55,12 +72,16 @@ this and base files have different roots: D:\VSCode\Flutter\clone\NeuroParenting
           // 'Phonetic untuk Disleksia',
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
           ),
         ),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
             onPressed: () {
               Get.offAll(() => const GamePage());
             }),
@@ -68,7 +89,7 @@ this and base files have different roots: D:\VSCode\Flutter\clone\NeuroParenting
           LanguageSwitcher(
             onPressed: localizationChange,
             textColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
+                ? const Color.fromARGB(255, 211, 227, 253)
                 : Colors.white,
           ),
           ThemeSwitcher(onPressed: () async {
@@ -80,6 +101,7 @@ this and base files have different roots: D:\VSCode\Flutter\clone\NeuroParenting
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(3),
         child: Column(
           children: List.generate(
             13, // Number of rows (from 'a' to 'z' is 26 letters, 2 letters per row)

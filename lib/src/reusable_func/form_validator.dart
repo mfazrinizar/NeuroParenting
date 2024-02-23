@@ -58,7 +58,7 @@ class FormValidator {
       return 'Please enter something.';
     } else if (!RegExp(r'^\d+$').hasMatch(value)) {
       return 'Please don\'t enter non-digit character(s).';
-    } else if (int.tryParse(value) == null || int.parse(value) <= 1000) {
+    } else if (int.tryParse(value) == null || int.parse(value) < 1000) {
       return 'Please enter value at least 1000.';
     }
     return null;

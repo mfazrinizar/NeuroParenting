@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// import 'package:flutter/foundation.dart'; // kDebugMode for sandbox/production key selection
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:midtrans_sdk/midtrans_sdk.dart';
@@ -26,6 +27,7 @@ class MidtransAPI {
     required String category,
     required String itemName,
   }) async {
+    const isProduction = kDebugMode ? false : true;
     const uniqueId = Uuid();
     String orderId =
         "neuropay-${category.toLowerCase()}-${uniqueId.v4().substring(0, 8)}";
@@ -33,6 +35,7 @@ class MidtransAPI {
     final response = await http.post(
       Uri.parse(env.midtransMerchantBaseUrl),
       headers: <String, String>{
+        'Is-Production': isProduction.toString(),
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
@@ -96,7 +99,8 @@ class MidtransAPI {
       config: MidtransConfig(
         clientKey: kDebugMode
             ? env.midtransClientKeySandbox
-            : env.midtransClientKeyProduction,
+            : env
+                .midtransClientKeyProduction, // waiting for Midtrans review to gain production access
         merchantBaseUrl: env.midtransMerchantBaseUrl,
         language: languageCode,
       ),

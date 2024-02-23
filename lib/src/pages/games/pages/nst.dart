@@ -126,20 +126,25 @@ class NSTState extends State<NST> {
           "Matching Games",
           style: GoogleFonts.nunito(
             fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
           ),
         ),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color.fromARGB(255, 211, 227, 253)
+                : Colors.white,
             onPressed: () {
+              audioPlayer.stop();
               Get.offAll(() => const GamePage());
             }),
         actions: [
           LanguageSwitcher(
             onPressed: localizationChange,
             textColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
+                ? const Color.fromARGB(255, 211, 227, 253)
                 : Colors.white,
           ),
           ThemeSwitcher(onPressed: () async {
@@ -168,6 +173,9 @@ class NSTState extends State<NST> {
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 211, 227, 253)
+                        : Colors.black,
                   ),
                 ),
                 Container(
@@ -183,6 +191,9 @@ class NSTState extends State<NST> {
                   '$answer',
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color.fromARGB(255, 211, 227, 253)
+                        : Colors.black,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -243,45 +254,45 @@ class NSTState extends State<NST> {
               ],
             ),
           ),
-          floatingActionButton: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.red[400]!;
-                  }
-                  return Colors.red[300]!;
-                },
-              ),
-              padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: const BorderSide(color: Colors.white, width: 2),
-                ),
-              ),
-              textStyle: MaterialStateProperty.all(
-                GoogleFonts.nunito(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              overlayColor: MaterialStateProperty.all(Colors.yellow[100]),
-              elevation: MaterialStateProperty.all(5),
-              shadowColor: MaterialStateProperty.all(Colors.yellow[700]),
-            ),
-            child: Text(
-              'Back',
-              // 'Kembali',
-              style: GoogleFonts.nunito(color: Colors.white),
-            ),
-            onPressed: () {
-              audioPlayer.stop();
-              Navigator.of(context).pop();
-            },
-          ),
+          // floatingActionButton: TextButton(
+          //   style: ButtonStyle(
+          //     backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          //       (Set<MaterialState> states) {
+          //         if (states.contains(MaterialState.pressed)) {
+          //           return Colors.red[400]!;
+          //         }
+          //         return Colors.red[300]!;
+          //       },
+          //     ),
+          //     padding: MaterialStateProperty.all(
+          //         const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+          //     shape: MaterialStateProperty.all(
+          //       RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(30),
+          //         side: const BorderSide(color: Colors.white, width: 2),
+          //       ),
+          //     ),
+          //     textStyle: MaterialStateProperty.all(
+          //       GoogleFonts.nunito(
+          //         fontSize: 18,
+          //         fontWeight: FontWeight.bold,
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     overlayColor: MaterialStateProperty.all(Colors.yellow[100]),
+          //     elevation: MaterialStateProperty.all(5),
+          //     shadowColor: MaterialStateProperty.all(Colors.yellow[700]),
+          //   ),
+          //   child: Text(
+          //     'Back',
+          //     // 'Kembali',
+          //     style: GoogleFonts.nunito(color: Colors.white),
+          //   ),
+          //   onPressed: () {
+          //     audioPlayer.stop();
+          //     Navigator.of(context).pop();
+          //   },
+          // ),
         ),
       ),
     );

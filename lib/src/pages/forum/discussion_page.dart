@@ -10,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:neuroparenting/src/db/push_notification/push_notification_api.dart';
 import 'package:neuroparenting/src/reusable_comp/language_changer.dart';
 import 'package:neuroparenting/src/reusable_comp/theme_changer.dart';
 import 'package:neuroparenting/src/reusable_func/file_picking.dart';
@@ -126,6 +127,7 @@ class DiscussionState extends State<DiscussionPage> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null && user.photoURL != null && user.displayName != null) {
         EasyLoading.show(status: 'Posting comment...');
+        final pushNotificationApi = PushNotificationAPI();
         final comment = Comment(
           text: commentController.text,
           avatarUrl: user.photoURL!,
@@ -138,6 +140,16 @@ class DiscussionState extends State<DiscussionPage> {
         await ForumApi.postComment(
           discussionId: widget.discussionId,
           comment: comment,
+        );
+
+        List<String> commenterUserIds =
+            commentsList.map((comment) => comment.commenterId).toList();
+
+        pushNotificationApi.notifyUsersWithDiscussionId(
+          commentBody: commentController.text,
+          discussionId: widget.discussionId,
+          posterUserId: widget.discussionPostUserId,
+          commenterUserIds: commenterUserIds,
         );
 
         final updatedComments = await ForumApi.fetchOnlyComments(
@@ -758,9 +770,9 @@ class DiscussionState extends State<DiscussionPage> {
                                             const Duration(milliseconds: 200),
                                         btnOkText: "Delete",
                                         btnCancelText: "Cancel",
-                                        title: 'Delete Discussion',
+                                        title: 'Delete Comment',
                                         desc:
-                                            "Are you sure you want to delete this discussion?",
+                                            "Are you sure you want to delete this comment?",
                                         btnCancelOnPress: () {},
                                         btnOkOnPress: () async {
                                           EasyLoading.show(
