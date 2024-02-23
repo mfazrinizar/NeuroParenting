@@ -7,14 +7,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'YouTube Player Demo',
+      title: 'Online Course App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.grey[200],
       ),
       home: const CourseListScreen(),
     );
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class CourseListScreen extends StatelessWidget {
-  const CourseListScreen({super.key});
+  const CourseListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,14 @@ class CourseListScreen extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('courses').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
             );
           }
 
@@ -55,20 +61,26 @@ class CourseListScreen extends StatelessWidget {
 class CourseItem extends StatelessWidget {
   final Course course;
 
-  const CourseItem({super.key, required this.course});
+  const CourseItem({Key? key, required this.course}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(course.name),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoListScreen(course: course),
-          ),
-        );
-      },
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ListTile(
+        title: Text(
+          course.name,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoListScreen(course: course),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -76,7 +88,7 @@ class CourseItem extends StatelessWidget {
 class VideoListScreen extends StatelessWidget {
   final Course course;
 
-  const VideoListScreen({super.key, required this.course});
+  const VideoListScreen({Key? key, required this.course}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +103,14 @@ class VideoListScreen extends StatelessWidget {
             .collection('videos')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
             );
           }
 
@@ -115,20 +132,24 @@ class VideoItem extends StatelessWidget {
   final String title;
   final String videoId;
 
-  const VideoItem({super.key, required this.title, required this.videoId});
+  const VideoItem({Key? key, required this.title, required this.videoId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => YouTubePlayerScreen(videoId: videoId),
-          ),
-        );
-      },
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ListTile(
+        title: Text(title),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => YouTubePlayerScreen(videoId: videoId),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -136,13 +157,14 @@ class VideoItem extends StatelessWidget {
 class YouTubePlayerScreen extends StatelessWidget {
   final String videoId;
 
-  const YouTubePlayerScreen({super.key, required this.videoId});
+  const YouTubePlayerScreen({Key? key, required this.videoId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('YouTube Player'),
+        title: const Text('Video Player'),
       ),
       body: Center(
         child: YoutubePlayer(

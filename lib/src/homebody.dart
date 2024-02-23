@@ -9,6 +9,7 @@ import 'package:neuroparenting/src/db/campaign/campaign_api.dart';
 import 'package:neuroparenting/src/pages/article/article.dart';
 import 'package:neuroparenting/src/pages/campaign/campaign.dart';
 import 'package:neuroparenting/src/pages/chatbot/chatbot.dart';
+import 'package:neuroparenting/src/pages/consult/consult.dart';
 import 'package:neuroparenting/src/pages/course/course.dart';
 import 'package:neuroparenting/src/pages/course/course_upload.dart';
 import 'package:neuroparenting/src/pages/donate/donate.dart';
@@ -230,8 +231,10 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
                     campaigns: campaigns,
                   ),
                 );
+              } else if (title == 'Consult') {
+                Get.to(() => const PsychologistListScreen());
               } else if (title == 'Course') {
-                Get.to(() => CourseListScreen());
+                Get.to(() => const CourseListScreen());
               } else {
                 Get.to(() => const UnderConstructionPage());
               }
