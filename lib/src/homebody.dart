@@ -220,6 +220,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
                 Get.to(() => const ArticleDictionaryPage());
               } else if (title == 'ChatBot') {
                 Get.to(() => const ChatBotPage());
+              } else if (title == 'Consult') {
+                Get.to(() => const ChatBotPage());
               } else if (title == 'Donate') {
                 Get.to(() => const DonatePage());
               } else if (title == 'Games') {
