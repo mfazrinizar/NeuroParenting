@@ -117,7 +117,7 @@ Future<void> listenFCM() async {
 }
 
 Future selectNotification(String? payload) async {
-  log('selectNotification: $payload');
+  // log('selectNotification: $payload');
   if (payload != null) {
     // Decode the payload into a RemoteMessage
     Map<String, dynamic> messageData = jsonDecode(payload);
@@ -148,7 +148,7 @@ void _handleMessage(RemoteMessage message) async {
 }
 
 void _navigateToPageBasedOnMessage(Map<String, dynamic> messageData) {
-  log('Message data: $messageData');
+  // log('Message data: $messageData');
 
   if (messageData['screen'] == 'discussion') {
     // Navigate to PaymentHistoryPage
@@ -225,12 +225,10 @@ class PushNotificationAPI {
             .remove(token); // token could also be posterDeviceToken[0]
       }
     }
-    log(commenterDeviceTokens.toString());
     commenterDeviceTokens.remove(fcmToken);
     posterDeviceToken?.remove(fcmToken) ?? [];
     commenterDeviceTokens = commenterDeviceTokens.toSet().toList();
     commenterDeviceTokens.add(fcmToken ?? "");
-    log(commenterDeviceTokens.toString());
 
     Map<String, dynamic> data = {
       'poster': {
@@ -250,6 +248,27 @@ class PushNotificationAPI {
         'dataId': discussionId,
       },
     };
+
+    // final pushNotificationApi = PushNotificationAPI();
+    // pushNotificationApi.storeNotification(
+    //     notifTitle: "notifTitle",
+    //     notifBody: "notifBody",
+    //     targetUserIds: ["targetUserIds"],
+    //     screen: "screen",
+    //     dataId: "dataId");
+
+    // Store notification for each userIds
+    Set<String> uniqueUserIds = {...commenterUserIds, posterUserId};
+    for (String userId in uniqueUserIds) {
+      await storeNotification(
+        notifTitle:
+            '$name ${userId == posterUserId ? "(Your Discussion)" : "(Commented Discussion)"}',
+        notifBody: commentBody,
+        targetUserIds: [userId],
+        screen: 'discussion',
+        dataId: discussionId,
+      );
+    }
 
     await multiUserTypeSendNotification(data: data);
   }
@@ -304,8 +323,6 @@ class PushNotificationAPI {
     FirebaseFunctions functions =
         FirebaseFunctions.instanceFor(region: 'us-central1');
 
-    log(data.toString());
-
     try {
       // final HttpsCallable callable =
       //     functions.httpsCallable('sendNotification');
@@ -359,7 +376,10 @@ class PushNotificationAPI {
 
         DocumentSnapshot userSnapshot = await userDoc.get();
 
-        int highestNotifId = userSnapshot.get('highestNotifId') ?? 0;
+        int highestNotifId = 0;
+        if (userSnapshot.exists) {
+          highestNotifId = userSnapshot.get('highestNotifId') ?? 0;
+        }
         highestNotifId++;
 
         String notifId = 'notif$highestNotifId';
