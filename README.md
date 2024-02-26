@@ -23,11 +23,11 @@ UI Scheme 2                      | UI Scheme 3
 ![UI2](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/3.jpg?raw=true)|![UI3](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/4.jpg?raw=true)|
 
 ## Features
-1. Forum, a supportive online forum designed for parents of neurodivergent children and experienced psychologists specializing in neurodevelopmental disorders. Our community is a safe and empathetic space where parents can come together to share experiences, seek advice, and build a network of support while benefiting from the professional insights provided by expert psychologists. another.
+1. Forum, a supportive online forum designed for parents of neurodivergent children and experienced psychologists specializing in neurodevelopmental disorders. Our community is a safe and empathetic space where parents can come together to share experiences, seek advice, and build a network of support while benefiting from the professional insights provided by expert psychologists. 
 
 2. Articles, connects you to helpful articles from trusted sources outside the app. Get practical tips, the latest research, and personal stories covering various aspects of neurodivergence.NeuroParenting facilitates your exploration, ensuring that valuable information and support are readily accessible with just a tap.
 
-3. Consult, Engage in real-time conversations with experienced psychologists, make a personalized consultationsz allowing you to seek guidance, ask questions, or discuss concerns directly.
+3. Consult, Engage in real-time conversations with experienced psychologists, make a personalized consultationsz allowing you to seek guidance, ask questions, or discuss concerns directly. (under development, the development unexpectedly took longer time)
 
 4. Games, designed for neurodivergent children, these interactive games turn education into a fun and engaging experience. Each game is crafted to stimulate cognitive skills, creativity, and social interaction. Watch as your child learns and grows. With NeuroParenting, education becomes an adventure, making every moment a chance to play and thrive.
 
@@ -41,9 +41,9 @@ UI Scheme 2                      | UI Scheme 3
 
 ## Application Screenshots
 1. Extremely adaptable and responsive UI.
-2. Ultra-comfort theme changing.
+2. Ultra-comfort theme changing (supports light & dark theme).
 3. Wide variety of features.
-4. Accessible in two languages, English and Indonesian Language.
+4. Accessible in two languages, English and Indonesian Language (Indonesian Language are not fully written due to time limitation, please only use English Language for now).
 
 <div style="display:flex;">
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding1.png" alt="screen_1" width="200"/>
@@ -80,16 +80,34 @@ UI Scheme 2                      | UI Scheme 3
 keyPassword=<yourKeyPassword>
 keyAlias=<yourKeyAlias>
 storeFile=<anyName>.keystore`
-8. Run `flutter build apk --release --split-per-abi --obfuscate --split-debug-info=/debug_info/` for splitted APK (each architecture) or `flutter build apk --release --obfuscate --split-debug-info=/debug_info/` for FAT APK (contains all ABIs)
-9. Your build should be at `build/app/outputs/flutter-apk`
+8. Using your browser, navigate to [Firebase Console](https://console.firebase.google.com/) to setup the Firebase integration.
+9. Click add project then proceed with the steps shown in Firebase Console web (setup Authentication, Firestore DB, Storage, FCM, and Functions).
+10. Download `google-services.json` and place it to app-level Android folder (android/app/).
+11. Edit `.env.example` name to `.env`, then edit value of each environment variables according to your API (check [Midtrans](https://midtrans.com) for Midtrans Payment Gateway, [Firebase Console](https://console.firebase.google.com/) for all Firebase-related API, [Gemini](https://aistudio.google.com/app/apikey) for Gemini API Key, deploy NeuroPay for Merchant Server URL (/neuropay/), and deploy NeuroFunctions (/neurofunctions/) for FCM push notification backend).
+12. If you don't want to generate your own AES 128/192/256 key, run `dart run build_runner build --define secure_dotenv_generator:secure_dotenv=OUTPUT_FILE=encryption_key.json`. If you decided to generate your own, run `dart run build_runner build --define secure_dotenv_generator:secure_dotenv=ENCRYPTION_KEY=yourEncryptionKey  --define secure_dotenv_generator:secure_dotenv=IV=yourIvKey --define secure_dotenv_generator:secure_dotenv=OUTPUT_FILE=encryption_key.json`.
+13. Run `flutter build apk --release --split-per-abi --obfuscate --split-debug-info=/debug_info/` for splitted APK (each architecture) or `flutter build apk --release --obfuscate --split-debug-info=/debug_info/` for FAT APK (contains all ABIs)
+14. Your build should be at `build/app/outputs/flutter-apk`
 Facing problems? Kindly open an issue.
 
 ## Tech Stack
 - Flutter
-- Firebase
-- Android
-- Midtrans API (Payment Gateway, not yet implemented)
-- Gemini AI Model
+- Firebase (Firestore DB, Storage, Functions, FCM)
+- Node.JS (FCM Push Notification)
+- PHP 8 Composer (Merchant Server)
+- Android (Platform)
+- Midtrans Native Mobile SDK & API (Payment Gateway, implemented in Donate, reusable for Consult)
+- Gemini AI Model (ChatBot)
+- AES 256 Encryption Key (Environment variables encryption)
+
+## System Design 
+
+We used Use Case Diagram and Sequence Diagram to design & plan our NeuroParenting app precisely. 
+
+### Use Case Diagram
+![Use Case Diagram](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/UseCaseDiagram.png)
+
+### Sequence Diagram of Each Use Case
+[System Analysis & Design of NeuroParenting](https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/NeuroParenting_SystemDesign.pdf) (Download in PDF)
 
 ## Downloads (Current Release)
 
