@@ -45,28 +45,58 @@ UI Scheme 2                      | UI Scheme 3
 3. Wide variety of features.
 4. Accessible in two languages, English and Indonesian Language (Indonesian Language are not fully written due to time limitation, please only use English Language for now).
 
+### Onboarding Page
 <div style="display:flex;">
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding1.png" alt="screen_1" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding1Dark.png" alt="screen_2" width="200"/>
   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2.png" alt="screen_3" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2Dark.png" alt="screen_4" width="200"/>
 </div>
+
+### Register Page
 <div style="display:flex;">
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Register.png" alt="screen_1" width="200"/>
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/RegisterDark.png" alt="screen_2" width="200"/>
-  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Login.png" alt="screen_3" width="200"/>
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/LoginDark.png" alt="screen_4" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Register.png" alt="screen_5" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/RegisterDark.png" alt="screen_6" width="200"/>
 </div>
+
+### Login Page
 <div style="display:flex;">
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Homepage.png" alt="screen_1" width="200"/>
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/HomePageDark.png" alt="screen_2" width="200"/>
-  <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.jpeg" alt="screen_3" width="200"/>
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1Dark.jpeg" alt="screen_4" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Login.png" alt="screen_7" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/LoginDark.png" alt="screen_8" width="200"/>
 </div>
+
+### Home Page
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Homepage.png" alt="screen_11" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/HomePageDark.png" alt="screen_12" width="200"/>
+</div>
+
+### Forum Page
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.jpeg" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.png" alt="screen_4" width="200"/>
+</div>
+
+### Discussion Page (Navigated from Forum)
 <div style="display:flex;">
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2.jpeg" alt="screen_1" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum2Dark.jpeg" alt="screen_2" width="200"/>
 </div>
+
+### Settings Page
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Setting.png" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/SettingDark.png" alt="screen_2" width="200"/>
+</div>
+
+### Payment Page (Sandbox & Production)
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/PaymentSandbox.png" alt="screen_1" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/PaymentProduction.jpg" alt="screen_2" width="200"/>
+</div>
+
+- The rest of pages can be seen by installing our NeuroParenting app.
+
 
 ## How to Compile & Run
 1. Install Java JDK (add to PATH), Android Studio, VS Code (or any preferred IDE), Flutter SDK, etc. to install all needed tools (SDK, NDK, extra tools) for Android development toolchain, please refer to this [link](https://docs.flutter.dev/get-started/install/windows/mobile).
@@ -112,10 +142,10 @@ We used Use Case Diagram and Sequence Diagram to design & plan our NeuroParentin
 ## Downloads (Current Release)
 
 Download the latest version of NeuroParenting according to your Android device's architecture type:
-- [Fat Apk](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-release.apk) (Fat APK, if you don't know your Android architecture)
-- [Arm64-v8a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-arm64-v8a-release.apk) (APK for arm64-v8a)
-- [Armeabi-v7a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-armeabi-v7a-release.apk) (APK for armeabi-v7a or arm32)
-- [x86_64](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.2/NeuroParenting-x86_64-release.apk) (APK for x86_64)
+- [Fat Apk](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.3/NeuroParenting-release.apk) (Fat APK, if you don't know your Android architecture)
+- [Arm64-v8a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.3/NeuroParenting-arm64-v8a-release.apk) (APK for arm64-v8a)
+- [Armeabi-v7a](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.3/NeuroParenting-armeabi-v7a-release.apk) (APK for armeabi-v7a or arm32)
+- [x86_64](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.3/NeuroParenting-x86_64-release.apk) (APK for x86_64)
 
 ## About Us
 Hey There! We're a group of four students developing NeuroParenting from Sriwijaya University. Each of our role is :
