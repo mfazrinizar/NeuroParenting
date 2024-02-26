@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroparenting/src/homepage.dart';
@@ -408,38 +409,64 @@ class GamePageState extends State<GamePage> {
                                       // height: 25,
                                       width: 25,
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
                                         Stack(
-                                          alignment: Alignment.bottomRight,
                                           children: [
-                                            const SizedBox(
-                                              height: 45,
+                                            SizedBox(
+                                              // padding: EdgeInsets.fromLTRB(
+                                              //     10, 0, 10, 0),
+                                              height: 90,
+                                              width: 90,
+                                              child: SvgPicture.asset(
+                                                  tagFilters[index]["image"]),
                                             ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(20)),
-                                                color: tagFilters[index]
-                                                    ["bgText"],
-                                              ),
-                                              padding: const EdgeInsets.all(5),
-                                              child: Text(
-                                                tagFilters[index]["tag"],
-                                                style: TextStyle(
-                                                  color: tagFilters[index]
-                                                      ["textColor"],
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w700,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 95,
                                                 ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 45,
+                                                Column(
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 60,
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.bottomRight,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    20)),
+                                                        color: tagFilters[index]
+                                                            ["bgText"],
+                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5),
+                                                      child: Text(
+                                                        tagFilters[index]
+                                                            ["tag"],
+                                                        style: TextStyle(
+                                                          color:
+                                                              tagFilters[index]
+                                                                  ["textColor"],
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
                                           ],
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ],
