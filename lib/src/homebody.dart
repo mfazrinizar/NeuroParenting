@@ -221,7 +221,8 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
               } else if (title == 'ChatBot') {
                 Get.to(() => const ChatBotPage());
               } else if (title == 'Consult') {
-                Get.to(() => const ChatBotPage());
+                // Get.to(() => const PsychologistListScreen()); <- errors occured, uncomment if it's been fixed.
+                Get.to(() => const UnderConstructionPage());
               } else if (title == 'Donate') {
                 Get.to(() => const DonatePage());
               } else if (title == 'Games') {
@@ -232,8 +233,6 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
                     campaigns: campaigns,
                   ),
                 );
-              } else if (title == 'Consult') {
-                Get.to(() => const PsychologistListScreen());
               } else if (title == 'Course') {
                 Get.to(() => const CourseListScreen());
               } else {
