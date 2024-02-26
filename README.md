@@ -53,6 +53,12 @@ UI Scheme 2                      | UI Scheme 3
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/OnBoarding2Dark.png" alt="screen_4" width="200"/>
 </div>
 
+### Start Page
+<div style="display:flex;">
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Start.png" alt="screen_5" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/StartDark.png" alt="screen_6" width="200"/>
+</div>
+
 ### Register Page
 <div style="display:flex;">
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Register.png" alt="screen_5" width="200"/>
@@ -73,7 +79,7 @@ UI Scheme 2                      | UI Scheme 3
 
 ### Forum Page
 <div style="display:flex;">
-   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.jpeg" alt="screen_3" width="200"/>
+   <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1Light.png" alt="screen_3" width="200"/>
    <img src="https://github.com/mfazrinizar/NeuroParenting/blob/main/NeuroParentingUI/Forum1.png" alt="screen_4" width="200"/>
 </div>
 
@@ -148,7 +154,7 @@ Download the latest version of NeuroParenting according to your Android device's
 - [x86_64](https://github.com/mfazrinizar/NeuroParenting/releases/download/v0.0.3/NeuroParenting-x86_64-release.apk) (APK for x86_64)
 
 ## About Us
-Hey There! We're a group of four students developing NeuroParenting from Sriwijaya University. Each of our role is :
+Hey There! We're a group of four students developing NeuroParenting from Sriwijaya University. Each of our role is:
 1. MUHAMMAD ZHAFRAN as a Hustler
 2. AISYAH FATIMAH as a Hipster
 3. M. FAZRI NIZAR as a Hacker
