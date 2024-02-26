@@ -108,36 +108,36 @@ class GamePageState extends State<GamePage> {
       "bgColor": const Color.fromARGB(255, 206, 236, 254),
       "bgText": const Color.fromARGB(255, 241, 249, 253),
       "textColor": const Color.fromARGB(255, 61, 92, 255),
-      "image": ""
-    },
-    {
-      "tag": "ASD   ",
-      "bgColor": const Color.fromARGB(255, 239, 224, 255),
-      "bgText": const Color.fromARGB(255, 255, 243, 255),
-      "textColor": const Color.fromARGB(255, 144, 101, 190),
-      "image": ""
+      "image": 'assets/images/dyslexiaTagBlue.svg',
     },
     {
       "tag": "DCD   ",
-      "bgColor": const Color.fromARGB(255, 254, 239, 220),
-      "bgText": const Color.fromARGB(255, 255, 255, 236),
-      "textColor": const Color.fromARGB(255, 251, 177, 90),
-      "image": ""
+      "bgColor": const Color.fromARGB(255, 239, 224, 255),
+      "bgText": const Color.fromARGB(255, 255, 243, 255),
+      "textColor": const Color.fromARGB(255, 144, 101, 190),
+      "image": 'assets/images/dcdTagPurple.svg',
     },
+    // {
+    //   "tag": "ASD   ",
+    //   "bgColor": const Color.fromARGB(255, 254, 239, 220),
+    //   "bgText": const Color.fromARGB(255, 255, 255, 236),
+    //   "textColor": const Color.fromARGB(255, 251, 177, 90),
+    //   "image": 'assets/images/animal_test.png',
+    // },
     {
       "tag": "ADHD   ",
       "bgColor": const Color.fromARGB(255, 255, 228, 241),
       "bgText": const Color.fromARGB(255, 254, 242, 255),
       "textColor": const Color.fromARGB(255, 255, 128, 189),
-      "image": ""
+      "image": 'assets/images/adhdTagPink.svg',
     },
-    {
-      "tag": "Autism   ",
-      "bgColor": const Color.fromARGB(255, 218, 238, 231),
-      "bgText": const Color.fromARGB(255, 240, 255, 253),
-      "textColor": const Color.fromARGB(255, 37, 223, 155),
-      "image": ""
-    },
+    // {
+    //   "tag": "Autism   ",
+    //   "bgColor": const Color.fromARGB(255, 218, 238, 231),
+    //   "bgText": const Color.fromARGB(255, 240, 255, 253),
+    //   "textColor": const Color.fromARGB(255, 37, 223, 155),
+    //   "image": 'assets/images/animal_test.png',
+    // },
   ];
 
   List<Map<String, dynamic>> foundGames = [];
@@ -390,7 +390,7 @@ class GamePageState extends State<GamePage> {
                                       tagFilters[index]["tag"].toString())
                                   : filterGame(""),
                               child: Container(
-                                alignment: Alignment.bottomRight,
+                                // alignment: Alignment.bottomRight,
                                 constraints: const BoxConstraints(
                                     minWidth: 180,
                                     maxWidth: 180,
@@ -402,35 +402,53 @@ class GamePageState extends State<GamePage> {
                                   ),
                                   color: tagFilters[index]["bgColor"],
                                 ),
-                                child: Stack(
-                                  alignment: Alignment.topRight,
+                                child: Column(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(20)),
-                                        color: tagFilters[index]["bgText"],
-                                      ),
-                                      padding: const EdgeInsets.all(5),
-                                      child: Text(
-                                        tagFilters[index]["tag"],
-                                        style: TextStyle(
-                                          color: tagFilters[index]["textColor"],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
                                     const SizedBox(
-                                      height: 45,
-                                    )
+                                      // height: 25,
+                                      width: 25,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Stack(
+                                          alignment: Alignment.bottomRight,
+                                          children: [
+                                            const SizedBox(
+                                              height: 45,
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(20)),
+                                                color: tagFilters[index]
+                                                    ["bgText"],
+                                              ),
+                                              padding: const EdgeInsets.all(5),
+                                              child: Text(
+                                                tagFilters[index]["tag"],
+                                                style: TextStyle(
+                                                  color: tagFilters[index]
+                                                      ["textColor"],
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 45,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             const SizedBox(
                               width: 10,
-                            )
+                            ),
                           ],
                         );
                       },
