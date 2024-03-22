@@ -136,7 +136,7 @@ class DonateState extends State<DonatePage> {
                                 ),
                               ),
                               Text(
-                                'Your donation means so much for our kids in need',
+                                'Your donation means so much for our kids in need\n(Donation will be managed by NeuroParenting team and will be forwarded to neurodivergent kids in need)',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: isDarkMode

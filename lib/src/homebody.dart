@@ -222,7 +222,7 @@ Widget _buildFeatureButton(IconData icon, String title, BuildContext context,
                 Get.to(() => const ChatBotPage());
               } else if (title == 'Consult') {
                 // Get.to(() => const PsychologistListScreen()); <- errors occured, uncomment if it's been fixed.
-                Get.to(() => const UnderConstructionPage());
+                Get.to(() => const PsychologistListScreen());
               } else if (title == 'Donate') {
                 Get.to(() => const DonatePage());
               } else if (title == 'Games') {

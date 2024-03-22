@@ -13,10 +13,13 @@ class User {
   });
 
   factory User.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return User(
-      name: doc['name'],
-      userTags: List<String>.from(doc['userTags']),
-      userType: doc['userType'],
+      name: data['name'] ?? 'null',
+      userTags: data.containsKey('userTags')
+          ? List<String>.from(data['userTags'])
+          : ['null'],
+      userType: data['userType'] ?? 'null',
     );
   }
 }
